@@ -234,3 +234,34 @@ class CPSInstaller(CMFInstaller):
                 self.log("  Installing.")
                 type = info.get('type', 'CPS Vocabulary')
                 vtool.manage_addCPSVocabulary(id, type, **info['data'])
+
+    #
+    # Internationalization support
+    #
+
+    def setupTranslations(self, product_name):
+        """Import .po files into the Localizer/default Message Catalog."""
+        mcat = self.portal.Localizer.default
+        self.log(" Checking available languages")
+        podir = os.path.join('Products', product_name)
+        popath = getPath(podir, 'i18n')
+        if popath is None:
+            self.log(" !!! Unable to find .po dir")
+        else:
+            self.log("  Checking installable languages")
+            avail_langs = mcat.get_languages()
+            self.log("    Available languages: %s" % str(avail_langs))
+            for file in os.listdir(popath):
+                if file.endswith('.po'):
+                    m = match('^.*([a-z][a-z])\.po$', file)
+                    if m is None:
+                        self.log('    Skipping bad file %s' % file)
+                        continue
+                    lang = m.group(1)
+                    if lang in avail_langs:
+                        lang_po_path = os.path.join(popath, file)
+                        lang_file = open(lang_po_path)
+                        self.log("    Importing %s into '%s' locale" % (file, lang))
+                        mcat.manage_import(lang, lang_file)
+                    else:
+                        self.log('    Skipping not installed locale for file %s' % file)
