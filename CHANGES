@@ -13,8 +13,10 @@ New features:
 - verifyDirectories method to set up directories.
 - Changed the Schema methods from addXxxx to verifyXxxx.
 - Changed the Workflow methods from setupXxxx to verifyXxxx.
+- addAction is now called verifyAction
 - New method verifyEventSubsribers.
 - setupPortalPermissions now takes an optional object as argument.
+- Support to setup boxes.
 Bug fixes:
 ~~~~~~~~~~
 - Fixed a bug in the local workflow setup.

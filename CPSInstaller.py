@@ -331,6 +331,34 @@ class CPSInstaller(CMFInstaller):
                     else:
                         self.log('    Skipping not installed locale for file %s' % file)
 
+#     # XXX  Here is an alternative wasy of doing this import
+#     # I don't know which is best /regebro
+#     #
+#     portal = self.portal_url.getPortalObject()
+#     Localizer = portal['Localizer']
+#     defaultCatalog = Localizer.default
+#     languages = Localizer.get_supported_languages()
+# 
+#     # computing po files' system directory
+#     CPSDefault_path = sys.modules['Products.CPSDefault'].__path__[0]
+#     i18n_path = os.path.join(CPSDefault_path, 'i18n')
+#     pr("   po files are searched in %s" % i18n_path)
+#     pr("   po files for %s are expected" % str(languages))
+# 
+#     # loading po files
+#     for lang in languages:
+#         po_filename = lang + '.po'
+#         pr("   importing %s file" % po_filename)
+#         po_path = os.path.join(i18n_path, po_filename)
+#         try:
+#             po_file = open(po_path)
+#         except (IOError, NameError):
+#             pr("    %s file not found" % po_path)
+#         else:
+#             defaultCatalog.manage_import(lang, po_file)
+#             pr("    %s file imported" % po_path)
+
+
     def verifyMessageCatalog(self, catalog_id, title):
         """Sets up a spezialized message catalog for your product"""
         self.log('Verifying message domain %s' % catalog_id)
