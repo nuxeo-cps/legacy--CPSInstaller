@@ -3,8 +3,8 @@ CPSInstaller
   CPSInstaller and CMFInstaller are two base classes that is intended to
   vastly simplify the creation of install scripts for CMF and CPS products.
   
-  It is basically a class full with methods that things that is common to
-  do when installing products, such as setting up skins, creating workflows,
+  It is basically a class full with methods that is commonly done when 
+  installing products, such as setting up skins, creating workflows,
   adding types, creating tools and such. CPSInstaller extends CMFInstaller
   with CPSSpecific support methods. It is simple to do the same for other
   CMF based systems, like Plone.
@@ -29,7 +29,7 @@ CPSInstaller
 
     Uninstalling is best delegated to automatic functionality that keeps
     track of what is being created, and removed this when running the
-    uninstall. CPSInstaller does not support this today, the idea is to
+    uninstall. CPSInstall does not support this today, the idea is to
     use and/or integrate with CMFQuickInstaller for this.
 
     Resetting, that is turning back the installation to it's known
@@ -40,7 +40,7 @@ CPSInstaller
     have the exact same result as installing.
 
     Upgrading is also similar to verifying, as an upgrade should only be
-    done if it isn't done already.
+    done if it isn't done already, so these tasks are really the same.
 
     Therefore, install scripts should be written as verification scripts,
     only making changes if needed. These are the basic guidelines to follow:
