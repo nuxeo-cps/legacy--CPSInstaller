@@ -25,6 +25,7 @@ from Products.CPSInstaller.CMFInstaller import log_ok_message
 portal_name = 'test_portal'
 ZopeTestCase.installProduct('CMFCore')
 ZopeTestCase.installProduct('CMFDefault')
+ZopeTestCase.installProduct('CMFCalendar')
 ZopeTestCase.installProduct('MailHost')
 ZopeTestCase.installProduct('CPSCore')
 ZopeTestCase.installProduct('CPSDocument')
@@ -192,14 +193,25 @@ return "This is a test script"
             }
         }
 
+        products = self.portal.manage_addProduct
+        # Try to create a portal_calendar tool.
+        # ProductDispatcher does not implement get() or has_key(),
+        # therefor we just try to install and catch the error if
+        # CMFCalendar is not installed.
+        calendar_product = None
+        try:
+            calendar_product = self.portal.manage_addProduct['CMFCalendar']
+            calendar_product.manage_addTool('CMF Calendar Tool')
+        except AttributeError:
+            pass
         installer = CPSInstaller(self.portal, 'Installer test')
         installer.addFlexibleTypes(types)
         self.assert_(hasattr(self.portal.portal_types, 'FlexibleType'))
         self.assert_(hasattr(self.portal.portal_types, 'IsInCalendarType'))
-        # Need to install portal_calendar tool first in this test
-        #self.assert_('IsInCalendarType' in \
-        #    self.portal.portal_calendar.calendar_types)
-
+        if calendar_product:
+            # Make sure the calendar type got registered.
+            self.assert_('IsInCalendarType' in \
+                self.portal.portal_calendar.calendar_types)
 
 
 if __name__ == '__main__':
