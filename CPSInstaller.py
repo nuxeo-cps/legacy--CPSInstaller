@@ -96,7 +96,8 @@ class CPSInstaller(CMFInstaller):
             workflow.states.addState(stateid)
             state = workflow.states.get(stateid)
             state.setProperties(title=statedef['title'],
-                                transitions=statedef['transitions'])
+                                transitions=statedef['transitions'],
+                                description=statedef.get('description', ''))
             for permission in statedef['permissions'].keys():
                 state.setPermission(permission, 0,
                                     statedef['permissions'][permission])
