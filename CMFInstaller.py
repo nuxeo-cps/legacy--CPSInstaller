@@ -19,6 +19,7 @@
 
 import os
 from re import match
+from types import StringType
 from zLOG import LOG, INFO, DEBUG
 from App.Extensions import getPath
 from Products.PythonScripts.PythonScript import PythonScript
@@ -228,6 +229,10 @@ class CMFInstaller:
         makes sure that the types in the list allowed_types will be allowed
         as content types in the types in the list allowed_in
         """
+        if isinstance(allowed_types, StringType):
+            allowed_types=(allowed_types,)
+        if isinstance(allowed_in, StringType):
+            allowed_in=(allowed_in,)
         ttool = self.portal.portal_types
         for type in allowed_in:
             workspaceACT = list(ttool[type].allowed_content_types)
