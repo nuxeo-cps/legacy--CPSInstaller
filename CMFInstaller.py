@@ -60,11 +60,14 @@ class CMFInstaller:
     def _cmf_finalize(self):
         """Does all the things that only needs to be done once"""
         # Reindex portal_catalog
+        reindex_catalog = getattr(self.portal, '_v_reindex_catalog', 0)
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
-        if changed_indexes:
-            ct = self.portal.portal_catalog
-            #XXX Reindex all indexes if more than one index is to be reindexed.
+        if reindex_catalog or len(changed_indexes) > 1:
             self.log('Reindex Catalog')
+            self.portal.portal_catalog.refreshCatalog(clear=1)
+        elif changed_indexes:
+            ct = self.portal.portal_catalog
+            self.log('Reindex Catalog indexes %s' % ', '.join(changed_indexes))
             for name in changed_indexes:
                 ct.reindexIndex(name, self.portal.REQUEST)
 
@@ -216,9 +219,13 @@ class CMFInstaller:
                 self.log('  Deleting old index')
                 ct.delIndex('uid')
         ct.addIndex('uid', 'FieldIndex')
-        self.flagIndexForReindex(id)
+        self.flagCatalogForReindex(id)
 
-    def flagIndexForReindex(self, indexid):
+    def flagCatalogForReindex(self, indexid=None):
+        if indexid is None:
+            # Reindex all catalog
+            self.portal._v_reindex_catalog = 1
+            return
         indexes = getattr(self.portal, '_v_changed_indexes', [])
         indexes.append(indexid)
         self.portal._v_changed_indexes = indexes

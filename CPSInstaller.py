@@ -291,17 +291,20 @@ class CPSInstaller(CMFInstaller):
         self.log('Verifying message catalog %s' % catalog_id)
         localizer = self.portal['Localizer']
         # MessageCatalog
-        if catalog_id in localizer.objectIds():
-            self.logOK()
-            return
+        if catalog_id not in localizer.objectIds():
+            languages = localizer.get_supported_languages()
+            localizer.manage_addProduct['Localizer'].manage_addMessageCatalog(
+                id=catalog_id,
+                title=title,
+                languages=languages,
+            )
 
-        languages = localizer.get_supported_languages()
-        localizer.manage_addProduct['Localizer'].manage_addMessageCatalog(
-            id=catalog_id,
-            title=title,
-            languages=languages,
-        )
-        self.log('    Created')
+        translation_service = self.portal.translation_service
+        if getattr(translation_service, catalog_id, None) is None:
+            translation_service.manage_addDomainInfo(catalog_id,
+                                          'Localizer/'+catalog_id)
+
+        self.flagCatalogForReindex()
 
     #
     # Portal_trees
