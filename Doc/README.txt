@@ -9,19 +9,6 @@ CPSInstaller
   with CPSSpecific support methods. It is simple to do the same for other
   CMF based systems, like Plone.
   
-  How to use
-  
-    To use CMFInstaller with your product, create a python script called 
-    Install.py in a directory called Extensions in your product directory.
-    
-    To start using the CMFInstaller, create an Extensions directory in your
-    product directory, copy the <hjhjhj>.py file to this directory and
-    rename it Install.py.
-
-    Strictly speaking, it can be called anything, but calling it Install.py 
-    and install respectively is the standardized way of doing it. This is 
-    also compatible with CMFQuickInstaller.
-
   Writing install scripts.
 
     There are five tasks you want an installer to support. Installing,
