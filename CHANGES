@@ -6,8 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
-- Made the retrieval of .po files cleaner, so the .po files can be retrieved
-  wherever the Zope products reside.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
-- cope with new CPS States API
+-

@@ -1,4 +1,21 @@
 *******************************************
+** CPSInstaller V0.15.1 [R1 build 2005/01/27-09:40 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- Made the retrieval of .po files cleaner, so the .po files can be retrieved
+  wherever the Zope products reside.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+- cope with new CPS States API
+
+*******************************************
 ** CPSInstaller V0.15.0 [R1 build 2005/01/20-11:35 by ben]
 
 Requires:
