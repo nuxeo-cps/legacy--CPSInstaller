@@ -20,7 +20,7 @@
 import os
 from types import StringType
 from zLOG import LOG, INFO, DEBUG
-from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.utils import getToolByName, _marker
 from Products.ZCTextIndex.ZCTextIndex import manage_addLexicon, ZCTextIndex
 
 SECTIONS_ID = 'sections'
@@ -162,12 +162,24 @@ class CMFInstaller:
     def portalHas(self, id):
         return id in self.portal.objectIds()
 
-    def getTool(self, id):
-        return getToolByName(self.portal, id, None)
-
+    def getTool(self, id, default=_marker):
+        """Gets the tool by id
+        
+        If No default is given, it will raise an error.
+        """
+        return getToolByName(self.portal, id, default)
     #
     # Methods to setup and manage actions
     #
+    def verifyActionProvider(self, action_provider):
+        self.log('Verifying action provider %s' % action_provider)
+        atool = self.getTool('portal_actions')
+        if action_provider in atool.listActionProviders():
+            self.log(' Already correctly installed')
+        else:    
+            atool.addActionProvider(action_provider)
+            self.log(' Installed')
+        
     def hasAction(self, tool, actionid):
         for action in self.portal[tool].listActions():
             if action.id == actionid:
@@ -485,7 +497,7 @@ class CMFInstaller:
     # Mixed management methods
     #
     def addCalendarTypes(self, type_ids):
-        ctool = getToolByName(self.portal, 'portal_calendar', None)
+        ctool = self.getTool('portal_calendar', None)
         if ctool is None:
             return
 
@@ -497,7 +509,7 @@ class CMFInstaller:
         ctool.calendar_types = current_types
 
     def removeCalendarTypes(self, type_ids):
-        ctool = getToolByName(self.portal, 'portal_calendar', None)
+        ctool = self.getTool('portal_calendar', None)
         if ctool is None:
             return
 
