@@ -1,4 +1,23 @@
 *******************************************
+** CPSInstaller V0.12.0 [R1 build 2004/09/15-15:15 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- API to support CPSPortlets.
+Bug fixes:
+~~~~~~~~~~ 
+- verifyLocalWorkflowChains() in destructive mode. 
+  Bug if the chain didn't exist. (KeyError)
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+- Adding Plone skins names in CMFInstaller to be able to register
+  CPSIO skins (needed when installing CPSIO on a Plone site to export it).
+- Unit tests for CPSPortlets. If CPSPortlets is not present, since it's not a mandatory product, the unit tests are not going to be called
+
+*******************************************
 ** CPSInstaller V0.11.0 [R1 build 2004/08/13-15:30 by madarche]
 
 Requires:
