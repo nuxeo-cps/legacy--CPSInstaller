@@ -301,11 +301,14 @@ class CPSInstaller(CMFInstaller):
                 # No install method found. Go Try with an external script.
                 pass
             else:
-                # Install
-                qtool.installProduct(module)
-                return
+                # Install if product is not already installed
+                if not qtool.isProductInstalled(module):
+                    qtool_res = qtool.installProduct(module)
+                    self.log("Product %s: %s"%(module, qtool_res,))
+                    return
 
-        # No QuickInstaller product or no install method found.
+        # No QuickInstaller product, no install method found, or product is
+        # already installed.
         try:
             if not self.portalHas(id):
                 __import__('Products.' + module)
