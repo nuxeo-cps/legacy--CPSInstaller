@@ -47,6 +47,16 @@ class CPSInstaller(CMFInstaller):
                 trtool[tree].manage_rebuild()
 
     #
+    # Overrides
+    #
+    def verifyRoles(self, roles):
+        already = self.portal.valid_roles()
+        for role in roles:
+            if role not in already:
+                self.portal.acl_users.userFolderAddRole(role)
+                self.log(" Add role %s" % role)
+
+    #
     # Workflow methods:
     #
 
@@ -73,7 +83,7 @@ class CPSInstaller(CMFInstaller):
 
         return wf
 
-    def setupWfStates(self, workflow, states):
+    def verifyWfStates(self, workflow, states):
         existing_states = workflow.states.objectIds()
         for stateid, statedef in states.items():
             if stateid in existing_states:
@@ -85,7 +95,7 @@ class CPSInstaller(CMFInstaller):
             for permission in statedef['permissions'].keys():
                 state.setPermission(permission, 0, statedef['permissions'][permission])
 
-    def setupWfTransitions(self, workflow, transitions):
+    def verifyWfTransitions(self, workflow, transitions):
         existing_transitions = workflow.transitions.objectIds()
         for transid, transdef in transitions.items():
             if transid in existing_transitions:
@@ -95,7 +105,7 @@ class CPSInstaller(CMFInstaller):
             trans = workflow.transitions.get(transid)
             trans.setProperties(**transdef)
 
-    def setupWfScripts(self, workflow, scripts):
+    def verifyWfScripts(self, workflow, scripts):
         existing_scripts = workflow.states.objectIds()
         for scriptid, scriptdef in scripts.items():
             if scriptid in existing_scripts:
@@ -108,7 +118,7 @@ class CPSInstaller(CMFInstaller):
                 if scriptdef.has_key(attribute):
                     setattr(script, attribute, scriptdef[attribute])
 
-    def setupWfVariables(self, workflow, variables):
+    def verifyWfVariables(self, workflow, variables):
         existing_vars = workflow.variables.objectIds()
         for varid, vardef in variables.items():
             if varid in existing_vars:
@@ -118,17 +128,17 @@ class CPSInstaller(CMFInstaller):
             var = workflow.variables[varid]
             var.setProperties(**vardef)
 
-    def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
+    def verifyWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
         self.log("Setup workflow %s" % wfdef['wfid'])
         wf = self.createWorkflow(wfdef)
         if wf is None:
             return
 
-        self.setupWfStates(wf, wfstates)
-        self.setupWfTransitions(wf, wftransitions)
-        self.setupWfScripts(wf, wfscripts)
-        self.setupWfVariables(wf, wfvariables)
+        self.verifyWfStates(wf, wfstates)
+        self.verifyWfTransitions(wf, wftransitions)
+        self.verifyWfScripts(wf, wfscripts)
+        self.verifyWfVariables(wf, wfvariables)
         self.log(' Done')
 
     def setupLocalWorkflowChains(self, object, wfchains):
@@ -348,7 +358,7 @@ class CPSInstaller(CMFInstaller):
     # Portal_trees
     #
 
-    def addTreeCacheTypes(self, treename, type_names=(), meta_types=()):
+    def verifyTreeCacheTypes(self, treename, type_names=(), meta_types=()):
         self.log('Verifying %s type(s) in %s tree cache' % (str(type_names), treename))
         tree = self.portal.portal_trees[treename]
         old_type_names = list(tree.type_names)
@@ -386,3 +396,13 @@ class CPSInstaller(CMFInstaller):
                 if res:
                     raise ValueError(res)
 
+    def verifyEventSubscribers(self, subscribers):
+        objs = self.portal.portal_eventservice.objectValues()
+        current_subscribers = [obj.subscriber for obj in objs]
+        for subscriber in subscribers:
+            self.log("Verifying Event service subscriber %s" % subscriber['subscriber'])
+            if subscriber['subscriber'] in current_subscribers:
+                self.logOK()
+                continue
+            self.log(" Adding")
+            self.portal.portal_eventservice.manage_addSubscriber(**subscriber)

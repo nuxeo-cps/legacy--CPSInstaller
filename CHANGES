@@ -8,9 +8,12 @@ New features:
 - Verifying of FlexibleTypes will now upgrade FactoryBased types, and
   set up actions, if defined.
 - Changes in local workflow setup are not overridden.
-- addTreeCacheTypes now takes lists for types and meta_types.
+- addTreeCacheTypes now takes lists for types and meta_types and is renamed
+  verifyTreeCacheTypes.
 - verifyDirectories method to set up directories.
-- Changed the Schema setup methods from addXxxx to verifyXxxx.
+- Changed the Schema methods from addXxxx to verifyXxxx.
+- Changed the Workflow methods from setupXxxx to verifyXxxx.
+
 Bug fixes:
 ~~~~~~~~~~
 - Fixed a bug in the local workflow setup.

@@ -232,6 +232,13 @@ class CMFInstaller:
                 self.log(" Fixup of skin %s" % skin_name)
             self.flagSkinCacheReset()
 
+    def deleteSkins(self, skinlist):
+        self.log('Deleting skins %s' % ', '.join(skinlist))
+        for skin in skinlist:
+            if skin in self.portal.portal_skins.objectIds():
+                self.portal.portal_skins._delObject(skin)
+                self.flagSkinCacheReset()
+
     def flagSkinCacheReset(self):
         self.portal._v_reset_skins = 1
 

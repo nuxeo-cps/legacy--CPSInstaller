@@ -125,7 +125,7 @@ return "This is a test script"
                         }
 
         installer = CPSInstaller(self.portal, 'Installer test')
-        installer.setupWorkflow(wfdef, wfstates, wftransitions,
+        installer.verifyWorkflow(wfdef, wfstates, wftransitions,
             wfscripts, wfvariables)
         # Check that the workflow was created
         wftool = self.portal.portal_workflow
@@ -145,7 +145,7 @@ return "This is a test script"
         for variable in wfvariables.keys():
             self.assert_(variable in variables)
 
-        installer.setupWorkflow(wfdef, wfstates, wftransitions,
+        installer.verifyWorkflow(wfdef, wfstates, wftransitions,
             wfscripts, wfvariables)
         # Check that the workflow was NOT created
         self.assert_(installer.messages[-1] == log_ok_message)
