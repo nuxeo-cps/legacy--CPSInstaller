@@ -167,7 +167,7 @@ class CPSInstaller(CMFInstaller):
                 workflow.variables.setStateVar(state_var)
 
     def verifyWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
-                      wfscripts={}, wfvariables={}):
+                       wfscripts={}, wfvariables={}):
         self.log("Setup workflow %s" % wfdef['wfid'])
         wf = self.createWorkflow(wfdef)
         if wf is None:
@@ -176,7 +176,8 @@ class CPSInstaller(CMFInstaller):
         self.verifyWfStates(wf, wfstates)
         self.verifyWfTransitions(wf, wftransitions)
         self.verifyWfScripts(wf, wfscripts)
-        self.verifyWfVariables(wf, wfvariables)
+        self.verifyWfVariables(wf, wfvariables, 
+                               state_var=wfdef.get('state_var', None))
         self.log(' Done')
 
     def verifyLocalWorkflowChains(self, object, wfchains):
