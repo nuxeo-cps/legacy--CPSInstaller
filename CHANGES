@@ -9,7 +9,8 @@ New features:
   set up actions, if defined.
 - Changes in local workflow setup are not overridden.
 - addTreeCacheTypes now takes lists for types and meta_types.
-
+- verifyDirectories method to set up directories.
+- Changed the Schema setup methods from addXxxx to verifyXxxx.
 Bug fixes:
 ~~~~~~~~~~
 - Fixed a bug in the local workflow setup.
