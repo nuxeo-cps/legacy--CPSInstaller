@@ -1,4 +1,21 @@
 *******************************************
+** CPSInstaller V0.3.1 [R1 build 2004/03/01-16:11 by regebro]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- verifySkins didn't work with Python2.1.
+
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.3.0 [R1 build 2004/03/01-13:13 by regebro]
 
 Requires:

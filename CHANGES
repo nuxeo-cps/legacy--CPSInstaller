@@ -6,8 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
-- verifySkins didn't work with Python2.1.
-
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
