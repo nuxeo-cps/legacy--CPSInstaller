@@ -470,8 +470,6 @@ class CPSInstaller(CMFInstaller):
                 translation_service.manage_addDomainInfo(catalog_id,
                     'Localizer/' + catalog_id)
 
-        self.flagCatalogForReindex()
-
     #
     # Portal_trees
     #
