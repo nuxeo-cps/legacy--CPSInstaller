@@ -1,4 +1,22 @@
 *******************************************
+** CPSInstaller V0.4.0 [R1 build 2004/04/29-11:11 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- More material for handling boxes.
+Bug fixes:
+~~~~~~~~~~
+- Removed acquisition where misleading.
+- verifyBoxes used to work on the portal, not the given object.
+- verifyFlexibleTypes ignored category settings on actions.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+- Logs a bit more verbose.
+
+*******************************************
 ** CPSInstaller V0.3.3 [R1 build 2004/04/09-13:27 by ben]
 
 Requires:
