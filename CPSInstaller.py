@@ -476,9 +476,15 @@ class CPSInstaller(CMFInstaller):
         for id, info in directories.items():
             self.log(" Directory %s" % id)
             if id in dirtool.objectIds():
-                self.logOK()
-                continue
-            self.log("  Installing.")
+                ob = dirtool[id]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The directory is modified and will not '
+                             'be changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    dirtool.manage_delObjects([id])
             directory = dirtool.manage_addCPSDirectory(id, info['type'])
             directory.manage_changeProperties(**info['data'])
             for role, expr in info.get('entry_local_roles', ()):
@@ -490,7 +496,7 @@ class CPSInstaller(CMFInstaller):
         objs = self.portal.portal_eventservice.objectValues()
         current_subscribers = [obj.subscriber for obj in objs]
         for subscriber in subscribers:
-            self.log("Verifying Event service subscriber %s" 
+            self.log("Verifying Event service subscriber %s"
                      % subscriber['subscriber'])
             if subscriber['subscriber'] in current_subscribers:
                 self.logOK()
