@@ -27,7 +27,6 @@ from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ExternalMethod.ExternalMethod import ExternalMethod
-from Products.CMFCore.utils import getToolByName
 
 from CMFInstaller import CMFInstaller
 
@@ -38,7 +37,7 @@ class CPSInstaller(CMFInstaller):
     #
 
     def createWorkflow(self, wfdef):
-        wftool = self.portal.portal_workflow
+        wftool = self.getTool('portal_workflow')
         wfid = wfdef['wfid']
 
         self.log(' Creating workflow %s' % wfid)
