@@ -117,6 +117,11 @@ class CPSInstaller(CMFInstaller):
         self.setupWfVariables(wf, wfvariables)
         self.log(' Done')
 
+    def setupLocalWorkflowChains(self, object, wfchains):
+        wfc = getattr(object, '.cps_workflow_configuration')
+        for portal_type, chain in wfchains.items():
+          wfc.manage_addChain(portal_type=portal_type, chain=chain)
+
     #
     # Flexible Type installation
     #
