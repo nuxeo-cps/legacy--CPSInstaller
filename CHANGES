@@ -3,7 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- add a method to verify the presence of a Virtual Host Monster
 Bug fixes:
 ~~~~~~~~~~
 -
