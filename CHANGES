@@ -8,6 +8,7 @@ Bug fixes:
 ~~~~~~~~~~
 - Workflow state property 'workflow_reset_on_workflow_variable' was not taken
   into account by CPSInstaller.
+- #460: Ensured only a Manager can instanciate an installer.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
