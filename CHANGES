@@ -3,7 +3,8 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- Added an addAction() method, to avoid code duplication, and be more
+  flexible on action definitons.
 Bug fixes:
 ~~~~~~~~~~
 -

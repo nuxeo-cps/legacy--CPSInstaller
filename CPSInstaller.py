@@ -236,13 +236,7 @@ class CPSInstaller(CMFInstaller):
                 nb_action = len(ti.listActions())
                 ti.deleteActions(selections=range(nb_action))
                 for a in data['actions']:
-                    ti.addAction(a['id'],
-                                 a['name'],
-                                 a['action'],
-                                 a.get('condition', ''),
-                                 a['permissions'][0],
-                                 a.get('category', 'object'),
-                                 visible=a.get('visible',1))
+                    self.addAction(ti, a)
 
         self.addCalendarTypes(display_in_cmf_calendar)
 

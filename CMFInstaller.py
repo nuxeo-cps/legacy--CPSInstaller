@@ -144,12 +144,33 @@ class CMFInstaller:
                 return 1
         return 0
 
+    def addAction(self, object, properties):
+        """Adds an action to an object
+        
+        Fixes up some properties first.
+        """
+        
+        # ActionInformation.__init__() uses 'permissions' as a 
+        # parameter, but addAction() uses 'permission'. We will
+        # allow both.
+        if properties.has_key('permissions'):
+            properties['permission'] = properties['permissions']
+            del properties['permissions']
+        # For backward compatibility, visible should default to 1:
+        if not properties.has_key('visible'):
+            properties['visible'] = 1
+        # And category to 'object':
+        if not properties.has_key('category'):
+            properties['category'] = 'object'
+
+        object.addAction(**properties)
+
     def verifyAction(self, tool, **kw):
         result = ' Verifying action %s...' % kw['id']
         if self.hasAction(tool, kw['id']):
             result += 'exists.'
         else:
-            self.portal[tool].addAction(**kw)
+            self.addAction(portal[tool], kw)
             result += 'added.'
         self.log(result)
 
