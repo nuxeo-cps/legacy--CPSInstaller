@@ -206,11 +206,11 @@ class CPSInstaller(CMFInstaller):
         if wf is None:
             return
 
+        self.verifyWfVariables(wf, wfvariables,
+                               state_var=wfdef.get('state_var'))
         self.verifyWfStates(wf, wfstates)
         self.verifyWfTransitions(wf, wftransitions)
         self.verifyWfScripts(wf, wfscripts)
-        self.verifyWfVariables(wf, wfvariables,
-                               state_var=wfdef.get('state_var'))
         self.log(' Done')
 
     def verifyLocalWorkflowChains(self, object, wfchains, destructive=0,
