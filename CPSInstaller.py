@@ -395,7 +395,7 @@ class CPSInstaller(CMFInstaller):
             self.log("    Available languages: %s" % str(avail_langs))
             for file in os.listdir(popath):
                 if file.endswith('.po'):
-                    m = match('^.*([a-z][a-z])\.po$', file)
+                    m = match('^.*([a-z][a-z]|[a-z][a-z]-[A-Z][A-Z])\.po$', file)
                     if m is None:
                         self.log('    Skipping bad file %s' % file)
                         continue
