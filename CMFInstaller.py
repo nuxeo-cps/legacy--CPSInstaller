@@ -30,19 +30,44 @@ log_ok_message = '   Already correctly installed'
 
 class CMFInstaller:
     """Base class for product-specific installers"""
+    product_name = None
 
-    def __init__(self, context, modulename):
+    def __init__(self, context, product_name=None, is_main_installer=1):
+        """CMFInstaller initialization
+
+        product_name should be set as a class attribute when subclassing,
+        but must be passed if you are not subclassing the installer.
+
+        is_main_installer should be se to 0 if this installer is called
+        from another installer to prevent multiple reindexing of catalogs
+        and similar actions that only needs to be done once.
+        """
         self.context = context
         self.portal = context.portal_url.getPortalObject()
-        self.modulename = modulename
         self.messages = []
+        self.is_main_installer = is_main_installer
+        if product_name is not None:
+            self.product_name = product_name
+        if self.product_name is None:
+            raise ValueError('No product name given to installer')
+
+    def finalize(self):
+        """Does all the things that only needs to be done once"""
+        if not self.is_main_installer:
+            return
+        ct = self.portal.portal_catalog
+        changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
+        if changed_indexes:
+            self.log('Reindex Catalog')
+            for name in changed_indexes:
+                ct.reindexIndex(name, self.portal.REQUEST)
 
     #
     # Logging
     #
     def log(self, message):
         self.messages.append(message)
-        LOG(self.modulename, INFO, message)
+        LOG(self.product_name, INFO, message)
 
     def logOK(self):
         self.log(log_ok_message)
@@ -55,12 +80,12 @@ class CMFInstaller:
     def logResult(self):
         return '''<html><head><title>%s</title></head>
             <body><pre>%s</pre></body></html>''' % (
-            self.modulename, self.flush() )
+            self.product_name, self.flush() )
 
     #
     # Other support methods
     #
-    def portalhas(self, id):
+    def portalHas(self, id):
         return id in self.portal.objectIds()
 
     def getTool(self, id):
@@ -162,6 +187,28 @@ class CMFInstaller:
             self.log(" Resetting skin cache")
             self.portal._v_skindata = None
             self.portal.setupCurrentSkin()
+
+    #
+    # Portal_catalog management methods
+    #
+    def addPortalCatalogIndex(self, id, type):
+        """Adds an index on portal_catalog"""
+        self.log(' Portal_catalog indexes: Adding %s %s' % (type, id))
+        ct = self.portal.portal_catalog
+        if id in ct.indexes():
+            if ct._catalog.getIndex(id).meta_type == type:
+                self.logOK()
+                return
+            else:
+                self.log('  Deleting old index')
+                ct.delIndex('uid')
+        ct.addIndex('uid', 'FieldIndex')
+        self.flagIndexForReindex(id)
+
+    def flagIndexForReindex(self, indexid):
+        indexes = getattr(self.portal, '_v_changed_indexes', [])
+        indexes.append(indexid)
+        self.portal._v_changed_indexes = indexes
 
     #
     # Mixed management methods
