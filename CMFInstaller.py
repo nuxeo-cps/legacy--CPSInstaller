@@ -284,7 +284,12 @@ class CMFInstaller:
         if skin_installed:
             all_skins = self.portal.portal_skins.getSkinPaths()
             for skin_name, skin_path in all_skins:
-                if skin_name not in  ['Basic', 'CPSSkins']:
+                # Plone skin names are needed to install
+                # CPSIO skins on a Plone site when exporting a Plone site.
+                if skin_name not in  ['Basic',
+                                      'CPSSkins',
+                                      'Plone Default',
+                                      'Plone Tableless']:
                     continue
                 path = [x.strip() for x in skin_path.split(',')]
                 path = [x for x in path if x not in skins.keys()] # strip all
