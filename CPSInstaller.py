@@ -60,6 +60,50 @@ class CPSInstaller(CMFInstaller):
         self.log(' Done')
         return wf
 
+    def setupWfStates(self, workflow, states):
+        existing_states = workflow.states.objectIds()
+        for stateid, statedef in states.items():
+            if stateid in existing_states:
+                continue
+            self.log('  Adding state %s' % stateid)
+            workflow.states.addState(stateid)
+            state = workflow.states.get(stateid)
+            state.setProperties(title=statedef['title'], transitions=statedef['transitions'])
+            for permission in statedef['permissions'].keys():
+                state.setPermission(permission, 0, statedef['permissions'][permission])
+
+    def setupWfTransitions(self, workflow, transitions):
+        existing_transitions = workflow.transitions.objectIds()
+        for transid, transdef in transitions.items():
+            if transid in existing_transitions:
+                continue
+            self.log('  Adding transition %s' % transid)
+            workflow.transitions.addTransition(transid)
+            trans = workflow.transitions.get(transid)
+            trans.setProperties(**transdef)
+
+    def setupWfScripts(self, workflow, scripts):
+        existing_scripts = workflow.states.objectIds()
+        for scriptid, scriptdef in scripts.items():
+            if scriptid in existing_scripts:
+                continue
+            self.log('  Adding script %s' % scriptid)
+            workflow.scripts._setObject(scriptid, PythonScript(scriptid))
+            script = workflow.scripts[scriptid]
+            script.write(scriptdef['script'])
+            for attribute in ('title', '_proxy_roles', '_owner'):
+                if scriptdef.has_key(attribute):
+                    setattr(script, attribute, scriptdef[attribute])
+
+    def setupWfVariables(self, workflow, variables):
+        existing_vars = workflow.variables.objectIds()
+        for varid, vardef in variables.items():
+            if varid in existing_vars:
+                continue
+            self.log('  Adding variable %s' % scriptid)
+            workflow.variables.addVariable(varid)
+            var = workflow.variables[varid]
+            var.setProperties(**vardef)
 
     def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
@@ -69,46 +113,14 @@ class CPSInstaller(CMFInstaller):
             self.logOK()
             return
 
-        existing_states = wf.states.objectIds()
-        for stateid, statedef in wfstates.items():
-            if stateid in existing_states:
-                continue
-            self.log('  Adding state %s' % stateid)
-            wf.states.addState(stateid)
-            state = wf.states.get(stateid)
-            state.setProperties(title=statedef['title'], transitions=statedef['transitions'])
-            for permission in statedef['permissions'].keys():
-                state.setPermission(permission, 0, statedef['permissions'][permission])
+        self.setupWfStates(wf, wfstates)
+        self.setupWfTransitions(wf, wftransitions)
+        self.setupWfScripts(wf, wfscripts)
+        self.setupWfVariables(wf, wfvariables)
 
-        existing_transitions = wf.transitions.objectIds()
-        for transid, transdef in wftransitions.items():
-            if transid in existing_transitions:
-                continue
-            self.log('  Adding transition %s' % transid)
-            wf.transitions.addTransition(transid)
-            trans = wf.transitions.get(transid)
-            trans.setProperties(**transdef)
-
-        existing_scripts = wf.states.objectIds()
-        for scriptid, scriptdef in wfscripts.items():
-            if scriptid in existing_scripts:
-                continue
-            self.log('  Adding script %s' % scriptid)
-            wf.scripts._setObject(scriptid, PythonScript(scriptid))
-            script = wf.scripts[scriptid]
-            script.write(scriptdef['script'])
-            for attribute in ('title', '_proxy_roles', '_owner'):
-                if scriptdef.has_key(attribute):
-                    setattr(script, attribute, scriptdef[attribute])
-
-        existing_vars = wf.variables.objectIds()
-        for varid, vardef in wfvariables.items():
-            if varid in existing_vars:
-                continue
-            self.log('  Adding variable %s' % scriptid)
-            wf.variables.addVariable(varid)
-            var = wf.variables[varid]
-            var.setProperties(**vardef)
+    #
+    # Internationalization support
+    #
 
     def setupTranslations(self):
         """Import .po files into the Localizer/default Message Catalog."""
