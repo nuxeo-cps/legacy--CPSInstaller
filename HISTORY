@@ -1,4 +1,25 @@
 *******************************************
+** CPSInstaller V0.8.1 [R1 build 2004/06/18-09:15 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- Added constants WORKSPACES_ID and SECTIONS_ID
+  
+Bug fixes:
+~~~~~~~~~~
+- Modifying the verifyFlexibleTypes method so that display_in_cmf_calendar and
+  use_content_status_history instructions are processed after all user actions
+  override the portal type actions. This has the effect of those instructions to
+  not be deleted, which was particularly the case with custom document types.
+
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.8.0 [R1 build 2004/06/14-08:02 by ben]
 
 Requires:
