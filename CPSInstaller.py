@@ -30,6 +30,83 @@ from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):
 
+    #
+    # Workflow methods:
+    #
+
+    # XXX Uh-oh, this is CPS Specific! Should be moved to CPSInstaller.
+
+    def createWorkflow(self, wfdef):
+        wftool = self.portal.portal_workflow
+        wfid = wfdef['wfid']
+
+        self.log('Installing workflow %s' % wfid)
+        if wfid in wftool.objectIds():
+            self.logOK()
+            return
+
+        # Create and set up workflow
+        wftool.manage_addWorkflow(id=wfid,
+                                  workflow_type='cps_workflow (Web-configurable workflow for CPS)')
+
+        wf = wftool[wfid]
+        if wfdef.has_key('permissions'):
+            for p in wfdef['permissions']:
+                wf.addManagedPermission(p)
+
+        if wfdef.has_key('state_var'):
+            wf.variables.setStateVar(wfdef['state_var'])
+
+        self.log(' Done')
+        return wf
+
+
+    def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
+                      wfscripts={}, wfvariables={}):
+        # XXX This method consistently breaks the installer rules as
+        # it does not check for the existance of the object before
+        # creating them.
+        self.log(" Setup workflow %s" % wfdef['wfid'])
+        wf = self.createWorkflow(wfdef)
+        if wf is None:
+            self.logOK()
+            return
+
+        existing_states = wf.states.objectIds('Workflow State')
+        for stateid, statedef in wfstates.items():
+            if stateid in existing_states:
+                continue
+            self.log('  Adding state %s' % stateid)
+            wf.states.addState(stateid)
+            state = wf.states.get(stateid)
+            state.setProperties(title=statedef['title'], transitions=statedef['transitions'])
+            for permission in statedef['permissions'].keys():
+                state.setPermission(permission, 0, statedef['permissions'][permission])
+
+        existing_transitions = wf.states.objectIds('Workflow Transition')
+        for transid, transdef in wftransitions.items():
+            if transid in existing_transitions:
+                continue
+            self.log('  Adding transition %s' % transid)
+            wf.transitions.addTransition(transid)
+            trans = wf.transitions.get(transid)
+            trans.setProperties(**transdef)
+
+        # XXX still breaks...
+        for scriptid, scriptdef in wfscripts.items():
+            wf.scripts._setObject(scriptid, PythonScript(scriptid))
+            script = wf.scripts[scriptid]
+            script.write(scriptdef['script'])
+            for attribute in ('title', '_proxy_roles', '_owner'):
+                if scriptdef.has_key(attribute):
+                    setattr(script, attribute, scriptdef[attribute])
+
+        # XXX still breaks...
+        for varid, vardef in wfvariables.items():
+            wf.variables.addVariable(varid)
+            var = wf.variables[varid]
+            var.setProperties(**vardef)
+
     def setupTranslations(self):
         """Import .po files into the Localizer/default Message Catalog."""
         # Is this CMF or CPS? Hummm...
@@ -65,10 +142,10 @@ class CPSInstaller(CMFInstaller):
         try:
             if not self.portalhas(id):
                 __import__(module)
-                self.logger.log('Adding %s' % title)
+                self.log('Adding %s' % title)
                 script = ExternalMethod(id, title, script, method)
                 self.portal._setObject(id, script)
-            self.logger.log(self.portal[id]())
+            self.log(self.portal[id]())
         except ImportError:
             pass
 
