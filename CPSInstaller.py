@@ -203,7 +203,11 @@ class CPSInstaller(CMFInstaller):
                                     under_sub_add=under_sub_add)
             else:
                 if destructive:
-                    wfc.delChain(portal_type=portal_type)
+                    try:
+                        wfc.delChain(portal_type=portal_type)
+                    except KeyError:
+                        # Here the chain doesn't exist yet
+                        pass
                     wfc.manage_addChain(portal_type=portal_type, chain=chain,
                                         under_sub_add=under_sub_add)
 

@@ -5,8 +5,9 @@ New features:
 ~~~~~~~~~~~~~
 - API to support CPSPortlets.
 Bug fixes:
-~~~~~~~~~~
--
+~~~~~~~~~~ 
+- verifyLocalWorkflowChains() in destructive mode. 
+  Bug if the chain didn't exist. (KeyError)
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 - Adding Plone skins names in CMFInstaller to be able to register
