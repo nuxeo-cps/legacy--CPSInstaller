@@ -287,7 +287,7 @@ class CPSInstaller(CMFInstaller):
         The schema definition is what you get when you go to the 'Export'
         tab of a schema.
         """
-        self.log("Verifiying schemas")
+        self.log("Verifying schemas")
         stool = self.getTool('portal_schemas')
         existing_schemas = stool.objectIds()
         for id, info in schemas.items():
@@ -315,6 +315,7 @@ class CPSInstaller(CMFInstaller):
         The widget definition is what you get when you go to the 'Export'
         tab of a widget.
         """
+        self.log("Verifying widgets")
         wtool = self.portal.portal_widget_types
         existing_widgets = wtool.objectIds()
         for id, info in widgets.items():
@@ -338,6 +339,7 @@ class CPSInstaller(CMFInstaller):
         The layout definition is what you get when you go to the 'Export'
         tab of a layout.
         """
+        self.log("Verifying layouts")
         ltool = self.portal.portal_layouts
         existing_layouts = ltool.objectIds()
         for id, info in layouts.items():
@@ -366,6 +368,7 @@ class CPSInstaller(CMFInstaller):
         The vocabulary definition is what you get when you go to the 'Export'
         tab of a vocabulary.
         """
+        self.log("Verifying vocabularies")
         vtool = self.portal.portal_vocabularies
         existing_vocabularies = vtool.objectIds()
         for id, info in vocabularies.items():
@@ -388,6 +391,7 @@ class CPSInstaller(CMFInstaller):
     #
     def setupTranslations(self, product_name=None, message_catalog='default'):
         """Import .po files into the Localizer/default Message Catalog."""
+        self.log("Setting up translations")
         if product_name is None:
             product_name = self.product_name
         mcat = self.portal.Localizer[message_catalog]
