@@ -182,12 +182,15 @@ class CPSInstaller(CMFInstaller):
                                state_var=wfdef.get('state_var'))
         self.log(' Done')
 
-    def verifyLocalWorkflowChains(self, object, wfchains, destructive=0):
+    def verifyLocalWorkflowChains(self, object, wfchains, destructive=0, 
+                                  under_sub_add=None):
         """Sets up the local workflows on object.
 
         wfchains = {
             '<Portal Type>': '<workflow_id>',
         }
+
+        if under_sub_add is set a Below Workflow Chain is added
         """
         self.log('Verifying local workflow for %s' % object.getId())
         if not '.cps_workflow_configuration' in object.objectIds():
@@ -196,11 +199,13 @@ class CPSInstaller(CMFInstaller):
         wfc = getattr(object, '.cps_workflow_configuration')
         for portal_type, chain in wfchains.items():
             if not wfc.getPlacefulChainFor(portal_type):
-                wfc.manage_addChain(portal_type=portal_type, chain=chain)
+                wfc.manage_addChain(portal_type=portal_type, chain=chain, 
+                                    under_sub_add=under_sub_add)
             else:
                 if destructive:
                     wfc.delChain(portal_type=portal_type)
-                    wfc.manage_addChain(portal_type=portal_type, chain=chain)
+                    wfc.manage_addChain(portal_type=portal_type, chain=chain,
+                                        under_sub_add=under_sub_add)
 
     #
     # Flexible Type installation
