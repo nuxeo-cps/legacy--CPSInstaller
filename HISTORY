@@ -1,4 +1,28 @@
 *******************************************
+** CPSInstaller V0.13.0 [R1 build 2004/10/06-11:48 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- CMFInstaller: getTool now takes a default, and fails if the tool 
+  is not found and no default is specified. This gets rid of 
+  "NoneType has no attribute errors" when a tool is missing, and 
+  instead you get the name of the tool as missing attribute.
+- CMFInstaller: New method verifyActionProvider(), to make sure your 
+  tool is an action_provider.
+- Added support for the new "actions_add" key in FlexibleTypeInformation that
+  unlike the "actions" key does not override the inherited actions that a type
+  may have.
+Bug fixes:
+~~~~~~~~~~
+- Cleaned up some getTool calls.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.12.0 [R1 build 2004/09/15-15:15 by madarche]
 
 Requires:

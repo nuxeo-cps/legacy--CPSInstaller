@@ -3,15 +3,10 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
-- CMFInstaller: getTool now takes a default, and fails if the tool 
-  is not found and no default is specified. This gets rid of 
-  "NoneType has no attribute errors" when a tool is missing, and 
-  instead you get the name of the tool as missing attribute.
-- CMFInstaller: New method verifyActionProvider(), to make sure your 
-  tool is an action_provider.
+-
 Bug fixes:
 ~~~~~~~~~~
-- Cleaned up some getTool calls.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
