@@ -1,4 +1,21 @@
 *******************************************
+** CPSInstaller V0.11.0 [R1 build 2004/08/13-15:30 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- efficient catalog reindexing
+Bug fixes:
+~~~~~~~~~~
+- fix: when adding catalog metadata the catalog is not refresh
+- fix: catalog is always refresh
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.10.0 [R1 build 2004/07/30-10:01 by ben]
 
 Requires:
