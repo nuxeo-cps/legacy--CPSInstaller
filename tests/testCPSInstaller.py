@@ -38,16 +38,21 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
     def testCreateWF(self):
         wfdef = {'wfid': 'test_workflow', }
 
-        wfstates = {'work': {
+        wfstates = {'state1': {
+                     'title': 'State1',
+                     'transitions':('trans1', 'trans3'),
+                     'permissions': {},
+                    },
+                    'state2': {
                      'title': 'Work',
-                     'transitions':('create_content', 'cut_copy_paste'),
+                     'transitions':('trans2',),
                      'permissions': {},
                     },
                 }
 
-        wftransitions = {'create': {
-                         'title': 'Initial creation',
-                         'new_state_id': 'work',
+        wftransitions = {'trans1': {
+                         'title': 'Test transition 1',
+                         'new_state_id': 'state1',
                          'transition_behavior': (TRANSITION_INITIAL_CREATE, ),
                          'actbox_name': '',
                          'actbox_category': 'workflow',
@@ -56,36 +61,22 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
                                    'guard_roles':'Manager; WorkspaceManager; WorkspaceMember; ',
                                    'guard_expr':''},
                         },
-                      'create_content': {
-                         'title': 'Create content',
-                         'new_state_id': 'work',
+                        'trans2': {
+                         'title': 'Test transition 2',
+                         'new_state_id': 'state2',
                          'transition_behavior': (TRANSITION_ALLOWSUB_CREATE,
                                                  TRANSITION_ALLOWSUB_CHECKOUT),
                          'trigger_type': TRIGGER_USER_ACTION,
-                         'actbox_name': 'New',
+                         'actbox_name': 'To State2',
                          'actbox_category': '',
                          'actbox_url': '',
                          'props': {'guard_permissions':'',
                                    'guard_roles':'Manager; WorkspaceManager; WorkspaceMember; ',
                                    'guard_expr':''},
                          },
-                    # create_folder is transition which does nothing?
-                      'create_folder': {
-                         'title': '',
-                         'new_state_id': '',
-                         'transition_behavior': (),
-                         'trigger_type': TRIGGER_USER_ACTION,
-                         'actbox_name': '',
-                         'actbox_category': '',
-                         'actbox_url': '',
-                         'props': {'guard_permissions':'',
-                                   'guard_roles':'',
-                                   'guard_expr':''},
-                         },
-                     # For the cut/copy/paste feature
-                     'cut_copy_paste': {
-                         'title': 'Cut/Copy/Paste',
-                         'new_state_id': 'work',
+                        'trans3': {
+                         'title': 'Test transition 2',
+                         'new_state_id': 'trans1',
                          'transition_behavior': (TRANSITION_ALLOWSUB_DELETE,
                                                  TRANSITION_ALLOWSUB_MOVE,
                                                  TRANSITION_ALLOWSUB_COPY),
@@ -104,12 +95,21 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
         installer = CPSInstaller(self.portal, 'Installer test')
         installer.setupWorkflow(wfdef, wfstates, wftransitions)
         # Check that the workflow was created
-        self.assert_(wfdef['wfid'] in self.portal.portal_workflow.objectIds())
+        wftool = self.portal.portal_workflow
+        self.assert_(wfdef['wfid'] in wftool.objectIds())
+        wf = wftool[wfdef['wfid']]
+        # Check that all the subobjects were created
+        states = wf.states.objectIds()
+        for state in wfstates.keys():
+            self.assert_(state in states)
+        transitions = wf.transitions.objectIds()
+        for transistion in wftransitions.keys():
+            self.assert_(transistion in transitions)
 
-        installer.flush() # Remove the old logs
         installer.setupWorkflow(wfdef, wfstates, wftransitions)
         # Check that the workflow was NOT created
         self.assert_(installer.messages[-1] == ' Already correctly installed')
+
 
 if __name__ == '__main__':
     framework()
