@@ -20,6 +20,7 @@ from Products.CPSCore.CPSWorkflow import \
 from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
 
 from Products.CPSInstaller.CPSInstaller import CPSInstaller
+from Products.CPSInstaller.CMFInstaller import log_ok_message
 
 portal_name = 'test_portal'
 ZopeTestCase.installProduct('CMFCore')
@@ -145,7 +146,7 @@ return "This is a test script"
         installer.setupWorkflow(wfdef, wfstates, wftransitions,
             wfscripts, wfvariables)
         # Check that the workflow was NOT created
-        self.assert_(installer.messages[-1] == ' Already correctly installed')
+        self.assert_(installer.messages[-1] == log_ok_message)
 
 
 if __name__ == '__main__':

@@ -27,6 +27,7 @@ from Products.CMFCore.utils import getToolByName
 
 SECTIONS_ID = 'sections'
 WORKSPACES_ID = 'workspaces'
+log_ok_message = '   Already correctly installed'
 
 class CMFInstaller:
     """Base class for product-specific installers"""
@@ -45,7 +46,7 @@ class CMFInstaller:
         LOG(self.modulename, INFO, message)
 
     def logOK(self):
-        self.log("   Already correctly installed")
+        self.log(log_ok_message)
 
     def flush(self):
         log = '\n'.join(self.messages)
