@@ -64,7 +64,8 @@ class CMFInstaller:
         self.reindexCatalog()
         self.resetSkinCache()
         self.reindexSecurity()
-        delattr(self.portal, '_v_main_installer')
+        if hasattr(self.portal, '_v_main_installer'):
+            delattr(self.portal, '_v_main_installer')
 
     #
     # Methods normally called only at the end of an install.
