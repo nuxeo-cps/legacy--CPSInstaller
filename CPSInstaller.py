@@ -32,6 +32,9 @@ from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):
 
+    WORKSPACES_ID = 'workspaces'
+    SECTIONS_ID = 'sections'
+
     def finalize(self):
         if not self.isMainInstaller():
             return

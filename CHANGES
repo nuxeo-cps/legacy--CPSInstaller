@@ -3,7 +3,8 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- Added constants WORKSPACES_ID and SECTIONS_ID
+  
 Bug fixes:
 ~~~~~~~~~~
 -
