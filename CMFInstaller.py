@@ -1,4 +1,4 @@
-# (C) Copyright 2003 Nuxeo SARL <http://nuxeo.com>
+# (C) Copyright 2003-2005 Nuxeo SARL <http://nuxeo.com>
 # Author: Lennart Regebro <regebro@nuxeo.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,7 @@
 import os
 from types import StringType
 from zLOG import LOG, INFO, DEBUG
+from AccessControl import getSecurityManager, Unauthorized
 from Products.CMFCore.utils import getToolByName, _marker
 from Products.CMFCore.DirectoryView import createDirectoryView
 from Products.ZCTextIndex.ZCTextIndex import manage_addLexicon, ZCTextIndex
@@ -42,6 +43,9 @@ class CMFInstaller:
         from another installer to prevent multiple reindexing of catalogs
         and similar actions that only needs to be done once.
         """
+        if not getSecurityManager().getUser().has_role('Manager'):
+            raise Unauthorized
+
         self.context = context
         self.messages = []
         self.portal = context.portal_url.getPortalObject()
