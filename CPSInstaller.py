@@ -63,9 +63,6 @@ class CPSInstaller(CMFInstaller):
 
     def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
-        # XXX This method consistently breaks the installer rules as
-        # it does not check for the existance of the object before
-        # creating them.
         self.log(" Setup workflow %s" % wfdef['wfid'])
         wf = self.createWorkflow(wfdef)
         if wf is None:
@@ -92,8 +89,11 @@ class CPSInstaller(CMFInstaller):
             trans = wf.transitions.get(transid)
             trans.setProperties(**transdef)
 
-        # XXX still breaks...
+        existing_scripts = wf.states.objectIds('Script (Python)')
         for scriptid, scriptdef in wfscripts.items():
+            if scriptid in existing_scripts:
+                continue
+            self.log('  Adding script %s' % scriptid)
             wf.scripts._setObject(scriptid, PythonScript(scriptid))
             script = wf.scripts[scriptid]
             script.write(scriptdef['script'])
@@ -101,8 +101,11 @@ class CPSInstaller(CMFInstaller):
                 if scriptdef.has_key(attribute):
                     setattr(script, attribute, scriptdef[attribute])
 
-        # XXX still breaks...
+        existing_vars = wf.variables.objectIds('Workflow Variable')
         for varid, vardef in wfvariables.items():
+            if varid in existing_vars:
+                continue
+            self.log('  Adding variable %s' % scriptid)
             wf.variables.addVariable(varid)
             var = wf.variables[varid]
             var.setProperties(**vardef)
