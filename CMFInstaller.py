@@ -22,7 +22,6 @@ from types import StringType
 from zLOG import LOG, INFO, DEBUG
 from Products.CMFCore.utils import getToolByName
 from Products.ZCTextIndex.ZCTextIndex import manage_addLexicon, ZCTextIndex
-from Products.PluginIndexes.TopicIndex.TopicIndex import TopicIndex
 
 SECTIONS_ID = 'sections'
 WORKSPACES_ID = 'workspaces'
