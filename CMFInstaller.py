@@ -272,7 +272,6 @@ class CMFInstaller:
         if id in ct.objectIds():
             self.logOK()
             return
-
         class Struct:
             def __init__(self, **kw):
                 for k, v in kw.items():
@@ -306,13 +305,12 @@ class CMFInstaller:
                 return
             self.log('  Deleting old index')
             ct.delIndex(id)
+        self.log('  Adding index')
         if type == 'ZCTextIndex':
             index = ZCTextIndex(id, extra=extra, caller=ct)
             ct._catalog.addIndex(id, index)
         else:
-            self.log('  Adding index')
             ct.addIndex(id, type, extra)
-
         if type == 'TopicIndex' and extra:
             index = ct._catalog.getIndex(id)
             for filter in extra:
@@ -321,7 +319,6 @@ class CMFInstaller:
                                      filter.expr)
                 self.log('   Adding filterSet %s for TopicIndex %s' %
                          (filter.id, id))
-
         self.flagCatalogForReindex(id)
 
     def addPortalCatalogMetadata(self, id, default_value=None):
