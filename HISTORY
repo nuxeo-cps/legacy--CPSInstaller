@@ -1,4 +1,25 @@
 *******************************************
+** CPSInstaller V0.3.2 [R1 build 2004/03/25-11:41 by ben]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- removeCalendarTypes didn't remove anything.
+- Verifying widgets, schemas, layouts and directories now check isUserModified.
+- If you remove a product but the external method object still existed
+  it would be called, and this would fail, and stop the install.
+  Now the existance of the script is checked before calling, and a warning
+  is printed if it does not exist any longer.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.3.1 [R1 build 2004/03/01-16:11 by regebro]
 
 Requires:

@@ -6,12 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
-- removeCalendarTypes didn't remove anything.
-- Verifying widgets, schemas, layouts and directories now check isUserModified.
-- If you remove a product but the external method object still existed
-  it would be called, and this would fail, and stop the install.
-  Now the existance of the script is checked before calling, and a warning
-  is printed if it does not exist any longer.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
