@@ -17,6 +17,15 @@
 #
 # $Id$
 
+
+import os
+from re import match
+from types import TupleType, ListType
+
+from App.Extensions import getPath
+from Acquisition import aq_base
+from zLOG import LOG, INFO, DEBUG
+
 from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):

@@ -42,10 +42,15 @@ class CMFInstaller:
         self.messages.append(message)
         LOG(self.modulename, INFO, message)
 
-    def flush(self):
-        return '\n'.join(self.messages)
+    def logOK(self):
+        self.log(" Already correctly installed")
 
-    def htmlflush(self):
+    def flush(self):
+        log = '\n'.join(self.messages)
+        self.messages = []
+        return log
+
+    def logResult(self):
         return '''<html><head><title>%s</title></head>
             <body><pre>%s</pre></body></html>''' % (
             self.modulename, self.flush() )
@@ -155,7 +160,7 @@ class CMFInstaller:
                 dv = self.portal.portal_skins[skin]
                 oldpath = dv.getDirPath()
                 if oldpath == path:
-                    self.log(" Already correctly installed")
+                    self.logOK()
                 else:
                     self.log("  Incorrectly installed, correcting path")
                     dv.manage_properties(dirpath=path)
