@@ -34,6 +34,15 @@ ZopeTestCase.installProduct('CPSDocument')
 class TestCPSInstaller(ZopeTestCase.PortalTestCase):
     """Tests the methods to support CPS installations"""
 
+    def afterSetUp(self):
+        try:
+            self.login('manager')
+        except AttributeError:
+            # CMF
+            uf = self.portal.acl_users
+            uf._doAddUser('manager', '', ['Manager'], [])
+            self.login('manager')
+
     def getPortal(self):
         if not hasattr(self.app, portal_name):
             manage_addCMFSite(self.app, portal_name)
