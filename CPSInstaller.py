@@ -246,6 +246,7 @@ class CPSInstaller(CMFInstaller):
                     'name': 'action_status_history',
                     'action': 'content_status_history',
                     'permission': ('View',),
+                    'condition': 'not:portal/portal_membership/isAnonymousUser',
                     'category': 'workflow',
                     })
                 del data['use_content_status_history']
