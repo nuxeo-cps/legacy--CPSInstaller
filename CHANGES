@@ -13,7 +13,7 @@ New features:
 - verifyDirectories method to set up directories.
 - Changed the Schema methods from addXxxx to verifyXxxx.
 - Changed the Workflow methods from setupXxxx to verifyXxxx.
-
+- New method verifyEventSubsribers.
 Bug fixes:
 ~~~~~~~~~~
 - Fixed a bug in the local workflow setup.
