@@ -6,7 +6,9 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- The installer now does a deep check on every object that makes up
+  a workflow, to see if it isUserModified() before deleting it and
+  recreating it.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
