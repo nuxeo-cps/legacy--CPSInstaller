@@ -59,6 +59,15 @@ class CMFInstaller:
             self.modulename, self.flush() )
 
     #
+    # Other support methods
+    #
+    def portalhas(self, id):
+        return id in self.portal.objectIds()
+
+    def getTool(self, id):
+        return getToolByName(self.portal, id, None)
+
+    #
     # Methods to setup and manage actions
     #
     def hasAction(self, tool, actionid):
@@ -117,11 +126,11 @@ class CMFInstaller:
     def verifySkins(self, skins):
         """Install or update skins.
 
-        <skins> parameter is a sequence of (<skin_name>, <skin_path>)."""
+        <skins> parameter is a dictionary of {<skin_name>: <skin_path>),}"""
 
         self.log("Verifying skins")
         skin_installed = 0
-        for skin, path in skins:
+        for skin, path in skins.items():
             path = path.replace('/', os.sep)
             self.log(" FS Directory View '%s'" % skin)
             if skin in self.portal.portal_skins.objectIds():
@@ -159,9 +168,6 @@ class CMFInstaller:
     # Mixed management methods
     #
 
-    def portalhas(self, id):
-        return id in self.portal.objectIds()
-
     def addRoles(self, roles):
         already = self.portal.valid_roles()
         for role in roles:
@@ -175,11 +181,17 @@ class CMFInstaller:
             return
 
         current_types = ctool.calendar_types
-        print current_types
-        print type_ids
         for tid in type_ids:
             if tid not in current_types:
                 self.log(' Calendar type %s added' % tid)
                 current_types.append(tid)
         ctool.calendar_types = current_types
+
+    def addTool(self, toolid, product, meta_type):
+        self.log('Creating %s' % toolid)
+        if self.portalhas(toolid):
+            self.logOK()
+        else:
+            self.portal.manage_addProduct[product].manage_addTool(meta_type)
+
 
