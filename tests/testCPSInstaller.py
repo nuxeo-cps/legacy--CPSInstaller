@@ -28,7 +28,7 @@ ZopeTestCase.installProduct('MailHost')
 ZopeTestCase.installProduct('CPSCore')
 
 class TestCPSInstaller(ZopeTestCase.PortalTestCase):
-    """Tests the methods to support CMF installations"""
+    """Tests the methods to support CPS installations"""
 
     def getPortal(self):
         if not hasattr(self.app, portal_name):
@@ -91,9 +91,39 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
                      },
                  }
 
+        wfscripts = {'test_sccripts': {
+                        '_owner': None,
+                        'script': """\
+##parameters=state_change
+return "This is a test script"
+"""
+                        },
+                    }
+
+        wfvariables = { 'var1': {
+                            'description': 'Variable 1',
+                            'default_expr': 'transition/getId|nothing',
+                            'for_status': 1,
+                            'update_always': 1,
+                            },
+                        'var2': {
+                            'description': 'Variable 2',
+                           'default_expr': 'user/getId',
+                           'for_status': 1,
+                           'update_always': 1
+                           },
+                        'var3': {
+                            'description': 'Variable 3',
+                            'default_expr': "python:state_change.kwargs."
+                                            "get('comment', '')",
+                            'for_status': 1,
+                            'update_always': 1
+                            },
+                        }
 
         installer = CPSInstaller(self.portal, 'Installer test')
-        installer.setupWorkflow(wfdef, wfstates, wftransitions)
+        installer.setupWorkflow(wfdef, wfstates, wftransitions,
+            wfscripts, wfvariables)
         # Check that the workflow was created
         wftool = self.portal.portal_workflow
         self.assert_(wfdef['wfid'] in wftool.objectIds())
@@ -105,11 +135,19 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
         transitions = wf.transitions.objectIds()
         for transistion in wftransitions.keys():
             self.assert_(transistion in transitions)
+        scripts = wf.scripts.objectIds()
+        for script in wfscripts.keys():
+            self.assert_(script in scripts)
+        variables = wf.variables.objectIds()
+        for variable in wfvariables.keys():
+            self.assert_(variable in variables)
 
-        installer.setupWorkflow(wfdef, wfstates, wftransitions)
+        installer.setupWorkflow(wfdef, wfstates, wftransitions,
+            wfscripts, wfvariables)
         # Check that the workflow was NOT created
         self.assert_(installer.messages[-1] == ' Already correctly installed')
 
+        print installer.flush()
 
 if __name__ == '__main__':
     framework()
