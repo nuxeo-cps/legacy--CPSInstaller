@@ -8,9 +8,12 @@ New features:
 - Verifying of FlexibleTypes will now upgrade FactoryBased types, and
   set up actions, if defined.
 - Changes in local workflow setup are not overridden.
+- addTreeCacheTypes now takes lists for types and meta_types.
+
 Bug fixes:
 ~~~~~~~~~~
-- Fixed a bug in the local workflow setup
+- Fixed a bug in the local workflow setup.
+- Various bugfixes.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

@@ -49,7 +49,6 @@ class CMFInstaller:
         if not hasattr(self.portal, '_v_main_installer'):
             self.log('Main installer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             self.portal._v_main_installer = self
-        self.is_main_installer = is_main_installer
         if product_name is not None:
             self.product_name = product_name
         if self.product_name is None:
@@ -63,13 +62,15 @@ class CMFInstaller:
         return 0
 
     def finalize(self):
-        self._cmf_finalize()
+        if self.isMainInstaller():
+            self._cmf_finalize()
 
     def _cmf_finalize(self):
         """Does all the things that only needs to be done once"""
         self.reindexCatalog()
         self.resetSkinCache()
         self.reindexSecurity()
+        delattr(self.portal, '_v_main_installer')
 
     #
     # Methods normally called only at the end of an install.
@@ -77,7 +78,6 @@ class CMFInstaller:
     #
     def reindexCatalog(self):
         # Reindex portal_catalog
-        delattr(self.portal, '_v_main_installer')
         reindex_catalog = getattr(self.portal, '_v_reindex_catalog', 0)
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
         if reindex_catalog or len(changed_indexes) > 1:

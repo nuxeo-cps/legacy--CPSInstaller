@@ -35,8 +35,8 @@ class CPSInstaller(CMFInstaller):
     def finalize(self):
         if not self.isMainInstaller():
             return
-        self._cmf_finalize()
         self._cps_finalize()
+        self._cmf_finalize()
 
     def _cps_finalize(self):
         changed_trees = getattr(self.portal, '_v_changed_tree_caches', [])
@@ -345,19 +345,17 @@ class CPSInstaller(CMFInstaller):
     # Portal_trees
     #
 
-    def addTreeCacheType(self, treename, type_name, meta_type):
-        self.log('Verifying %s type in %s tree cache' % (type_name, treename))
-        trtool = self.portal.portal_trees
-        WTN = list(trtool[treename].type_names)
-        if type_name not in WTN:
-            WTN.append(type_name)
-            trtool[treename].type_names = WTN
-            self.flagRebuildTreeCache(treename)
-        WMT = list(trtool[treename].meta_types)
-        if meta_type not in WMT:
-            WMT.append(type_name)
-            trtool[treename].meta_types = WMT
-            self.flagRebuildTreeCache(treename)
+    def addTreeCacheTypes(self, treename, type_names=(), meta_types=()):
+        self.log('Verifying %s type(s) in %s tree cache' % (str(type_names), treename))
+        tree = self.portal.portal_trees[treename]
+        old_type_names = list(tree.type_names)
+        old_meta_types = list(tree.meta_types)
+        tree.manage_changeProperties(
+            type_names=old_type_names + list(type_names),
+            meta_types=old_meta_types + list(meta_types))
+        if old_type_names != tree.type_names or \
+           old_meta_types != tree.meta_types:
+                self.flagRebuildTreeCache(treename)
 
     def flagRebuildTreeCache(self, treename):
         trees = getattr(self.portal, '_v_changed_tree_caches', [])
