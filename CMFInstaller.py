@@ -313,7 +313,10 @@ class CMFInstaller:
                 add_meta_type=typeinfo['add_meta_type'],
                 typeinfo_name=typeinfo['typeinfo_name'],
                 )
-            self.allowContentTypes(typeinfo['allowed_content_types'], ptype)
+            if typeinfo.has_key('properties'):
+                ttool[ptype].manage_changeProperties(typeinfo['properties'])
+
+            self.allowContentTypes(typeinfo.get('allowed_content_types', ()), ptype)
 
     #
     # Access control management methods

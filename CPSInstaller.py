@@ -204,12 +204,14 @@ class CPSInstaller(CMFInstaller):
     def runExternalUpdater(self, id, title, module, script, method):
         try:
             if not self.portalHas(id):
-                __import__(module)
+                __import__('Products.' + module)
                 self.log('Adding %s' % title)
-                script = ExternalMethod(id, title, script, method)
+                script = ExternalMethod(id, title, '%s.%s' % (module, script), method)
                 self.portal._setObject(id, script)
             self.log(self.portal[id]())
         except ImportError:
+            self.log('WARNING: Product %s could not be imported!'
+                     ' Installer was not called.' % module)
             pass
 
     #
@@ -411,15 +413,16 @@ class CPSInstaller(CMFInstaller):
     def verifyBoxContainer(self, object=None):
         if object is None:
             object = self.portal
-        idbc = self.portal.portal_boxes.getBoxContainerId(portal)
+        idbc = self.portal.portal_boxes.getBoxContainerId(object)
         self.log("Verifying box container /%s" % idbc )
         if not hasattr(object,idbc):
-            pr("   Creating")
-            portal.manage_addProduct['CPSDefault'].addBoxContainer()
+            self.log("   Creating")
+            object.manage_addProduct['CPSDefault'].addBoxContainer()
 
     def verifyBoxes(self, boxes, object=None):
         if object is None:
             object = self.portal
+        self.verifyBoxContainer(object)
         self.log('Verifying boxes on %s' % object.getId())
         ttool = self.getTool('portal_types')
         idbc = self.portal.portal_boxes.getBoxContainerId(self.portal)
