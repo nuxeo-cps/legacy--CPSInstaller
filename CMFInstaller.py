@@ -78,6 +78,12 @@ class CMFInstaller:
             self.addAction(**a)
 
     def hideActions(self, actions):
+        # XXX This breaks the installer rules, as it does not check
+        # if it already has been done. A sysadmin may therefore
+        # "unhide" an action, only for it to get hidden next time
+        # the script is run.
+        # An install tool could keep track of whih installs have
+        # been run, and this method could check there.
         for tool, actionids in actions.items():
             actions = list(self.portal[tool]._actions)
             for ac in actions:
@@ -89,6 +95,8 @@ class CMFInstaller:
             self.portal[tool]._actions = actions
 
     def deleteActions(self, actions):
+        # XXX This breaks the installer rules. See comment
+        # for hideActions().
         for tool, actionids in actions.items():
             actions = list(self.portal[tool]._actions)
             for ac in actions:
@@ -198,6 +206,8 @@ class CMFInstaller:
         wftool = self.portal.portal_workflow
         wfid = wfdef['wfid']
 
+        # XXX This breaks the installer rules as it unconditionally
+        # deletes an object and reinstalls it.
         if wfid in wftool.objectIds():
             wftool.manage_delObjects([wfid])
         wftool.manage_addWorkflow(id=wfid,
@@ -216,6 +226,9 @@ class CMFInstaller:
 
     def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
+        # XXX This method consistently breaks the installer rules as
+        # it does not check for the existance of the object before
+        # creating them.
         self.log(" Setup workflow %s" % wfdef['wfid'])
         wf = self.createWorkflow(wfdef)
 
