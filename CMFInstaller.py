@@ -182,7 +182,7 @@ class CMFInstaller:
                     dv.manage_properties(dirpath=path)
             else:
                 skin_installed = 1
-                self.portal.portal_skins.manage_addProduct['CMFCore'].manage_addDirectoryView(filepath=path, id=skin)
+                #self.portal.portal_skins.manage_addProduct['CMFCore'].manage_addDirectoryView(filepath=path, id=skin)
                 self.log("  Creating skin")
 
         if skin_installed:
@@ -193,7 +193,7 @@ class CMFInstaller:
                 path = [x.strip() for x in skin_path.split(',')]
                 path = [x for x in path if x not in skins] # strip all
                 if path and path[0] == 'custom':
-                    path = path[:1] + [skin[0] for skin in skins] + path[1:]
+                    path = path[:1] + [skin for skin in skins] + path[1:]
                 else:
                     path = [skin[0] for skin in skins] + path
                 npath = ', '.join(path)
