@@ -673,11 +673,12 @@ class CPSInstaller(CMFInstaller):
         return self.getPortletContainer(object, create=1)
 
     def verifyPortlets(self, portlets, object=None):
-        """Verify the existence of given portet in the object's portlet container.
-        If not found, a portlet is instantied. Existing portlets are not affected.
+        """Verify the existence of given portet in the object's portlet
+        container. If not found, a portlet is instantiated.
+        Existing portlets are not affected.
 
-        portlets is a dictionary with keys begins the box ids, and values being
-        the dictionary given by the export tab.
+        'portlets' is a dictionary with keys begins the box ids,
+        and values being the dictionary given by the export tab.
         The default object is the portal itself.
 
         return the list a new portlet ids.
@@ -693,9 +694,10 @@ class CPSInstaller(CMFInstaller):
         ttool = self.getTool('portal_types')
 
         returned = []
-        for new_portlet in portlets:
+        for key, new_portlet in portlets.items():
             existing_portlets = portlet_container.listPortlets()
             updated = 0
+
             # Check if the portlet needs an update
             identifier = new_portlet.get('identifier')
             if identifier:
