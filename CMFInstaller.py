@@ -220,11 +220,11 @@ class CMFInstaller:
                 if skin_name != 'Basic':
                     continue
                 path = [x.strip() for x in skin_path.split(',')]
-                path = [x for x in path if x not in skins] # strip all
+                path = [x for x in path if x not in skins.keys()] # strip all
                 if path and path[0] == 'custom':
-                    path = path[:1] + [skin for skin in skins] + path[1:]
+                    path = path[:1] + [skin for skin in skins.keys()] + path[1:]
                 else:
-                    path = [skin[0] for skin in skins] + path
+                    path = [skin[0] for skin in skins.keys()] + path
                 npath = ', '.join(path)
                 self.portal.portal_skins.addSkinSelection(skin_name, npath)
                 self.log(" Fixup of skin %s" % skin_name)
