@@ -503,7 +503,7 @@ class CPSInstaller(CMFInstaller):
         self.log('Verifying boxes on %s' % object.absolute_url(relative=1))
         ttool = self.getTool('portal_types')
         idbc = self.portal.portal_boxes.getBoxContainerId(object)
-        box_container = object[idbc]
+        box_container = getattr(object, idbc)
         existing_boxes = box_container.objectIds()
         for box in boxes.keys():
             if box in existing_boxes:
