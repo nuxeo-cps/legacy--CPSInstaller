@@ -61,7 +61,8 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
                          'actbox_category': 'workflow',
                          'actbox_url': '',
                          'props': {'guard_permissions':'',
-                                   'guard_roles':'Manager; WorkspaceManager; WorkspaceMember; ',
+                                   'guard_roles':'Manager; WorkspaceManager; '
+                                                 'WorkspaceMember; ',
                                    'guard_expr':''},
                         },
                         'trans2': {
@@ -74,7 +75,8 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
                          'actbox_category': '',
                          'actbox_url': '',
                          'props': {'guard_permissions':'',
-                                   'guard_roles':'Manager; WorkspaceManager; WorkspaceMember; ',
+                                   'guard_roles':'Manager; WorkspaceManager; '
+                                                 'WorkspaceMember; ',
                                    'guard_expr':''},
                          },
                         'trans3': {
@@ -89,7 +91,8 @@ class TestCPSInstaller(ZopeTestCase.PortalTestCase):
                          'actbox_category': '',
                          'actbox_url': '',
                          'props': {'guard_permissions':'',
-                                   'guard_roles':'Manager; WorkspaceManager; WorkspaceMember; ',
+                                   'guard_roles':'Manager; WorkspaceManager; '
+                                                 'WorkspaceMember; ',
                                    'guard_expr':''},
                      },
                  }
@@ -193,7 +196,6 @@ return "This is a test script"
             }
         }
 
-        products = self.portal.manage_addProduct
         # Try to create a portal_calendar tool.
         # ProductDispatcher does not implement get() or has_key(),
         # therefor we just try to install and catch the error if

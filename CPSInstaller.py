@@ -33,10 +33,10 @@ class CPSInstaller(CMFInstaller):
     def finalize(self):
         if not self.isMainInstaller():
             return
-        self._cps_finalize()
-        self._cmf_finalize()
+        self._CPSFinalize()
+        self._CMFFinalize()
 
-    def _cps_finalize(self):
+    def _CPSFinalize(self):
         changed_trees = getattr(self.portal, '_v_changed_tree_caches', [])
         if changed_trees:
             self.log('Rebuilding Tree cache')
@@ -68,7 +68,7 @@ class CPSInstaller(CMFInstaller):
 
         # Create and set up workflow
         wftool.manage_addWorkflow(id=wfid,
-                                  workflow_type='cps_workflow (Web-configurable workflow for CPS)')
+            workflow_type='cps_workflow (Web-configurable workflow for CPS)')
 
         wf = wftool[wfid]
         if wfdef.has_key('permissions'):
@@ -88,10 +88,11 @@ class CPSInstaller(CMFInstaller):
             self.log(' Adding state %s' % stateid)
             workflow.states.addState(stateid)
             state = workflow.states.get(stateid)
-            state.setProperties(title=statedef['title'], 
+            state.setProperties(title=statedef['title'],
                                 transitions=statedef['transitions'])
             for permission in statedef['permissions'].keys():
-                state.setPermission(permission, 0, statedef['permissions'][permission])
+                state.setPermission(permission, 0,
+                                    statedef['permissions'][permission])
 
     def verifyWfTransitions(self, workflow, transitions):
         existing_transitions = workflow.transitions.objectIds()
@@ -203,7 +204,8 @@ class CPSInstaller(CMFInstaller):
             if not self.portalHas(id):
                 __import__('Products.' + module)
                 self.log('Adding %s' % title)
-                script = ExternalMethod(id, title, '%s.%s' % (module, script), method)
+                script = ExternalMethod(id, title, '%s.%s' % (module, script),
+                                        method)
                 self.portal._setObject(id, script)
             result = self.portal[id]()
             if result:
@@ -326,10 +328,12 @@ class CPSInstaller(CMFInstaller):
                     if lang in avail_langs:
                         lang_po_path = os.path.join(popath, file)
                         lang_file = open(lang_po_path)
-                        self.log("    Importing %s into '%s' locale" % (file, lang))
+                        self.log("    Importing %s into '%s' locale" % (file,
+                                                                        lang))
                         mcat.manage_import(lang, lang_file)
                     else:
-                        self.log('    Skipping not installed locale for file %s' % file)
+                        self.log('    Skipping not installed locale '
+                                 'for file %s' % file)
 
 #     # XXX  Here is an alternative wasy of doing this import
 #     # I don't know which is best /regebro
@@ -338,13 +342,13 @@ class CPSInstaller(CMFInstaller):
 #     Localizer = portal['Localizer']
 #     defaultCatalog = Localizer.default
 #     languages = Localizer.get_supported_languages()
-# 
+#
 #     # computing po files' system directory
 #     CPSDefault_path = sys.modules['Products.CPSDefault'].__path__[0]
 #     i18n_path = os.path.join(CPSDefault_path, 'i18n')
 #     pr("   po files are searched in %s" % i18n_path)
 #     pr("   po files for %s are expected" % str(languages))
-# 
+#
 #     # loading po files
 #     for lang in languages:
 #         po_filename = lang + '.po'

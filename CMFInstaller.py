@@ -30,7 +30,7 @@ class CMFInstaller:
     """Base class for product-specific installers"""
     product_name = None
 
-    def __init__(self, context, product_name=None, is_main_installer=1):
+    def __init__(self, context, product_name=None):
         """CMFInstaller initialization
 
         product_name should be set as a class attribute when subclassing,
@@ -53,13 +53,13 @@ class CMFInstaller:
     def isMainInstaller(self):
         if getattr(self.portal, '_v_main_installer', 1) is self:
             return 1
-        return 0
+        return 0.
 
     def finalize(self):
         if self.isMainInstaller():
-            self._cmf_finalize()
+            self._CMFFinalize()
 
-    def _cmf_finalize(self):
+    def _CMFFinalize(self):
         """Does all the things that only needs to be done once"""
         self.reindexCatalog()
         self.resetSkinCache()
@@ -205,7 +205,8 @@ class CMFInstaller:
                     dv.manage_properties(dirpath=path)
             else:
                 skin_installed = 1
-                self.portal.portal_skins.manage_addProduct['CMFCore'].manage_addDirectoryView(filepath=path, id=skin)
+                product = self.portal.portal_skins.manage_addProduct['CMFCore']
+                product.manage_addDirectoryView(filepath=path, id=skin)
                 self.log("  Creating skin")
 
         if skin_installed:
