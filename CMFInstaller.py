@@ -475,3 +475,15 @@ class CMFInstaller:
             self.portal.manage_delObjects([toolid])
         self.log(' Adding')
         self.portal.manage_addProduct[product].manage_addTool(meta_type)
+
+    def verifyVHM(self):
+        """
+        Verify that a Virtual Host Monster exist at root of Zope.
+        That's not necessary, but admin friendly.
+        """
+        root = self.portal.getPhysicalRoot()
+        if root.objectValues('Virtual Host Monster') == []:
+            root.manage_addProduct['SiteAccess'].manage_addVirtualHostMonster(id='VirtualHostMonster')
+            self.log("Virtual Host Monster created")
+        else:
+            self.log("Virtual Host Monster found ")
