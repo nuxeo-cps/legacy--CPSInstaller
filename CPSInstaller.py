@@ -21,6 +21,7 @@
 import os
 from re import match
 from types import TupleType, ListType
+from ConfigParser import ConfigParser, NoOptionError, NoSectionError
 
 from App.Extensions import getPath
 from Acquisition import aq_base
@@ -562,6 +563,22 @@ class CPSInstaller(CMFInstaller):
                     res = dir.addEntryLocalRole(role, expr)
                     if res:
                         raise ValueError(res)
+            if info.has_key('dataFromConfigFile'):
+                # you can use dataFromConfigFile to set ldap pwd ex:
+                # in your getCustomDirectories:
+                #   'dataFromConfigFile': {
+                #       'filename': 'ldap.conf',
+                #       'section': 'default',
+                #       },
+                # in your zope instance/etc/ldap.conf
+                # [default]
+                # ldap_server=dev2
+                # ldap_port=10389
+                # ldap_bind_dn=cn=Manager,o=gouv,c=fr
+                # ldap_bind_password=foobar
+                confdata = self.loadConfigurationFile(
+                    **info['dataFromConfigFile'])
+                info['data'].update(confdata)
             dir.manage_changeProperties(**info['data'])
 
     def verifyEventSubscribers(self, subscribers):
@@ -575,3 +592,27 @@ class CPSInstaller(CMFInstaller):
                 continue
             self.log(" Adding")
             self.portal.portal_eventservice.manage_addSubscriber(**subscriber)
+
+    def loadConfigurationFile(self, filename, section='default', default={}):
+        # load a configuration file in INSTANCE_HOME/etc
+        filename = os.path.join(INSTANCE_HOME, 'etc/' + filename)
+        self.log('     loadConfigurationFile: %s' % filename)
+        try:
+            fh = open(filename, 'r')
+        except IOError:
+            self.log('loadConfigurationFile: ERROR file %s not found' %
+                     filename)
+            return default
+        parser = ConfigParser()
+        parser.readfp(fh)
+        fh.close()
+        try:
+            options = parser.options(section)
+        except NoSectionError:
+            self.log("loadConfigurationFile: ERROR file %s "
+                     "don't have [%s] section" % (filename, section))
+            return default
+        kw = {}
+        for option in options:
+            kw[option] = parser.get(section, option)
+        return kw
