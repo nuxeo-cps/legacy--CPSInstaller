@@ -23,13 +23,13 @@ if not 'SOFTWARE_HOME' in os.environ.keys():
             break
         curdir, ignore = os.path.split(curdir)
 
-if zope_home:
-    zope_home = os.path.join(zope_home, 'lib', 'python')
-    print "Setting SOFTWARE_HOME to", zope_home
-    os.environ['SOFTWARE_HOME'] = zope_home
-else:
-    print "SOFTWARE_HOME not set, and can not be found."
-    sys.exit(-1)
+    if zope_home:
+        zope_home = os.path.join(zope_home, 'lib', 'python')
+        print "Setting SOFTWARE_HOME to", zope_home
+        os.environ['SOFTWARE_HOME'] = zope_home
+    else:
+        print "SOFTWARE_HOME not set, and can not be found."
+        sys.exit(-1)
 
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
