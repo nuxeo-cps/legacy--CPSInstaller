@@ -1,4 +1,22 @@
 *******************************************
+** CPSInstaller V0.3.3 [R1 build 2004/04/09-13:27 by ben]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- The installer now does a deep check on every object that makes up
+  a workflow, to see if it isUserModified() before deleting it and
+  recreating it.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.3.2 [R1 build 2004/03/25-11:41 by ben]
 
 Requires:
