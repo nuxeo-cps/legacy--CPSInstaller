@@ -27,6 +27,7 @@ ZopeTestCase.installProduct('CMFCore')
 ZopeTestCase.installProduct('CMFDefault')
 ZopeTestCase.installProduct('MailHost')
 ZopeTestCase.installProduct('CPSCore')
+ZopeTestCase.installProduct('CPSDocument')
 
 class TestCPSInstaller(ZopeTestCase.PortalTestCase):
     """Tests the methods to support CPS installations"""
@@ -147,6 +148,58 @@ return "This is a test script"
             wfscripts, wfvariables)
         # Check that the workflow was NOT created
         self.assert_(installer.messages[-1] == log_ok_message)
+
+    def testFlexTypes(self):
+        types = {
+            'FlexibleType': {
+                'title': 'portal_type_Flexible_title',
+                'description': 'portal_type_Flexible_description',
+                'content_icon': 'flexible_icon.gif',
+                'content_meta_type': 'CPS Document',
+                'product': 'CPSDocument',
+                'factory': 'addCPSDocument',
+                'immediate_view': 'cpsdocument_edit_form',
+                'global_allow': 1,
+                'filter_content_types': 1,
+                'allowed_content_types': (),
+                'allow_discussion': 0,
+                'cps_is_searchable': 1,
+                'cps_proxy_type': 'document',
+                'schemas': ['metadata', 'common', 'flexible_content'],
+                'layouts': ['common', 'flexible_content'],
+                'flexible_layouts': ['flexible_content:flexible_content'],
+                'storage_methods': [],
+            },
+            'IsInCalendarType': {
+                'title': 'portal_type_Event_title',
+                'description': 'portal_type_Event_description',
+                'content_icon': 'event_icon.gif',
+                'content_meta_type': 'CPS Document',
+                'product': 'CPSDocument',
+                'factory': 'addCPSDocument',
+                'immediate_view': 'cpsdocument_view',
+                'global_allow': 1,
+                'filter_content_types': 1,
+                'allowed_content_types': (),
+                'allow_discussion': 0,
+                'cps_is_searchable': 1,
+                'cps_proxy_type': 'document',
+                'schemas': ['metadata', 'common', 'event'],
+                'layouts': ['common', 'event'],
+                'flexible_layouts': [],
+                'storage_methods': [],
+                'display_in_cmf_calendar': 1,
+            }
+        }
+
+        installer = CPSInstaller(self.portal, 'Installer test')
+        installer.addFlexibleTypes(types)
+        self.assert_(hasattr(self.portal.portal_types, 'FlexibleType'))
+        self.assert_(hasattr(self.portal.portal_types, 'IsInCalendarType'))
+        # Need to install portal_calendar tool first in this test
+        #self.assert_('IsInCalendarType' in \
+        #    self.portal.portal_calendar.calendar_types)
+
 
 
 if __name__ == '__main__':
