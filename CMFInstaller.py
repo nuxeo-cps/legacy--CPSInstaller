@@ -55,12 +55,20 @@ class CMFInstaller:
         """Does all the things that only needs to be done once"""
         if not self.is_main_installer:
             return
+
+        # Reindex portal_catalog
         ct = self.portal.portal_catalog
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
         if changed_indexes:
             self.log('Reindex Catalog')
             for name in changed_indexes:
                 ct.reindexIndex(name, self.portal.REQUEST)
+
+        # Reset skins cache
+        if getattr(self.portal, '_v_reset_skins', 0):
+            self.log("Resetting skin cache")
+            self.portal._v_skindata = None
+            self.portal.setupCurrentSkin()
 
     #
     # Logging
@@ -184,9 +192,10 @@ class CMFInstaller:
                 npath = ', '.join(path)
                 self.portal.portal_skins.addSkinSelection(skin_name, npath)
                 self.log(" Fixup of skin %s" % skin_name)
-            self.log(" Resetting skin cache")
-            self.portal._v_skindata = None
-            self.portal.setupCurrentSkin()
+            self.flagSkinCacheReset()
+
+    def flagSkinCacheReset(self):
+        self.portal._v_reset_skins = 1
 
     #
     # Portal_catalog management methods
