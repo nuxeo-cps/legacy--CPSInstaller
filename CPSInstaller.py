@@ -376,6 +376,37 @@ class CPSInstaller(CMFInstaller):
             trees.append(treename)
             self.portal._v_changed_tree_caches = trees
 
+    #
+    # Boxes
+    #
+
+    def verifyBoxContainer(self, object=None):
+        if object is None:
+            object = self.portal
+        idbc = self.portal.portal_boxes.getBoxContainerId(portal)
+        self.log("Verifying box container /%s" % idbc )
+        if not hasattr(object,idbc):
+            pr("   Creating")
+            portal.manage_addProduct['CPSDefault'].addBoxContainer()
+
+    def verifyBoxes(self, boxes, object=None):
+        if object is None:
+            object = self.portal
+        self.log('Verifying boxes on %s' % object.getId())
+        ttool = self.getTool('portal_types')
+        idbc = self.portal.portal_boxes.getBoxContainerId(self.portal)
+        box_container = object[idbc]
+        existing_boxes = box_container.objectIds()
+        for box in boxes.keys():
+            if box in existing_boxes:
+                continue
+            self.log("   Creation of box: %s" % box)
+            apply(ttool.constructContent,
+                (boxes[box]['type'], box_container,
+                box, None), {})
+            ob = getattr(box_container, box)
+            ob.manage_changeProperties(**boxes[box])
+
 
     #
     # Misc stuff

@@ -27,7 +27,7 @@ from Products.CMFCore.utils import getToolByName
 
 SECTIONS_ID = 'sections'
 WORKSPACES_ID = 'workspaces'
-log_ok_message = '   Already correctly installed'
+log_ok_message = '...Already correctly installed'
 
 class CMFInstaller:
     """Base class for product-specific installers"""
@@ -110,7 +110,8 @@ class CMFInstaller:
         LOG(self.product_name, INFO, message)
 
     def logOK(self):
-        self.log(log_ok_message)
+        self.messages[-1] = self.messages[-1] + log_ok_message
+        #self.log(log_ok_message)
 
     def flush(self):
         log = '\n'.join(self.messages)
@@ -143,7 +144,7 @@ class CMFInstaller:
                 return 1
         return 0
 
-    def addAction(self, tool, **kw):
+    def verifyAction(self, tool, **kw):
         result = ' Verifying action %s...' % kw['id']
         if self.hasAction(tool, kw['id']):
             result += 'exists.'
@@ -154,7 +155,7 @@ class CMFInstaller:
 
     def verifyActions(self, actionslist):
         for a in actionslist:
-            self.addAction(**a)
+            self.verifyAction(**a)
 
     def hideActions(self, actions):
         # XXX This breaks the installer rules, as it does not check
