@@ -257,9 +257,11 @@ class CPSInstaller(CMFInstaller):
     # Internationalization support
     #
 
-    def setupTranslations(self, product_name):
+    def setupTranslations(self, product_name=None, message_catalog='default'):
         """Import .po files into the Localizer/default Message Catalog."""
-        mcat = self.portal.Localizer.default
+        if product_name is None:
+            product_name = self.product_name
+        mcat = self.portal.Localizer[message_catalog]
         self.log(" Checking available languages")
         podir = os.path.join('Products', product_name)
         popath = getPath(podir, 'i18n')
