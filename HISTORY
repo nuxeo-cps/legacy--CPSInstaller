@@ -1,4 +1,22 @@
 *******************************************
+** CPSInstaller V0.15.0 [R1 build 2005/01/20-11:35 by ben]
+
+Requires:
+~~~~~~~~~
+- CPSWokflow
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- Workflow state property 'workflow_reset_on_workflow_variable' was not taken
+  into account by CPSInstaller.
+- #460: Ensured only a Manager can instanciate an installer.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.14.1 [R1 build 2004/12/13-08:23 by madarche]
 
 Requires:
