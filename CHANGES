@@ -3,10 +3,16 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- Checks that the local workflow definition object exists before modifying it.
+- New method flagReindexSecurity(), makes finalize() reindex the security settings.
+- New method setupPortalPermissions(), Sets up permissions on the portal object.
+- addRoles is now called verifyRoles
+- addTool is now called verifyTool
+- More examples of how the API works.
 Bug fixes:
 ~~~~~~~~~~
--
+- Skin directories were not added correctly to the skin lists.
+- Several smaller bugs and typos fixed.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
