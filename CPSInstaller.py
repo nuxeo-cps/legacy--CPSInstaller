@@ -288,10 +288,11 @@ class CPSInstaller(CMFInstaller):
 
     def verifyMessageCatalog(self, catalog_id, title):
         """Sets up a spezialized message catalog for your product"""
-        self.log('Verifying message catalog %s' % catalog_id)
+        self.log('Verifying message domain %s' % catalog_id)
         localizer = self.portal['Localizer']
         # MessageCatalog
         if catalog_id not in localizer.objectIds():
+            self.log('  Adding message catalog')
             languages = localizer.get_supported_languages()
             localizer.manage_addProduct['Localizer'].manage_addMessageCatalog(
                 id=catalog_id,
@@ -300,7 +301,9 @@ class CPSInstaller(CMFInstaller):
             )
 
         translation_service = self.portal.translation_service
-        if getattr(translation_service, catalog_id, None) is None:
+        domains = [info[0] for info in translation_service.getDomainInfo()]
+        if not catalog_id in domains:
+            self.log('  Adding message domain')
             translation_service.manage_addDomainInfo(catalog_id,
                                           'Localizer/'+catalog_id)
 
