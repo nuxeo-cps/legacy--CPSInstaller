@@ -144,6 +144,17 @@ class CMFInstaller:
                 return 1
         return 0
 
+    def getActionIndex(self, action_id, action_provider):
+        """Return the action index owned by an action provider or -1 is the
+        action doesn't exist.
+        """
+        action_index = 0
+        for action in action_provider.listActions():
+            if action.id == action_id:
+                return action_index
+            action_index += 1
+        return -1
+
     def addAction(self, object, properties):
         """Adds an action to an object
 
