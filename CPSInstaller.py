@@ -543,19 +543,19 @@ class CPSInstaller(CMFInstaller):
         for id, info in directories.items():
             self.log(" Directory %s" % id)
             if id in dirtool.objectIds():
-                ob = dirtool[id]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                dir = dirtool[id]
+                if hasattr(dir, 'isUserModified') and \
+                   dir.isUserModified():
                     self.log('WARNING: The directory is modified and will not '
                              'be changed. Delete manually if needed.')
-                    continue
                 else:
                     self.log('   Deleting old definition')
                     dirtool.manage_delObjects([id])
-            directory = dirtool.manage_addCPSDirectory(id, info['type'])
-            directory.manage_changeProperties(**info['data'])
+            if id not in dirtool.objectIds():
+                dir = dirtool.manage_addCPSDirectory(id, info['type'])
+            dir.manage_changeProperties(**info['data'])
             for role, expr in info.get('entry_local_roles', ()):
-                res = directory.addEntryLocalRole(role, expr)
+                res = dir.addEntryLocalRole(role, expr)
                 if res:
                     raise ValueError(res)
 

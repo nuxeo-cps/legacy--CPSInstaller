@@ -9,4 +9,6 @@ Bug fixes:
 -
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
--
+- Change the behavior of the verifyDirectories() method so that it can change
+  properties on user modified directories. This is because what is user modified
+  in directories is supposed to be data *in* the directories.
