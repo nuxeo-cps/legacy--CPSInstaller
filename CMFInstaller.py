@@ -146,11 +146,11 @@ class CMFInstaller:
 
     def addAction(self, object, properties):
         """Adds an action to an object
-        
+
         Fixes up some properties first.
         """
-        
-        # ActionInformation.__init__() uses 'permissions' as a 
+
+        # ActionInformation.__init__() uses 'permissions' as a
         # parameter, but addAction() uses 'permission'. We will
         # allow both.
         if properties.has_key('permissions'):
