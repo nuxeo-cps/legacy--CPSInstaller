@@ -18,7 +18,6 @@
 # $Id$
 
 import os
-from Globals import package_home
 from re import match
 from zLOG import LOG, INFO, DEBUG
 from App.Extensions import getPath
@@ -168,11 +167,11 @@ class CMFInstaller:
     # Internationalization support
     #
 
-    def setupTranslations(self):
+    def setupTranslations(self, product_name):
         """Import .po files into the Localizer/default Message Catalog."""
         mcat = self.portal.Localizer.default
         self.log(" Checking available languages")
-        podir = os.path.join('Products', self.product_name)
+        podir = os.path.join('Products', product_name)
         popath = getPath(podir, 'i18n')
         if popath is None:
             self.log(" !!! Unable to find .po dir")
