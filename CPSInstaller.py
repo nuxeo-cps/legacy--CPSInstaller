@@ -254,11 +254,19 @@ class CPSInstaller(CMFInstaller):
         tab of a widget.
         """
         wtool = self.portal.portal_widget_types
+        existing_widgets = wtool.objectIds()
         for id, info in widgets.items():
             self.log(" Adding widget %s" % id)
-            if id in wtool.objectIds():
-                self.logOK()
-                continue
+            if id in existing_widgets:
+                ob = wtool[id]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The widget is modified and will not be '
+                             'changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    wtool.manage_delObjects([id])
             widget = wtool.manage_addCPSWidgetType(id, info['type'])
             widget.manage_changeProperties(**info['data'])
 
@@ -270,11 +278,19 @@ class CPSInstaller(CMFInstaller):
         tab of a layout.
         """
         ltool = self.portal.portal_layouts
+        existing_layouts = ltool.objectIds()
         for id, info in layouts.items():
             self.log(" Adding layout %s" % id)
-            if id in ltool.objectIds():
-                self.logOK()
-                continue
+            if id in existing_layouts:
+                ob = ltool[id]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The layout is modified and will not be '
+                             'changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    ltool.manage_delObjects([id])
             layout = ltool.manage_addCPSLayout(id)
             for widget_id, widgetinfo in info['widgets'].items():
                 self.log("  Widget %s" % widget_id)
@@ -297,8 +313,8 @@ class CPSInstaller(CMFInstaller):
             if id in existing_vocabularies:
                 p = vtool[id]
                 if p.isUserModified():
-                    self.log('WARNING: The schema is modified and will not be '
-                             'changed. Delete manually if needed.')
+                    self.log('WARNING: The vocabulary is modified and will not'
+                             ' be changed. Delete manually if needed.')
                     continue
                 else:
                     self.log("  Deleting.")
