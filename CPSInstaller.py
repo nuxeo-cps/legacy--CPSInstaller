@@ -122,7 +122,7 @@ class CPSInstaller(CMFInstaller):
     #
 
     def addFlexibleTypes(self, type_data):
-        ttool = getToolByName(self.portal, 'portal_types')
+        ttool = self.getTool('portal_types')
         ptypes_installed = ttool.objectIds()
         display_in_cmf_calendar = []
 
@@ -139,7 +139,7 @@ class CPSInstaller(CMFInstaller):
 
         self.addCalendarTypes(display_in_cmf_calendar)
 
- 
+
     # This will go away, when registration with dependancies are implemented
     def runExternalUpdater(self, id, title, module, script, method):
         try:
