@@ -157,14 +157,14 @@ class CMFInstaller:
         for a in actionslist:
             self.verifyAction(**a)
 
-    def hideActions(self, actions):
+    def hideActions(self, hidemap):
         # XXX This breaks the installer rules, as it does not check
         # if it already has been done. A sysadmin may therefore
         # "unhide" an action, only for it to get hidden next time
         # the script is run.
         # An install tool could keep track of whih installs have
         # been run, and this method could check there.
-        for tool, actionids in actions.items():
+        for tool, actionids in hidemap.items():
             actions = list(self.portal[tool]._actions)
             for ac in actions:
                 id = ac.id
@@ -174,18 +174,15 @@ class CMFInstaller:
                         self.log(" Hiding action %s from %s" % (id, tool))
             self.portal[tool]._actions = actions
 
-    def deleteActions(self, actions):
+    def deleteActions(self, deletemap):
         # XXX This breaks the installer rules. See comment
         # for hideActions().
-        for tool, actionids in actions.items():
-            actions = list(self.portal[tool]._actions)
-            for ac in actions:
-                id = ac.id
-                if id in actionids:
-                    if ac.visible:
-                        ac.visible = 0
-                        self.log(" Deleting action %s from %s" % (id, tool))
-            self.portal[tool]._actions = actions
+        for tool, actionids in deletemap.items():
+            actions = [ ac for ac in list(self.portal[tool]._actions)\
+                                  if ac.id not in actionids ]
+            for ac in actionids:
+                self.log(" Deleting action %s from %s" % (id, tool))
+            self.portal[tool]._actions = tuple(actions)
 
     #
     # Methods to setup and manage skins
