@@ -240,7 +240,7 @@ class CPSInstaller(CMFInstaller):
                                  a['action'],
                                  a.get('condition', ''),
                                  a['permissions'][0],
-                                 'object',
+                                 a.get('category', 'object'),
                                  visible=a.get('visible',1))
 
         self.addCalendarTypes(display_in_cmf_calendar)

@@ -8,6 +8,7 @@ Bug fixes:
 ~~~~~~~~~~
 - Removed acquisition where misleading.
 - verifyBoxes used to work on the portal, not the given object.
+- verifyFlexibleTypes ignored category settings on actions.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 - Logs a bit more verbose.
