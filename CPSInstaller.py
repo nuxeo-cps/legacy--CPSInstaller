@@ -227,11 +227,18 @@ class CPSInstaller(CMFInstaller):
         """
         self.log("Verifiying schemas")
         stool = self.getTool('portal_schemas')
+        existing_schemas = stool.objectIds()
         for id, info in schemas.items():
             self.log(" Adding schema %s" % id)
-            if id in stool.objectIds():
-                self.logOK()
-                continue
+            if id in existing_schemas:
+                schema = stool['id']
+                if hasattr(schema, 'isUserModified') and \
+                   schema.isUserModified():
+                    self.log('WARNING: Schema has is modified. Not changing')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    stool.manage_delObjects(id)
             schema = stool.manage_addCPSSchema(id)
             for field_id, fieldinfo in info.items():
                 self.log("  Field %s." % field_id)
