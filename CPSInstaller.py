@@ -20,6 +20,7 @@
 
 import os
 from re import match
+from types import TupleType, ListType
 
 from App.Extensions import getPath
 from Acquisition import aq_base
@@ -485,26 +486,38 @@ class CPSInstaller(CMFInstaller):
     #
     # Boxes
     #
+    def getBoxContainer(self, object, create=0):
+        """Get a box container and create it if not found and asked for."""
+        idbc = self.portal.portal_boxes.getBoxContainerId(object)
+        if not hasattr(aq_base(object), idbc) and create:
+            self.log("   Creating %s/%s" %
+                (object.absolute_url(relative=1), idbc))
+            object.manage_addProduct['CPSDefault'].addBoxContainer()
+        container = getattr(object, idbc)
+        return container
+
     def verifyBoxContainer(self, object=None):
+        """Verify the existence of the box container and create it if not
+           found."""
         if object is None:
             object = self.portal
-        idbc = self.portal.portal_boxes.getBoxContainerId(object)
-        self.log("Verifying box container %s/%s" %
-            (object.absolute_url(relative=1),
-             idbc))
-        if not hasattr(aq_base(object), idbc):
-            self.log("   Creating")
-            object.manage_addProduct['CPSDefault'].addBoxContainer()
+        self.log("Verifying box container for %s" %
+            (object.absolute_url(relative=1)))
+        self.getBoxContainer(object, create=1)
 
     def verifyBoxes(self, boxes, object=None):
+        """Verify the existence of given boxes in the object's box container.
+        If not found, a box is instantied. Existing boxes are not affected.
+
+        boxes is a dictionary with keys begins the box ids, and values being
+        the dictionary given by the export tab.
+        The default object is the portal itself."""
         if object is None:
             object = self.portal
-        self.verifyBoxContainer(object)
         self.log('Verifying boxes on %s' % object.absolute_url(relative=1))
-        ttool = self.getTool('portal_types')
-        idbc = self.portal.portal_boxes.getBoxContainerId(object)
-        box_container = getattr(object, idbc)
+        box_container = self.getBoxContainer(object, create=1)
         existing_boxes = box_container.objectIds()
+        ttool = self.getTool('portal_types')
         for box in boxes.keys():
             if box in existing_boxes:
                 continue
@@ -514,6 +527,19 @@ class CPSInstaller(CMFInstaller):
                 box, None), {})
             ob = getattr(box_container, box)
             ob.manage_changeProperties(**boxes[box])
+
+    def deleteBoxes(self, boxes_id, object=None):
+        """Delete boxes with the id listed in boxes_id that are located in
+           box_container."""
+        box_container = self.getBoxContainer(object)
+        existing_boxes = box_container.objectIds()
+
+        if type(boxes_id) not in (TupleType, ListType):
+            boxes_id = (boxes_id,)
+
+        for box in boxes_id:
+            if box in existing_boxes:
+                box_container._delObject(box)
 
     #
     # Misc stuff

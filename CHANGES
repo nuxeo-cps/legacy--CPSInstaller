@@ -3,7 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- More material for handling boxes.
 Bug fixes:
 ~~~~~~~~~~
 - Removed acquisition where misleading.
