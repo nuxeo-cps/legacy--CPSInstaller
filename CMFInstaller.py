@@ -70,7 +70,7 @@ class CMFInstaller:
         self.reindexCatalog()
         self.resetSkinCache()
         self.reindexSecurity()
-        
+
     #
     # Methods normally called only at the end of an install.
     # Typically reindexing methods and similar.
@@ -88,6 +88,8 @@ class CMFInstaller:
             self.log('Reindex Catalog indexes %s' % ', '.join(changed_indexes))
             for name in changed_indexes:
                 ct.reindexIndex(name, self.portal.REQUEST)
+        setattr(self.portal, '_v_reindex_catalog', 0)
+        setattr(self.portal, '_v_changed_indexes', [])
 
     def resetSkinCache(self):
         # Reset skins cache
@@ -95,11 +97,13 @@ class CMFInstaller:
             self.log("Resetting skin cache")
             self.portal._v_skindata = None
             self.portal.setupCurrentSkin()
+        setattr(self.portal, '_v_reset_skins', 0)
 
     def reindexSecurity(self):
         if getattr(self.portal, '_v_reindex_security', 0):
             self.log("Reindexing Security")
             self.portal.reindexObjectSecurity()
+        setattr(self.portal, '_v_reindex_security', 0)
 
     #
     # Logging

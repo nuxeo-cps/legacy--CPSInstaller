@@ -150,7 +150,7 @@ class CPSInstaller(CMFInstaller):
     # Flexible Type installation
     #
 
-    def addFlexibleTypes(self, type_data):
+    def verifyFlexibleTypes(self, type_data):
         ttool = self.getTool('portal_types')
         ptypes_installed = ttool.objectIds()
         display_in_cmf_calendar = []

@@ -205,7 +205,7 @@ return "This is a test script"
         except AttributeError:
             pass
         installer = CPSInstaller(self.portal, 'Installer test')
-        installer.addFlexibleTypes(types)
+        installer.verifyFlexibleTypes(types)
         self.assert_(hasattr(self.portal.portal_types, 'FlexibleType'))
         self.assert_(hasattr(self.portal.portal_types, 'IsInCalendarType'))
         if calendar_product:

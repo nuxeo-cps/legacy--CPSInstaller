@@ -3,7 +3,8 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- Split up the finalizing method into several methods so they can be called
+  during installation if necessary.
 Bug fixes:
 ~~~~~~~~~~
 -
