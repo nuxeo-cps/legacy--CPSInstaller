@@ -47,7 +47,6 @@ class CMFInstaller:
         self.messages = []
         self.portal = context.portal_url.getPortalObject()
         if not hasattr(self.portal, '_v_main_installer'):
-            self.log('Main installer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             self.portal._v_main_installer = self
         if product_name is not None:
             self.product_name = product_name
@@ -56,9 +55,7 @@ class CMFInstaller:
 
     def isMainInstaller(self):
         if getattr(self.portal, '_v_main_installer', 1) is self:
-            self.log("IS main installer, finalizing")
             return 1
-        self.log("Not main installer, exiting")
         return 0
 
     def finalize(self):
