@@ -434,11 +434,15 @@ class CPSInstaller(CMFInstaller):
             vtype = info.get('type', 'CPS Vocabulary')
             vtool.manage_addCPSVocabulary(id, vtype, **info['data'])
 
-    #
-    # Internationalization support
-    #
     def setupTranslations(self, product_name=None, message_catalog='default'):
-        """Import .po files into the Localizer/default Message Catalog."""
+        """Load the .po files of the given product.
+
+        The .po files contain the translation messages which are used for the
+        i18n of a product.
+
+        The current mechanism relies on Localizer and by default loads the .po
+        files into the Localizer/default Message Catalog.
+        """
         self.log("Setting up translations")
         if not self.portalHas('Localizer'):
             # No Localizer, or using PlacelessTranslationService
@@ -453,7 +457,7 @@ class CPSInstaller(CMFInstaller):
         product_path = os.path.dirname(product_file)
         po_path = os.path.join(product_path, 'i18n')
         if po_path is None:
-            self.log(" !!! Unable to find .po dir at %s" % po_path)
+            self.log(" WARNING Unable to find .po dir at %s" % po_path)
         else:
             self.log("  Checking installable languages")
             avail_langs = mcat.get_languages()
