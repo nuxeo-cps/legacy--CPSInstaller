@@ -152,4 +152,85 @@ class CPSInstaller(CMFInstaller):
         except ImportError:
             pass
 
+    #
+    # CPSSchemas installation
+    #
+    def addSchemas(self, schemas):
+        """Adds schemas if they don't exist
 
+        The schemas parameter is a dictionary of schema definitions.
+        The schema definition is what you get when you go to the 'Export'
+        tab of a schema.
+        """
+        self.log("Verifiying schemas")
+        stool = self.getTool('portal_schemas')
+        for id, info in schemas.items():
+            self.log(" Adding schema %s" % id)
+            if id in stool.objectIds():
+                self.logOK()
+                continue
+            schema = stool.manage_addCPSSchema(id)
+            for field_id, fieldinfo in info.items():
+                self.log("  Field %s." % field_id)
+                schema.manage_addField(field_id, fieldinfo['type'],
+                                    **fieldinfo['data'])
+
+    def addWidgets(self, widgets):
+        """Adds widgets if they don't exist
+
+        The widgets parameter is a dictionary of widget definitions.
+        The widget definition is what you get when you go to the 'Export'
+        tab of a widget.
+        """
+        wtool = self.portal.portal_widget_types
+        for id, info in widgets.items():
+            self.log(" Adding widget %s" % id)
+            if id in wtool.objectIds():
+                self.logOK()
+                continue
+            widget = wtool.manage_addCPSWidgetType(id, info['type'])
+            widget.manage_changeProperties(**info['data'])
+
+    def addLayouts(self, layouts):
+        """Adds layouts if they don't exist
+
+        The layouts parameter is a dictionary of layout definitions.
+        The layout definition is what you get when you go to the 'Export'
+        tab of a layout.
+        """
+        ltool = self.portal.portal_layouts
+        for id, info in layouts.items():
+            self.log(" Adding layout %s" % id)
+            if id in ltool.objectIds():
+                self.logOK()
+                continue
+            layout = ltool.manage_addCPSLayout(id)
+            for widget_id, widgetinfo in info['widgets'].items():
+                self.log("  Widget %s" % widget_id)
+                widget = layout.manage_addCPSWidget(widget_id, widgetinfo['type'],
+                                                    **widgetinfo['data'])
+            layout.setLayoutDefinition(info['layout'])
+            layout.manage_changeProperties(**info['layout'])
+
+    def addVocabularies(self, vocabularies):
+        """Adds vocabularies if they don't exist
+
+        The vocabularies parameter is a dictionary of vocabulary definitions.
+        The vocabulary definition is what you get when you go to the 'Export'
+        tab of a vocabulary.
+        """
+        vtool = self.portal.portal_vocabularies
+        for id, info in vocabularies.items():
+            self.log(" Adding vocabulary %s" % id)
+            kept = 0
+            if id in vtool.objectIds():
+                if getattr(vtool, id).isUserModified():
+                    self.log("  Keeping, as it has been modified.")
+                    self.log("  Delete it manually if needed.")
+                    continue
+                else:
+                    self.log("  Deleting.")
+                    vtool.manage_delObjects([id])
+                self.log("  Installing.")
+                type = info.get('type', 'CPS Vocabulary')
+                vtool.manage_addCPSVocabulary(id, type, **info['data'])
