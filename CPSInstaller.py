@@ -130,6 +130,8 @@ class CPSInstaller(CMFInstaller):
                 'workflow_lock_on_workflow_variable', []),
                 workflow_unlock_on_workflow_variable=statedef.get(
                 'workflow_unlock_on_workflow_variable', []),
+                workflow_reset_on_workflow_variable=statedef.get(
+                'workflow_reset_on_workflow_variable', []),
                                 )
             for permission in statedef['permissions'].keys():
                 state.setPermission(permission, 0,
