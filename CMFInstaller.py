@@ -366,6 +366,18 @@ class CMFInstaller:
                 current_types.append(tid)
         ctool.calendar_types = current_types
 
+    def removeCalendarTypes(self, type_ids):
+        ctool = getToolByName(self.portal, 'portal_calendar', None)
+        if ctool is None:
+            return
+
+        current_types = ctool.calendar_types
+        for tid in type_ids:
+            if tid not in current_types:
+                self.log(' Calendar type %s removed' % tid)
+                current_types.remove(tid)
+        ctool.calendar_types = current_types
+
     def verifyTool(self, toolid, product, meta_type):
         self.log('Verifying tool %s' % toolid)
         if self.portalHas(toolid):

@@ -298,9 +298,9 @@ class CPSInstaller(CMFInstaller):
                 else:
                     self.log("  Deleting.")
                     vtool.manage_delObjects([id])
-                self.log("  Installing.")
-                vtype = info.get('type', 'CPS Vocabulary')
-                vtool.manage_addCPSVocabulary(id, vtype, **info['data'])
+            self.log("  Installing.")
+            vtype = info.get('type', 'CPS Vocabulary')
+            vtool.manage_addCPSVocabulary(id, vtype, **info['data'])
 
     #
     # Internationalization support
@@ -377,12 +377,13 @@ class CPSInstaller(CMFInstaller):
                 languages=languages,
             )
 
-        translation_service = self.portal.translation_service
-        domains = [info[0] for info in translation_service.getDomainInfo()]
-        if not catalog_id in domains:
-            self.log('  Adding message domain')
-            translation_service.manage_addDomainInfo(catalog_id,
-                                          'Localizer/'+catalog_id)
+        if catalog_id.lower() != 'default':
+            translation_service = self.portal.translation_service
+            domains = [info[0] for info in translation_service.getDomainInfo()]
+            if not catalog_id in domains:
+                self.log('  Adding message domain')
+                translation_service.manage_addDomainInfo(catalog_id,
+                                            'Localizer/'+catalog_id)
 
         self.flagCatalogForReindex()
 
