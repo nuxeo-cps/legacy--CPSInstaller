@@ -608,6 +608,8 @@ class CPSInstaller(CMFInstaller):
     def deleteBoxes(self, boxes_id, object=None):
         """Delete boxes with the id listed in boxes_id that are located in
            box_container."""
+        if object is None:
+            object = self.portal
         box_container = self.getBoxContainer(object)
         existing_boxes = box_container.objectIds()
 
