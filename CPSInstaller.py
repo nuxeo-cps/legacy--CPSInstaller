@@ -26,7 +26,7 @@ from App.Extensions import getPath
 from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
 from Products.PythonScripts.PythonScript import PythonScript
-from Products.ExternalMethods.ExternalMethod import ExternalMethod
+from Products.ExternalMethod.ExternalMethod import ExternalMethod
 from Products.CMFCore.utils import getToolByName
 
 from CMFInstaller import CMFInstaller
