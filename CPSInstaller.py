@@ -171,7 +171,7 @@ class CPSInstaller(CMFInstaller):
             if ptype in ptypes_installed:
                 if ttool[ptype].meta_type == 'Factory-based Type Information':
                     # Old CMF type that needs to be upgraded.
-                    self.ttool.manage_delObjects([ptype])
+                    ttool.manage_delObjects([ptype])
                     self.log("  Replacing...")
                 else:
                     self.logOK()
