@@ -68,6 +68,28 @@ class CMFInstaller:
         if hasattr(self.portal, '_v_main_installer'):
             delattr(self.portal, '_v_main_installer')
 
+
+    def _reindexIndexes(self, indexes, REQUEST):
+        # this is same as portal_catalog.reindexIndex
+        # except that we update many indexes at the same time
+        # and we do update metadata
+        ct = self.portal.portal_catalog
+        paths = ct._catalog.uids.keys()
+        for p in paths:
+            obj = ct.resolve_path(p)
+            if not obj:
+                obj = ct.resolve_url(p, REQUEST)
+            if obj is not None:
+                try:
+                    ct.catalog_object(obj, p, idxs=indexes,
+                                        update_metadata=1)
+                except TypeError:
+                    # Fall back to Zope 2.6.2 interface. This is necessary for
+                    # products like CMF 1.4.2 and earlier that subclass from
+                    # ZCatalog and don't support the update_metadata argument.
+                    # May be removed some day.
+                    ct.catalog_object(obj, p, idxs=indexes)
+
     #
     # Methods normally called only at the end of an install.
     # Typically reindexing methods and similar.
@@ -75,17 +97,23 @@ class CMFInstaller:
     def reindexCatalog(self):
         # Reindex portal_catalog
         reindex_catalog = getattr(self.portal, '_v_reindex_catalog', 0)
+        if not reindex_catalog:
+            # the only way to update metadata is to refresh the wall catalog :/
+            reindex_catalog = getattr(self.portal,
+                                      '_v_reindex_catalog_metadata', 0)
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
-        if reindex_catalog or len(changed_indexes) > 1:
-            self.log('Reindex Catalog')
-            self.portal.portal_catalog.refreshCatalog(clear=1)
+        ct = self.portal.portal_catalog
+        if reindex_catalog:
+            self.log('Rebuild all catalog indexes')
+            ct.refreshCatalog(clear=1)
         elif changed_indexes:
-            ct = self.portal.portal_catalog
-            self.log('Reindex Catalog indexes %s' % ', '.join(changed_indexes))
-            for name in changed_indexes:
-                ct.reindexIndex(name, self.portal.REQUEST)
+            self.log('Rebuild catalog indexes: %s' %
+                     ' '.join(changed_indexes))
+            self._reindexIndexes(changed_indexes,
+                                 self.portal.REQUEST)
         setattr(self.portal, '_v_reindex_catalog', 0)
         setattr(self.portal, '_v_changed_indexes', [])
+        setattr(self.portal, '_v_reindex_catalog_metadata', 0)
 
     def resetSkinCache(self):
         # Reset skins cache
@@ -343,6 +371,7 @@ class CMFInstaller:
         if not ct._catalog.schema.has_key(id):
             self.log('  Adding metadata')
             ct.addColumn(id, default_value)
+            self.flagCatalogForReindexMetadata(id)
 
     def flagCatalogForReindex(self, indexid=None):
         if indexid is None:
@@ -352,6 +381,10 @@ class CMFInstaller:
         indexes = getattr(self.portal, '_v_changed_indexes', [])
         indexes.append(indexid)
         self.portal._v_changed_indexes = indexes
+
+    def flagCatalogForReindexMetadata(self, metadataid=None):
+        # we need to rebuild all metadata
+        self.portal._v_reindex_catalog_metadata = 1
 
     #
     # Portal_types management methods
