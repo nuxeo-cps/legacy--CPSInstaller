@@ -7,7 +7,7 @@ New features:
 Bug fixes:
 ~~~~~~~~~~
 - removeCalendarTypes didn't remove anything.
-
+- Verifying widgets, schemas and layouts now check isUserModified()
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
