@@ -1,4 +1,23 @@
 *******************************************
+** CPSInstaller V0.7.2 [R1 build 2004/06/04-15:22 by afernandez]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- add a method to verify the presence of a Virtual Host Monster
+Bug fixes:
+~~~~~~~~~~
+-
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+- Change the behavior of the verifyDirectories() method so that it can change
+  properties on user modified directories. This is because what is user modified
+  in directories is supposed to be data *in* the directories.
+- Code beautification, using parentheses to avoid anti-slash in conditions
+
+*******************************************
 ** CPSInstaller V0.7.1 [R1 build 2004/05/21-11:13 by madarche]
 
 Requires:
