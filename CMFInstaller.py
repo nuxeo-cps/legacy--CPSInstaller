@@ -314,7 +314,8 @@ class CMFInstaller:
                 typeinfo_name=typeinfo['typeinfo_name'],
                 )
             if typeinfo.has_key('properties'):
-                ttool[ptype].manage_changeProperties(typeinfo['properties'])
+                ttool[ptype].manage_changeProperties(
+                    **typeinfo['properties'])
 
             self.allowContentTypes(typeinfo.get('allowed_content_types', ()), ptype)
 
