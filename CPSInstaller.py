@@ -42,6 +42,7 @@ class CPSInstaller(CMFInstaller):
 
     WORKSPACES_ID = 'workspaces'
     SECTIONS_ID = 'sections'
+    EVENT_MASK_META_TYPE = "INVALID METATYPE TO MASK EVENT DURING INSTALL TIME"
 
     def finalize(self):
         if not self.isMainInstaller():
@@ -735,6 +736,39 @@ class CPSInstaller(CMFInstaller):
                 continue
             self.log(" Adding")
             self.portal.portal_eventservice.manage_addSubscriber(**subscriber)
+
+    def _getSubscriberObject(self, subscriber_name):
+        obj = [obj for obj in self.portal.portal_eventservice.objectValues()
+               if obj.subscriber == subscriber_name]
+        if not obj:
+            return None
+        return obj[0]
+
+    def maskEventSubscriber(self, subscriber):
+        # mask events for a subscriber by setting an invalid meta type mask
+        obj = self._getSubscriberObject(subscriber)
+        if obj is None:
+            return
+        obj._v_old_meta_type_ = obj.meta_type_
+        obj.manage_changeProperties(meta_type_=self.EVENT_MASK_META_TYPE)
+        self.log("maskEventSubscriber %s remove meta_type %s" % (
+            subscriber, obj._v_old_meta_type_))
+
+    def restoreEventSubscriber(self, subscriber):
+        # restore events for a subscriber
+        obj = self._getSubscriberObject(subscriber)
+        if obj is None:
+            return
+        if obj.meta_type_ == self.EVENT_MASK_META_TYPE:
+            meta_type_ = getattr(self, '_v_old_meta_type_', '*')
+            obj.manage_changeProperties(meta_type_=meta_type_)
+            self.log("restoreEventSubscriber %s restore meta_type %s" % (
+            subscriber, obj.meta_type_))
+            try:
+                del obj._v_old_meta_type_
+            except KeyError:
+                self.log("restoreEventSubscriber %s "
+                         "warning missing backuped metatype" % (subscriber))
 
     def loadConfigurationFile(self, filename, section='default', default={}):
         # load a configuration file in INSTANCE_HOME/etc
