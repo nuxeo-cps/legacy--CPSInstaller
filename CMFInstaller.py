@@ -220,6 +220,51 @@ class CMFInstaller:
         self.portal._v_changed_indexes = indexes
 
     #
+    # Portal_types management methods
+    #
+    def allowContentTypes(self, allowed_types, allowed_in):
+        """Allow a list of types in a list of types
+
+        makes sure that the types in the list allowed_types will be allowed
+        as content types in the types in the list allowed_in
+        """
+        ttool = self.portal.portal_types
+        for type in allowed_in:
+            workspaceACT = list(ttool[type].allowed_content_types)
+            for ptype in allowed_types:
+                if ptype not in  workspaceACT:
+                    workspaceACT.append(ptype)
+            ttool[type].allowed_content_types = workspaceACT
+
+    def verifyContentTypes(self, type_dict):
+        """Checks the content_types
+
+        type_dict is:
+        {'typeid': {'allowed_content_types': ('type1', 'type2'),
+                    'typeinfo_name': 'Product: Typename',
+                    'add_meta_type'='Factory-based Type Information',
+                   }
+        }
+        """
+        self.log("Verifying Types")
+        ttool = self.portal.portal_types
+        ptypes_installed = ttool.objectIds()
+
+        for ptype, typeinfo in type_dict.items():
+            self.log("  Type '%s'" % ptype)
+            if ptype in ptypes_installed:
+                self.logOK()
+                continue
+
+            self.log("  Adding")
+            ttool.manage_addTypeInformation(
+                id=ptype,
+                add_meta_type=typeinfo['add_meta_type'],
+                typeinfo_name=typeinfo['typeinfo_name'],
+                )
+            self.allowContentTypes(typeinfo['allowed_content_types'], ptype)
+
+    #
     # Mixed management methods
     #
 
