@@ -24,7 +24,7 @@ CPSInstaller
 
   Writing install scripts.
 
-    There are four tasks you want an installer to support. Installing,
+    There are five tasks you want an installer to support. Installing,
     Uninstalling, Verifying, Upgrading and "Resetting".
 
     Uninstalling is best delegated to automatic functionality that keeps
