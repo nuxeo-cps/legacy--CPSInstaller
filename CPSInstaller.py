@@ -449,15 +449,17 @@ class CPSInstaller(CMFInstaller):
             product_name = self.product_name
         mcat = self.portal.Localizer[message_catalog]
         self.log(" Checking available languages")
-        podir = os.path.join('Products', product_name)
-        popath = getPath(podir, 'i18n')
-        if popath is None:
-            self.log(" !!! Unable to find .po dir")
+        import Products
+        product_file = getattr(Products, product_name).__file__
+        product_path = os.path.dirname(product_file)
+        po_path = os.path.join(product_path, 'i18n')
+        if po_path is None:
+            self.log(" !!! Unable to find .po dir at %s" % po_path)
         else:
             self.log("  Checking installable languages")
             avail_langs = mcat.get_languages()
             self.log("    Available languages: %s" % str(avail_langs))
-            for file in os.listdir(popath):
+            for file in os.listdir(po_path):
                 if file.endswith('.po'):
                     m = match('^.*([a-z][a-z]|[a-z][a-z]_[A-Z][A-Z])\.po$', file)
                     if m is None:
@@ -465,7 +467,7 @@ class CPSInstaller(CMFInstaller):
                         continue
                     lang = m.group(1)
                     if lang in avail_langs:
-                        lang_po_path = os.path.join(popath, file)
+                        lang_po_path = os.path.join(po_path, file)
                         lang_file = open(lang_po_path)
                         self.log("    Importing %s into '%s' locale" % (file,
                                                                         lang))
