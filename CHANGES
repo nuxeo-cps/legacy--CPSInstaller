@@ -5,6 +5,8 @@ New features:
 ~~~~~~~~~~~~~
 - Split up the finalizing method into several methods so they can be called
   during installation if necessary.
+- Verifying of FlexibleTypes will now upgrade FactoryBased types, and
+  set up actions, if defined.
 Bug fixes:
 ~~~~~~~~~~
 -
