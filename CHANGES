@@ -3,7 +3,8 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- new addZCTextIndexLexicon
+- addPortalCatalogIndex handle TopicIndex and ZCTextIndex
 Bug fixes:
 ~~~~~~~~~~
 -
