@@ -1,4 +1,21 @@
 *******************************************
+** CPSInstaller V0.5.0 [R1 build 2004/05/14-16:08 by ben]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- new addZCTextIndexLexicon
+- addPortalCatalogIndex handle TopicIndex and ZCTextIndex
+Bug fixes:
+~~~~~~~~~~
+-
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.4.0 [R1 build 2004/04/29-11:11 by madarche]
 
 Requires:
