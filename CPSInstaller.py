@@ -20,10 +20,8 @@
 
 import os
 from re import match
-from types import TupleType, ListType
 
 from App.Extensions import getPath
-from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ExternalMethod.ExternalMethod import ExternalMethod
@@ -59,7 +57,6 @@ class CPSInstaller(CMFInstaller):
     #
     # Workflow methods:
     #
-
     def createWorkflow(self, wfdef):
         wftool = self.getTool('portal_workflow')
         wfid = wfdef['wfid']
@@ -91,7 +88,8 @@ class CPSInstaller(CMFInstaller):
             self.log(' Adding state %s' % stateid)
             workflow.states.addState(stateid)
             state = workflow.states.get(stateid)
-            state.setProperties(title=statedef['title'], transitions=statedef['transitions'])
+            state.setProperties(title=statedef['title'], 
+                                transitions=statedef['transitions'])
             for permission in statedef['permissions'].keys():
                 state.setPermission(permission, 0, statedef['permissions'][permission])
 
@@ -160,7 +158,6 @@ class CPSInstaller(CMFInstaller):
     #
     # Flexible Type installation
     #
-
     def verifyFlexibleTypes(self, type_data):
         ttool = self.getTool('portal_types')
         ptypes_installed = ttool.objectIds()
@@ -288,8 +285,8 @@ class CPSInstaller(CMFInstaller):
             self.log(" Adding vocabulary %s" % id)
             if id in vtool.objectIds():
                 p = vtool[id]
-                self.log(str(p.meta_type) )
-                self.log(str(p.getId()) )
+                self.log(str(p.meta_type))
+                self.log(str(p.getId()))
 
                 if p.isUserModified():
                     self.log("  Keeping, as it has been modified.")
@@ -305,7 +302,6 @@ class CPSInstaller(CMFInstaller):
     #
     # Internationalization support
     #
-
     def setupTranslations(self, product_name=None, message_catalog='default'):
         """Import .po files into the Localizer/default Message Catalog."""
         if product_name is None:
@@ -374,8 +370,7 @@ class CPSInstaller(CMFInstaller):
             localizer.manage_addProduct['Localizer'].manage_addMessageCatalog(
                 id=catalog_id,
                 title=title,
-                languages=languages,
-            )
+                languages=languages)
 
         if catalog_id.lower() != 'default':
             translation_service = self.portal.translation_service
@@ -383,16 +378,16 @@ class CPSInstaller(CMFInstaller):
             if not catalog_id in domains:
                 self.log('  Adding message domain')
                 translation_service.manage_addDomainInfo(catalog_id,
-                                            'Localizer/'+catalog_id)
+                    'Localizer/' + catalog_id)
 
         self.flagCatalogForReindex()
 
     #
     # Portal_trees
     #
-
     def verifyTreeCacheTypes(self, treename, type_names=(), meta_types=()):
-        self.log('Verifying %s type(s) in %s tree cache' % (str(type_names), treename))
+        self.log('Verifying %s type(s) in %s tree cache' 
+                 % (str(type_names), treename))
         tree = self.portal.portal_trees[treename]
         old_type_names = list(tree.type_names)
         old_meta_types = list(tree.meta_types)
@@ -401,7 +396,7 @@ class CPSInstaller(CMFInstaller):
             meta_types=old_meta_types + list(meta_types))
         if old_type_names != tree.type_names or \
            old_meta_types != tree.meta_types:
-                self.flagRebuildTreeCache(treename)
+            self.flagRebuildTreeCache(treename)
 
     def flagRebuildTreeCache(self, treename):
         trees = getattr(self.portal, '_v_changed_tree_caches', [])
@@ -412,12 +407,11 @@ class CPSInstaller(CMFInstaller):
     #
     # Boxes
     #
-
     def verifyBoxContainer(self, object=None):
         if object is None:
             object = self.portal
         idbc = self.portal.portal_boxes.getBoxContainerId(object)
-        self.log("Verifying box container /%s" % idbc )
+        self.log("Verifying box container /%s" % idbc)
         if not hasattr(object,idbc):
             self.log("   Creating")
             object.manage_addProduct['CPSDefault'].addBoxContainer()
@@ -441,11 +435,9 @@ class CPSInstaller(CMFInstaller):
             ob = getattr(box_container, box)
             ob.manage_changeProperties(**boxes[box])
 
-
     #
     # Misc stuff
     #
-
     def verifyDirectories(self, directories):
         dirtool = self.portal.portal_directories
         for id, info in directories.items():
@@ -465,7 +457,8 @@ class CPSInstaller(CMFInstaller):
         objs = self.portal.portal_eventservice.objectValues()
         current_subscribers = [obj.subscriber for obj in objs]
         for subscriber in subscribers:
-            self.log("Verifying Event service subscriber %s" % subscriber['subscriber'])
+            self.log("Verifying Event service subscriber %s" 
+                     % subscriber['subscriber'])
             if subscriber['subscriber'] in current_subscribers:
                 self.logOK()
                 continue

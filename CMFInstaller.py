@@ -18,11 +18,8 @@
 # $Id$
 
 import os
-from re import match
 from types import StringType
 from zLOG import LOG, INFO, DEBUG
-from App.Extensions import getPath
-from Products.PythonScripts.PythonScript import PythonScript
 from Products.CMFCore.utils import getToolByName
 
 SECTIONS_ID = 'sections'
@@ -273,9 +270,9 @@ class CMFInstaller:
         as content types in the types in the list allowed_in
         """
         if isinstance(allowed_types, StringType):
-            allowed_types=(allowed_types,)
+            allowed_types = (allowed_types,)
         if isinstance(allowed_in, StringType):
-            allowed_in=(allowed_in,)
+            allowed_in = (allowed_in,)
         ttool = self.portal.portal_types
         for type in allowed_in:
             workspaceACT = list(ttool[type].allowed_content_types)
@@ -308,18 +305,17 @@ class CMFInstaller:
             ttool.manage_addTypeInformation(
                 id=ptype,
                 add_meta_type=typeinfo['add_meta_type'],
-                typeinfo_name=typeinfo['typeinfo_name'],
-                )
+                typeinfo_name=typeinfo['typeinfo_name'])
             if typeinfo.has_key('properties'):
                 ttool[ptype].manage_changeProperties(
                     **typeinfo['properties'])
 
-            self.allowContentTypes(typeinfo.get('allowed_content_types', ()), ptype)
+            self.allowContentTypes(
+                typeinfo.get('allowed_content_types', ()), ptype)
 
     #
     # Access control management methods
     #
-
     def verifyRoles(self, roles):
         already = self.portal.valid_roles()
         for role in roles:
@@ -350,7 +346,6 @@ class CMFInstaller:
     #
     # Mixed management methods
     #
-
     def addCalendarTypes(self, type_ids):
         ctool = getToolByName(self.portal, 'portal_calendar', None)
         if ctool is None:
