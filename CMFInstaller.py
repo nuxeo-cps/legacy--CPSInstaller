@@ -21,6 +21,8 @@ import os
 from types import StringType
 from zLOG import LOG, INFO, DEBUG
 from Products.CMFCore.utils import getToolByName
+from Products.ZCTextIndex.ZCTextIndex import manage_addLexicon, ZCTextIndex
+from Products.PluginIndexes.TopicIndex.TopicIndex import TopicIndex
 
 SECTIONS_ID = 'sections'
 WORKSPACES_ID = 'workspaces'
@@ -239,19 +241,60 @@ class CMFInstaller:
     #
     # Portal_catalog management methods
     #
-    def addPortalCatalogIndex(self, id, type):
-        """Adds an index on portal_catalog"""
-        self.log(' Portal_catalog indexes: Adding %s %s' % (type, id))
+    def addZCTextIndexLexicon(self, id, title=''):
+        """Add a ZCTextIndex Lexicon."""
+        self.log(' Adding a ZCTextIndex Lexicon %s' % id)
+        ct = self.portal.portal_catalog
+        if id in ct.objectIds():
+            self.logOK()
+            return
+
+        class Struct:
+            def __init__(self, **kw):
+                for k, v in kw.items():
+                    setattr(self, k, v)
+        elems = (Struct(group='Case Normalizer',
+                        name='Case Normalizer',
+                        ),
+                 Struct(group='Stop Words',
+                        name=" Don't remove stop words"
+                        #name="Remove listed and single char words"
+                        #name="Remove listed stop words only"
+                        ),
+                 Struct(group='Word Splitter',
+                        name='Whitespace splitter',
+                        ))
+        manage_addLexicon(ct, id, title, elems)
+        self.log(' Added')
+
+    def addPortalCatalogIndex(self, id, type, extra=None):
+        """Adds an index on portal_catalog."""
+        self.log(' Portal_catalog verify index %s: %s' % (type, id))
         ct = self.portal.portal_catalog
         if id in ct.indexes():
             if ct._catalog.getIndex(id).meta_type == type:
                 self.logOK()
                 return
-            else:
-                self.log('  Deleting old index')
-                ct.delIndex('uid')
-        ct.addIndex('uid', 'FieldIndex')
+            self.log('  Deleting old index')
+            ct.delIndex(id)
+        if type == 'ZCTextIndex':
+            index = ZCTextIndex(id, extra=extra, caller=ct)
+            ct._catalog.addIndex(id, index)
+        else:
+            self.log('  Adding index')
+            ct.addIndex(id, type, extra)
+
+        if type == 'TopicIndex' and extra:
+            index = ct._catalog.getIndex(id)
+            for filter in extra:
+                index.addFilteredSet(filter.id,
+                                     'PythonFilteredSet',
+                                     filter.expr)
+                self.log('   Adding filterSet %s for TopicIndex %s' %
+                         (filter.id, id))
+
         self.flagCatalogForReindex(id)
+
 
     def flagCatalogForReindex(self, indexid=None):
         if indexid is None:
@@ -387,4 +430,3 @@ class CMFInstaller:
             self.portal.manage_delObjects([toolid])
         self.log(' Adding')
         self.portal.manage_addProduct[product].manage_addTool(meta_type)
-
