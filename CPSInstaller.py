@@ -35,7 +35,7 @@ try:
     _quickinstaller_support = 1
 except ImportError:
     _quickinstaller_support = 0
-    
+
 from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):
@@ -106,9 +106,30 @@ class CPSInstaller(CMFInstaller):
             self.log(' Adding state %s' % stateid)
             workflow.states.addState(stateid)
             state = workflow.states.get(stateid)
-            state.setProperties(title=statedef['title'],
-                                transitions=statedef['transitions'],
-                                description=statedef.get('description', ''))
+
+            # XXX use kw instead
+            state.setProperties(
+                title=statedef['title'],
+                transitions=statedef['transitions'],
+                description=statedef.get('description', ''),
+                state_behaviors=statedef.get('state_behaviors', ()),
+                state_delegatees_vars_info=statedef.get(
+                'state_delegatees_vars_info', {}),
+                push_on_workflow_variable=statedef.get(
+                'push_on_workflow_variable', []),
+                pop_on_workflow_variable=statedef.get(
+                'pop_on_workflow_variable', []),
+                returned_up_hierarchy_on_workflow_variable=statedef.get(
+                'returned_up_hierarchy_on_workflow_variable', []),
+                workflow_up_on_workflow_variable=statedef.get(
+                'workflow_up_on_workflow_variable', []),
+                workflow_down_on_workflow_variable=statedef.get(
+                'workflow_down_on_workflow_variable', []),
+                workflow_lock_on_workflow_variable=statedef.get(
+                'workflow_lock_on_workflow_variable', []),
+                workflow_unlock_on_workflow_variable=statedef.get(
+                'workflow_unlock_on_workflow_variable', []),
+                                )
             for permission in statedef['permissions'].keys():
                 state.setPermission(permission, 0,
                                     statedef['permissions'][permission])
@@ -288,7 +309,7 @@ class CPSInstaller(CMFInstaller):
                 # Install
                 qtool.installProduct(module)
                 return
-            
+
         # No QuickInstaller product or no install method found.
         try:
             if not self.portalHas(id):

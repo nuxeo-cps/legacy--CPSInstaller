@@ -5,6 +5,7 @@ New features:
 ~~~~~~~~~~~~~
 - CPSInstaller will now use CMFQuickInstaller to install products, if possible.
 - box import cope with guard configuration
+- support state stack definitions
 Bug fixes:
 ~~~~~~~~~~
 - Boxes were not updated, even if they were not modified by users
