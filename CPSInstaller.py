@@ -17,7 +17,6 @@
 #
 # $Id$
 
-
 import os
 from re import match
 from types import TupleType, ListType
