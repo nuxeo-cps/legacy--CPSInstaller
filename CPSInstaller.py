@@ -224,7 +224,7 @@ class CPSInstaller(CMFInstaller):
     #
     # Flexible Type installation
     #
-    def verifyFlexibleTypes(self, type_data):
+    def verifyFlexibleTypes(self, type_data, doc_roots={}):
         ttool = self.getTool('portal_types')
         ptypes_installed = ttool.objectIds()
         display_in_cmf_calendar = []
@@ -271,8 +271,34 @@ class CPSInstaller(CMFInstaller):
                 del data['use_content_status_history']
             ti.manage_changeProperties(**data)
             self.log("  Added")
-
         self.addCalendarTypes(display_in_cmf_calendar)
+        if doc_roots:
+            self.log("Updating workflow associations")
+            self.verifyWorkflowAssociations(type_data, doc_roots)
+    
+    def verifyWorkflowAssociations(self, type_data, doc_roots):
+        '''
+        type_data is a structure as the one returned by getDocumentTypes;
+        doc_roots represents the document roots in the portal tree and
+        it is a structure as the one returned by getDocumentRoots
+        '''
+        wf_chain = {}
+        # init wf_chain's elements
+        for root_id in doc_roots.keys():
+            wf_chain[root_id] = {}
+        
+        for ptype, data in type_data.items():
+            self.log("Reading workflow associations for %s type..." % ptype)
+            wfs = data.get('workflows') or {}
+            for root_id, root_data in doc_roots.items():
+                wf = wfs.get(root_id)
+                if not wf:
+                    wf = data.get(root_data.get('wf_attrname'), 
+                                  root_data.get('content_default_wf'))
+                self.log("    ...%s in %s" % (wf, root_data.get('title', root_id)))
+                wf_chain[root_id][ptype] = wf
+        for root_id in doc_roots.keys():
+            self.verifyLocalWorkflowChains(self.portal[root_id], wf_chain[root_id])
 
     # Use this simpler API instead of runExternalUpdater() whenever possible
     def setupProduct(self, product):
