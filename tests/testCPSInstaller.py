@@ -8,7 +8,7 @@ if __name__ == '__main__':
 from Testing import ZopeTestCase
 
 from Products.CMFDefault.Portal import manage_addCMFSite
-from Products.CPSCore.CPSWorkflow import \
+from Products.CPSWorkflow.CPSWorkflowTransitions import \
      TRANSITION_INITIAL_PUBLISHING, TRANSITION_INITIAL_CREATE, \
      TRANSITION_ALLOWSUB_CREATE, TRANSITION_ALLOWSUB_PUBLISHING, \
      TRANSITION_BEHAVIOR_PUBLISHING, TRANSITION_BEHAVIOR_FREEZE, \
@@ -28,6 +28,7 @@ ZopeTestCase.installProduct('CMFDefault')
 ZopeTestCase.installProduct('CMFCalendar')
 ZopeTestCase.installProduct('MailHost')
 ZopeTestCase.installProduct('CPSCore')
+ZopeTestCase.installProduct('CPSWorkflow')
 ZopeTestCase.installProduct('CPSDocument')
 
 class TestCPSInstaller(ZopeTestCase.PortalTestCase):
