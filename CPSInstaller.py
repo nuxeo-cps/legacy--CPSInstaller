@@ -210,13 +210,17 @@ class CPSInstaller(CMFInstaller):
                 script = ExternalMethod(id, title, '%s.%s' % (module, script),
                                         method)
                 self.portal._setObject(id, script)
-            result = self.portal[id]()
+            script = self.portal[id]
+            if script.filepath() is None:
+                self.log('WARNING: External script for %s could not be called!'
+                     ' Product is probably removed.' % module)
+                return
+            result = script()
             if result:
                 self.log(result)
         except ImportError:
             self.log('WARNING: Product %s could not be imported!'
                      ' Installer was not called.' % module)
-            pass
 
     #
     # CPSSchemas installation
