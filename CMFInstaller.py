@@ -173,7 +173,7 @@ class CMFInstaller:
         if self.hasAction(tool, kw['id']):
             result += 'exists.'
         else:
-            self.addAction(portal[tool], kw)
+            self.addAction(self.portal[tool], kw)
             result += 'added.'
         self.log(result)
 
