@@ -101,6 +101,8 @@ class InstallHelper:
                 self.logger.log(" Add role %s" % role)
 
     def verifySkins(self, skindefs):
+        """XXX: write some docstring here stating what a skindefs is"""
+
         self.logger.log("Verifying skins")
 
         cmfcore = self.portal.portal_skins.manage_addProduct['CMFCore']
