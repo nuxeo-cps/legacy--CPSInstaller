@@ -295,6 +295,14 @@ class CMFInstaller:
 
         self.flagCatalogForReindex(id)
 
+    def addPortalCatalogMetadata(self, id, default_value=None):
+        """Adds a metadata in the portal_catalog."""
+        self.log(' Portal_catalog verify Metadata: %s, default value: %s'
+                 % (id, default_value))
+        ct = self.portal.portal_catalog
+        if not ct._catalog.schema.has_key(id):
+            self.log('  Adding metadata')
+            ct.addColumn(id, default_value)
 
     def flagCatalogForReindex(self, indexid=None):
         if indexid is None:
