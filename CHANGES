@@ -3,10 +3,11 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- efficient catalog reindexing
 Bug fixes:
 ~~~~~~~~~~
--
+- fix: when adding catalog metadata the catalog is not refresh
+- fix: catalog is always refresh
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
