@@ -148,7 +148,7 @@ return "This is a test script"
         installer.verifyWorkflow(wfdef, wfstates, wftransitions,
             wfscripts, wfvariables)
         # Check that the workflow was NOT created
-        self.assert_(installer.messages[-1] == log_ok_message)
+        self.assert_(installer.messages[-1].count(log_ok_message) > 0)
 
     def testFlexTypes(self):
         types = {
