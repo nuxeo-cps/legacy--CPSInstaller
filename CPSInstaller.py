@@ -307,7 +307,14 @@ class CPSInstaller(CMFInstaller):
         module = product
         script = 'install'
         method = 'install'
-        self.runExternalUpdater(id, title, module, script, method)
+        try:
+            self.runExternalUpdater(id, title, module, script, method)
+
+        # FIXME bare except == bad but I don't know what kind of
+        # exception is thrown...
+        except:
+            script = 'Install'
+            self.runExternalUpdater(id, title, module, script, method)
 
     def setupQuickInstaller(self):
         if not self.portalHas('portal_quickinstaller'):
@@ -588,7 +595,7 @@ class CPSInstaller(CMFInstaller):
         if not hasattr(aq_base(object), idbc) and create:
             self.log("   Creating %s/%s" %
                 (object.absolute_url(relative=1), idbc))
-            object.manage_addProduct['CPSDefault'].addBoxContainer()
+            object.manage_addProduct['CPSBoxes'].addBoxContainer()
         container = getattr(object, idbc)
         return container
 
@@ -619,14 +626,19 @@ class CPSInstaller(CMFInstaller):
                 if hasattr(box, 'isUserModified') and box.isUserModified():
                     self.log('WARNING: The Box is modified and will not be '
                              'changed. Delete manually if needed.')
-                    continue
                 else:
                     self.log("   Deletion of box: %s" % box)
                     box_container._delObject(box)
+
             self.log("   Creation of box: %s" % box)
-            apply(ttool.constructContent,
-                (boxes[box]['type'], box_container,
-                box, None), {})
+
+            try:
+                apply(ttool.constructContent,
+                      (boxes[box]['type'], box_container,
+                       box, None), {})
+            except:
+                raise str(box)
+
             ob = getattr(box_container, box)
             ob.manage_changeProperties(**boxes[box])
             ob.setGuardProperties(props=boxes[box].get('guard_props', {}))

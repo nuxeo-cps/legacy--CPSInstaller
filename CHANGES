@@ -12,4 +12,4 @@ Bug fixes:
   'portlets' argument, not a list.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
--
+- verifyProduct() supports 'install' or 'Install' as external method script name.
