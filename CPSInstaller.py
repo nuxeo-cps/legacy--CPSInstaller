@@ -158,13 +158,34 @@ class CPSInstaller(CMFInstaller):
         for ptype, data in type_data.items():
             self.log(" Adding type '%s'" % ptype)
             if ptype in ptypes_installed:
-                self.logOK()
-                continue
+                if ttool[ptype].meta_type == 'Factory-based Type Information':
+                    # Old CMF type that needs to be upgraded.
+                    self.ttool.manage_delObjects([ptype])
+                    self.log("  Replacing...")
+                else:
+                    self.logOK()
+                    continue
+
             ti = ttool.addFlexibleTypeInformation(id=ptype)
             if data.get('display_in_cmf_calendar'):
                 display_in_cmf_calendar.append(ptype)
                 del data['display_in_cmf_calendar']
             ti.manage_changeProperties(**data)
+            self.log("  Added")
+
+            if data.has_key('actions'):
+                self.log("    Setting actions")
+                nb_action = len(ti.listActions())
+                self.log(str(nb_action))
+                ti.deleteActions(selections=range(nb_action))
+                for a in data['actions']:
+                    ti.addAction(a['id'],
+                                 a['name'],
+                                 a['action'],
+                                 a.get('condition', ''),
+                                 a['permissions'][0],
+                                 'object',
+                                 visible=a.get('visible',1))
 
         self.addCalendarTypes(display_in_cmf_calendar)
 
