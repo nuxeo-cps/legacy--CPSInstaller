@@ -66,4 +66,7 @@ CPSInstaller
          because then again, the site manager will be frustrated by his
          configuration changes magically being reset.
 
-
+    One of the features of CPSInstaller is that these principles are 
+    automatically supported. If you use a CPSInstaller method to install
+    a skin or a portal type or similar, it will make the tests it should.
+    (This is not 100% true at this moment, but it will be soon, I hope.)
