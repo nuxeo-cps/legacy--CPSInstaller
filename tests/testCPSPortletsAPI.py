@@ -84,20 +84,38 @@ class TestCPSPortletsAPI(CPSDefaultTestCase.CPSDefaultTestCase):
     def test_verifyPortlets(self):
 
         # Example of portlets declaration
-        portlets = {'Dummy Portlet': {'type'  : 'Dummy Portlet',
-                                      'Title' : 'Fake Portlet',
-                                      'slot'  : 'left',
-                                      'order' : 0},
-                    'Dummy Portlet 2': {'type'  : 'Dummy Portlet',
-                                        'Title' : 'Fake Portlet 2',
-                                        'slot'  : 'right',
-                                        'order' : 2},
-                    }
+        portlets = ({'type'  : 'Dummy Portlet',
+                     'identifier' : 'dummy1',
+                     'Title' : 'Fake Portlet',
+                     'slot'  : 'left',
+                     'order' : 0},
+                    {'type'  : 'Dummy Portlet',
+                     'identifier' : 'dummy2',
+                     'Title' : 'Fake Portlet 2',
+                     'slot'  : 'right',
+                     'order' : 2},
+                    {'type'  : 'Dummy Portlet',
+                     'identifier' : 'dummy2',
+                     'Title' : 'Fake Portlet 2',
+                     'slot'  : 'left',
+                     'order' : 3},
+                    )
 
         if self.installer is not None:
             # Test creation of portlets at the root of the portal
+            # Only 2 in results since we provided twice the identifier
             returned = self.installer.verifyPortlets(portlets)
             self.assertEqual(len(returned), 2)
+
+            new_portlets = ({'type'  : 'Dummy Portlet',
+                             'identifier' : 'dummy1',
+                             'Title' : 'Fake Portlet',
+                             'slot'  : 'left',},
+                             )
+            returned = self.installer.verifyPortlets(new_portlets)
+            self.assertEqual(len(returned), 1)
+            returned = self.installer.verifyPortlets(())
+            self.assertEqual(len(returned), 0)
 
 if __name__ == '__main__':
     framework()
