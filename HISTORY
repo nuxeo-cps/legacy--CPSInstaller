@@ -1,4 +1,22 @@
 *******************************************
+** CPSInstaller V0.7.0 [R1 build 2004/05/20-15:13 by ben]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- Added an addAction() method, to avoid code duplication, and be more
+  flexible on action definitons.
+- addPortalCatalogIndex don't turn TextIndexNG into ZCTextIndex
+Bug fixes:
+~~~~~~~~~~
+-
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.6.0 [R1 build 2004/05/17-16:13 by ben]
 
 Requires:
