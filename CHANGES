@@ -6,7 +6,8 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- Removed acquisition where misleading.
+- verifyBoxes used to work on the portal, not the given object.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
--
+- Logs a bit more verbose.
