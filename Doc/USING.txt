@@ -62,9 +62,8 @@ Using the CPSInstaller
     needed if they are run as a part of a batch of installations of several
     products.
 
-    CPSInstaller and CMFInstaller has support for telling the installer if
-    it is not run standalone. This is done by instantiating it with the
-    parameter is_main_installer=0 (it is 1 by default).
+    CPSInstaller and CMFInstaller will have support for telling the installer
+    if it is not run standalone. It will be automatic, soon, I hope. :) /Lennart
 
     At the end of your install script, you should run the call the finalize()
     method. If the script is being run as a main installer, it will then
@@ -100,6 +99,11 @@ Changes from CPSDefault.Installer
      a dictionary, in the form of
         { 'skin_name': 'Products/path/to/skin/directory', }
 
+  3. There is a bunch of differences in method naming.
+     For example, setupSkins is called verifySkins. The methods
+     that test and verify are supposed to be called verifyXxxx, and
+     methods call addXxxx or createXxx or setupXxx may not do any
+     checking before.
 
 
 
