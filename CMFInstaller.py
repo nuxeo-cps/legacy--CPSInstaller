@@ -296,8 +296,13 @@ class CMFInstaller:
         self.log(' Portal_catalog verify index %s: %s' % (type, id))
         ct = self.portal.portal_catalog
         if id in ct.indexes():
-            if ct._catalog.getIndex(id).meta_type == type:
+            current_index_type = ct._catalog.getIndex(id).meta_type
+            if current_index_type == type:
                 self.logOK()
+                return
+            elif type == 'ZCTextIndex' and current_index_type != 'TextIndex':
+                # we only turn TextIndex into ZCTextIndex keeping NG
+                self.log('  keeping index of type %s.' % current_index_type)
                 return
             self.log('  Deleting old index')
             ct.delIndex(id)
