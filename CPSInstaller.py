@@ -396,6 +396,10 @@ class CPSInstaller(CMFInstaller):
     def setupTranslations(self, product_name=None, message_catalog='default'):
         """Import .po files into the Localizer/default Message Catalog."""
         self.log("Setting up translations")
+        if not self.portalHas('Localizer'):
+            # No Localizer, or using PlacelessTranslationService
+            self.log(" No setup done, no Localizer")
+            return
         if product_name is None:
             product_name = self.product_name
         mcat = self.portal.Localizer[message_catalog]
