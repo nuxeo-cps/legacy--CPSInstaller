@@ -177,7 +177,7 @@ class CPSInstaller(CMFInstaller):
         self.verifyWfTransitions(wf, wftransitions)
         self.verifyWfScripts(wf, wfscripts)
         self.verifyWfVariables(wf, wfvariables, 
-                               state_var=wfdef.get('state_var', None))
+                               state_var=wfdef.get('state_var'))
         self.log(' Done')
 
     def verifyLocalWorkflowChains(self, object, wfchains):
