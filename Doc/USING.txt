@@ -1,0 +1,107 @@
+Using the CPSInstaller
+
+  To use CMFInstaller with your product, create a python script called
+  Install.py in a directory called Extensions in your product directory.
+
+  To start using the CMFInstaller, create an Extensions directory in your
+  product directory, and create a Python file called Install.py, with a
+  method "Install(self)" in it.
+
+  Strictly speaking, it can be called anything, but calling it both the
+  file and the method Install is the standardized way of doing it. This
+  is also compatible with CMFQuickInstaller, which gives you a way of
+  uninstalling and reinstalling the products, which can be handy.
+  (There will probably be further integration between CPSInstaller and
+  CMFQuickInstaller in the near future).
+
+  You can use CPSInstaller in two ways. Either by subclassing it and
+  extending it with install methods. Subclassing it is easy, all you
+  need is to define a class attribute 'product_name'.
+
+  Here is an example:
+
+    from Products.CPSInstaller.CPSInstaller import CPSInstaller
+    class MyInstaller(CPSInstaller):
+        product_name = 'MyProduct'
+
+        def install(self):
+            self.log("Starting MyProduct install")
+            # Do the installing here
+            self.log("End of specific MyProduct install")
+            self.finalize()
+
+    def Install(self):
+        installer = MyInstaller(self)
+        installer.install()
+        return installer.logResult()
+
+  For very simple installs you can also just instantiate the CPSInstaller.
+  In that case you pass the product_name as a parameter to the instantiation:
+
+    from Products.CPSInstaller.CPSInstaller import CPSInstaller
+
+    def Install(self):
+        installer = CPSInstaller(self, 'MyProduct')
+        installer.log("Starting MyProduct install")
+        # Do the instllation here
+        installer.log("End of specific MyProduct install")
+        installer.finalize()
+        return installer.logResult()
+
+  Most installations quickly get so big that you want to split the
+  installation into several separate methods for clarity, and in that
+  case you should definitely subclass the installer for clarity.
+
+  About finalize()
+
+    Many things need only to be made once during an install. Reindexing the
+    portal_catalog is a typical example of this. It only needs to be done
+    once at the end of the install. But when writing install scripts each
+    product is unaware of the others, and therefore they must reindex the
+    catalog, in case they are being run standalone, even though this is not
+    needed if they are run as a part of a batch of installations of several
+    products.
+
+    CPSInstaller and CMFInstaller has support for telling the installer if
+    it is not run standalone. This is done by instantiating it with the
+    parameter is_main_installer=0 (it is 1 by default).
+
+    At the end of your install script, you should run the call the finalize()
+    method. If the script is being run as a main installer, it will then
+    reindex the catalog and do other one-off fixes. If it is being called
+    from another installer with is_main_installer=0, it does nothing.
+
+
+CMF-only installations
+
+  In many cases you might want to support Installations on non-CPS sites.
+  For this case, there is CMFInstaller. It has many support methods for
+  making CMF installations. CPSInstaller extends CMFInstaller, so CPSInstaller
+  has all the functionality CMFInstaller has, plus a lot of CPS-only support.
+
+  If your installation needs nothing that is CPS specific, you should use
+  CMFInstaller. If you want to support installing on both on CPS and on
+  non-CPS sites, but need different install scripts, you can create two
+  different installers and call the correct one from your Install() method:
+
+  def Install(self):
+      if 'portal_proxies' in self.portal.objectIds():
+          #run the CPS Install
+      else:
+          #run the CMF Install
+
+
+Changes from CPSDefault.Installer
+
+  1. Instead of deriving from CPSDefault.Installer.BaseInstaller,
+     derive the installer from CPSInstaller.CPSInstaller.CPSInstaller.
+
+  2. The list of skind, which before was a tuple of tuples is not instead
+     a dictionary, in the form of
+        { 'skin_name': 'Products/path/to/skin/directory', }
+
+
+
+
+
+
