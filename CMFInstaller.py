@@ -72,7 +72,6 @@ class CMFInstaller:
     def _reindexIndexes(self, indexes, REQUEST):
         # this is same as portal_catalog.reindexIndex
         # except that we update many indexes at the same time
-        # and we do update metadata
         ct = self.portal.portal_catalog
         paths = ct._catalog.uids.keys()
         for p in paths:
@@ -82,7 +81,7 @@ class CMFInstaller:
             if obj is not None:
                 try:
                     ct.catalog_object(obj, p, idxs=indexes,
-                                        update_metadata=1)
+                                        update_metadata=0)
                 except TypeError:
                     # Fall back to Zope 2.6.2 interface. This is necessary for
                     # products like CMF 1.4.2 and earlier that subclass from
