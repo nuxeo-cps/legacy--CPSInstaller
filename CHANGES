@@ -1,6 +1,6 @@
 Requires:
 ~~~~~~~~~
--
+- CPSCompat >= 0.1.0
 New features:
 ~~~~~~~~~~~~~
 -added new method that updates the local workflow associations for the document types.

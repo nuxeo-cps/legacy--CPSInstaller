@@ -2,4 +2,4 @@
 
 # CPS --------------------
 CPSCore
-
+CPSCompat >= 0.1.0

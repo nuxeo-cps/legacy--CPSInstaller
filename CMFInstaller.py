@@ -127,7 +127,7 @@ class CMFInstaller:
         # Reset skins cache
         if getattr(self.portal, '_v_reset_skins', 0):
             self.log("Resetting skin cache")
-            self.portal._v_skindata = None
+            self.portal.clearCurrentSkin()
             self.portal.setupCurrentSkin()
         setattr(self.portal, '_v_reset_skins', 0)
 
