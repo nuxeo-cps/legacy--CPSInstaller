@@ -43,7 +43,7 @@ class CPSInstaller(CMFInstaller):
         self.log('Installing workflow %s' % wfid)
         if wfid in wftool.objectIds():
             self.logOK()
-            return
+            return None
 
         # Create and set up workflow
         wftool.manage_addWorkflow(id=wfid,
@@ -69,7 +69,7 @@ class CPSInstaller(CMFInstaller):
             self.logOK()
             return
 
-        existing_states = wf.states.objectIds('Workflow State')
+        existing_states = wf.states.objectIds()
         for stateid, statedef in wfstates.items():
             if stateid in existing_states:
                 continue
@@ -80,7 +80,7 @@ class CPSInstaller(CMFInstaller):
             for permission in statedef['permissions'].keys():
                 state.setPermission(permission, 0, statedef['permissions'][permission])
 
-        existing_transitions = wf.states.objectIds('Workflow Transition')
+        existing_transitions = wf.transitions.objectIds()
         for transid, transdef in wftransitions.items():
             if transid in existing_transitions:
                 continue
@@ -89,7 +89,7 @@ class CPSInstaller(CMFInstaller):
             trans = wf.transitions.get(transid)
             trans.setProperties(**transdef)
 
-        existing_scripts = wf.states.objectIds('Script (Python)')
+        existing_scripts = wf.states.objectIds()
         for scriptid, scriptdef in wfscripts.items():
             if scriptid in existing_scripts:
                 continue
@@ -101,7 +101,7 @@ class CPSInstaller(CMFInstaller):
                 if scriptdef.has_key(attribute):
                     setattr(script, attribute, scriptdef[attribute])
 
-        existing_vars = wf.variables.objectIds('Workflow Variable')
+        existing_vars = wf.variables.objectIds()
         for varid, vardef in wfvariables.items():
             if varid in existing_vars:
                 continue
