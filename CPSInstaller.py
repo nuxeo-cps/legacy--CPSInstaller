@@ -551,8 +551,67 @@ class CPSInstaller(CMFInstaller):
                 box_container._delObject(box)
 
     #
+    # Portlets
+    #
+
+    def getPortletContainer(self, object=None, create=0):
+        """Get a portlets container and create it if not found and asked for.
+        """
+        if object is None:
+            object = self.portal
+        idpc = self.portal.portal_cpsportlets.getPortletContainerId()
+        if not hasattr(aq_base(object), idpc) and create:
+            self.log("   Creating %s/%s" %
+                (object.absolute_url(relative=1), idpc))
+            object.manage_addProduct['CPSPortlets'].addPortletsContainer()
+        container = getattr(object, idpc, None)
+        return container
+
+    def verifyPortletContainer(self, object=None):
+        """Verify the existence of the portlet container and create it if not
+           found."""
+        if object is None:
+            object = self.portal
+        self.log("Verifying portlet container for %s" %
+            (object.absolute_url(relative=1)))
+        return self.getPortletContainer(object, create=1)
+
+    def verifyPortlets(self, portlets, object=None):
+        """Verify the existence of given portet in the object's portlet container.
+        If not found, a portlet is instantied. Existing portlets are not affected.
+
+        portlets is a dictionary with keys begins the box ids, and values being
+        the dictionary given by the export tab.
+        The default object is the portal itself.
+
+        return the list a new portlet ids.
+        """
+
+        if object is None:
+            object = self.portal
+
+        self.log('Verifying portlets on %s' % object.absolute_url(relative=1))
+
+        portlet_container = self.getPortletContainer(object, create=1)
+        existing_portlets = portlet_container.listPortletIds()
+        ttool = self.getTool('portal_types')
+
+        returned = []
+        for portlet in portlets.keys():
+            if portlet in existing_portlets:
+                continue
+            self.log("   Creation of portlet: %s" % portlet)
+            portlet_id = self.portal.portal_cpsportlets.createPortlet(
+                ptype_id=portlets[portlet]['type'],
+                context=object,
+                **portlets[portlet])
+            returned.append(portlet_id)
+        return returned
+
+    #
     # Misc stuff
     #
+
     def verifyDirectories(self, directories):
         dirtool = self.portal.portal_directories
         for id, info in directories.items():
