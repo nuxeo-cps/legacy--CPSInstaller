@@ -208,7 +208,9 @@ class CPSInstaller(CMFInstaller):
                 self.log('Adding %s' % title)
                 script = ExternalMethod(id, title, '%s.%s' % (module, script), method)
                 self.portal._setObject(id, script)
-            self.log(self.portal[id]())
+            result = self.portal[id]()
+            if result:
+                self.log(result)
         except ImportError:
             self.log('WARNING: Product %s could not be imported!'
                      ' Installer was not called.' % module)
