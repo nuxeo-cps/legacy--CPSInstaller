@@ -176,11 +176,11 @@ class CPSInstaller(CMFInstaller):
         self.verifyWfStates(wf, wfstates)
         self.verifyWfTransitions(wf, wftransitions)
         self.verifyWfScripts(wf, wfscripts)
-        self.verifyWfVariables(wf, wfvariables, 
+        self.verifyWfVariables(wf, wfvariables,
                                state_var=wfdef.get('state_var'))
         self.log(' Done')
 
-    def verifyLocalWorkflowChains(self, object, wfchains):
+    def verifyLocalWorkflowChains(self, object, wfchains, destructive=0):
         """Sets up the local workflows on object.
 
         wfchains = {
@@ -195,6 +195,10 @@ class CPSInstaller(CMFInstaller):
         for portal_type, chain in wfchains.items():
             if not wfc.getPlacefulChainFor(portal_type):
                 wfc.manage_addChain(portal_type=portal_type, chain=chain)
+            else:
+                if destructive:
+                    wfc.delChain(portal_type=portal_type)
+                    wfc.manage_addChain(portal_type=portal_type, chain=chain)
 
     #
     # Flexible Type installation
@@ -459,7 +463,7 @@ class CPSInstaller(CMFInstaller):
     # Portal_trees
     #
     def verifyTreeCacheTypes(self, treename, type_names=(), meta_types=()):
-        self.log('Verifying %s type(s) in %s tree cache' 
+        self.log('Verifying %s type(s) in %s tree cache'
                  % (str(type_names), treename))
         tree = self.portal.portal_trees[treename]
         old_type_names = list(tree.type_names)
