@@ -1,4 +1,22 @@
 *******************************************
+** CPSInstaller V0.14.0 [R1 build 2004/11/18-13:16 by ben]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- CPSInstaller will now use CMFQuickInstaller to install products, if possible.
+- box import cope with guard configuration
+- support state stack definitions
+Bug fixes:
+~~~~~~~~~~
+- Boxes were not updated, even if they were not modified by users
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.13.0 [R1 build 2004/10/06-11:48 by madarche]
 
 Requires:
