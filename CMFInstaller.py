@@ -21,6 +21,7 @@ import os
 from types import StringType
 from zLOG import LOG, INFO, DEBUG
 from Products.CMFCore.utils import getToolByName, _marker
+from Products.CMFCore.DirectoryView import createDirectoryView
 from Products.ZCTextIndex.ZCTextIndex import manage_addLexicon, ZCTextIndex
 
 SECTIONS_ID = 'sections'
@@ -289,8 +290,10 @@ class CMFInstaller:
                     dv.manage_properties(dirpath=path)
             else:
                 skin_installed = 1
-                product = self.portal.portal_skins.manage_addProduct['CMFCore']
-                product.manage_addDirectoryView(filepath=path, id=skin)
+                # Hack to Fix CMF 1.5 incompatibility
+                if path.startswith("Products/"):
+                    path = path[len("Products/"):]
+                createDirectoryView(self.portal.portal_skins, path, skin)
                 self.log("  Creating skin")
 
         if skin_installed:
