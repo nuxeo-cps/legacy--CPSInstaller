@@ -207,7 +207,7 @@ class CPSInstaller(CMFInstaller):
             layout = ltool.manage_addCPSLayout(id)
             for widget_id, widgetinfo in info['widgets'].items():
                 self.log("  Widget %s" % widget_id)
-                widget = layout.manage_addCPSWidget(widget_id, widgetinfo['type'],
+                layout.manage_addCPSWidget(widget_id, widgetinfo['type'],
                                                     **widgetinfo['data'])
             layout.setLayoutDefinition(info['layout'])
             layout.manage_changeProperties(**info['layout'])
@@ -222,7 +222,6 @@ class CPSInstaller(CMFInstaller):
         vtool = self.portal.portal_vocabularies
         for id, info in vocabularies.items():
             self.log(" Adding vocabulary %s" % id)
-            kept = 0
             if id in vtool.objectIds():
                 if getattr(vtool, id).isUserModified():
                     self.log("  Keeping, as it has been modified.")
