@@ -235,13 +235,13 @@ class CPSInstaller(CMFInstaller):
                 display_in_cmf_calendar.append(ptype)
                 del data['display_in_cmf_calendar']
             if data.get('use_content_status_history'):
-                ti.addAction(id='status_history',
-                               name='action_status_history',
-                               action='content_status_history',
-                               condition='',
-                               permission=('View',),
-                               category='workflow',
-                               visible=1)
+                self.addAction(ti, {
+                    'id': 'status_history',
+                    'name': 'action_status_history',
+                    'action': 'content_status_history',
+                    'permission': ('View',),
+                    'category': 'workflow',
+                    })
                 del data['use_content_status_history']
             ti.manage_changeProperties(**data)
             self.log("  Added")

@@ -175,6 +175,10 @@ class CMFInstaller:
         # Condition must be present, even empty
         if not properties.has_key('condition'):
             properties['condition'] = ''
+        # Ensure action is TALES
+        action = properties.get('action')
+        if action is not None and ':' not in action:
+            properties['action'] = 'string:${object_url}/'+action
 
         object.addAction(**properties)
 

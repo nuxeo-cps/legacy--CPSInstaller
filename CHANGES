@@ -6,8 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- Ensure actions are always TALES.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 - Using mixed case method name verifyVHM -> verifyVhm
-  
