@@ -275,14 +275,27 @@ class CPSInstaller(CMFInstaller):
 
         self.addCalendarTypes(display_in_cmf_calendar)
 
+    # Use this simpler API instead of runExternalUpdater() whenever possible
+    def setupProduct(self, product):
+        id = product.lower() + '_installer'
+        title = product + ' Installer'
+        module = product
+        script = 'install'
+        method = 'install'
+        self.runExternalUpdater(id, title, module, script, method)
 
-    # This will go away, when registration with dependancies are implemented
+    def setupQuickInstaller(self):
+        if not self.portalHas('portal_quickinstaller'):
+            addQuickInstallerTool(self.portal)
+
+    # XXX: This will go away, when registration with dependancies are
+    # implemented
     def runExternalUpdater(self, id, title, module, script, method):
         # First check if we should use the QuickInstaller:
         if _quickinstaller_support:
-            if not self.portalHas('portal_quickinstaller'):
-                addQuickInstallerTool(self.portal)
+            self.setupQuickInstaller()
             qtool = self.getTool('portal_quickinstaller')
+
             try:
                 qtool.getInstallMethod(module)
             except AttributeError:
