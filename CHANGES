@@ -5,6 +5,7 @@ New features:
 ~~~~~~~~~~~~~
 - Added an addAction() method, to avoid code duplication, and be more
   flexible on action definitons.
+- addPortalCatalogIndex don't turn TextIndexNG into ZCTextIndex
 Bug fixes:
 ~~~~~~~~~~
 -
