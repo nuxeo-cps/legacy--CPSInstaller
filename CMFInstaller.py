@@ -283,7 +283,7 @@ class CMFInstaller:
                     workspaceACT.append(ptype)
             ttool[type].allowed_content_types = workspaceACT
 
-    def verifyContentTypes(self, type_dict):
+    def verifyContentTypes(self, type_dict, destructive=0):
         """Checks the content_types
 
         type_dict is:
@@ -300,8 +300,12 @@ class CMFInstaller:
         for ptype, typeinfo in type_dict.items():
             self.log("  Type '%s'" % ptype)
             if ptype in ptypes_installed:
-                self.logOK()
-                continue
+                if destructive:
+                    self.log(" Deleting %s"  %ptype)
+                    ttool.manage_delObjects([ptype])
+                else:
+                    self.logOK()
+                    continue
 
             self.log("  Adding")
             ttool.manage_addTypeInformation(
