@@ -25,8 +25,7 @@ class TestCPSPortletsAPI(CPSDefaultTestCase.CPSDefaultTestCase):
     It's not going to do anything if CPSPortlets is not present.
     """
 
-
-    login_id = 'root'
+    login_id = 'manager'
 
     def afterSetUp(self):
         if self.login_id:
