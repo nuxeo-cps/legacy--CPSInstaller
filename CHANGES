@@ -6,7 +6,8 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- removeCalendarTypes didn't remove anything.
+
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

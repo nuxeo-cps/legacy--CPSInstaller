@@ -373,7 +373,7 @@ class CMFInstaller:
 
         current_types = ctool.calendar_types
         for tid in type_ids:
-            if tid not in current_types:
+            if tid in current_types:
                 self.log(' Calendar type %s removed' % tid)
                 current_types.remove(tid)
         ctool.calendar_types = current_types
