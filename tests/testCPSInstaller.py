@@ -147,7 +147,6 @@ return "This is a test script"
         # Check that the workflow was NOT created
         self.assert_(installer.messages[-1] == ' Already correctly installed')
 
-        print installer.flush()
 
 if __name__ == '__main__':
     framework()
