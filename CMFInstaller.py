@@ -77,6 +77,10 @@ class CMFInstaller:
             self.portal._v_skindata = None
             self.portal.setupCurrentSkin()
 
+        if getattr(self.portal, '_v_reindex_security', 0):
+            self.log("Reindexing Security")
+            self.portal.reindexObjectSecurity()
+
     #
     # Logging
     #
@@ -280,15 +284,35 @@ class CMFInstaller:
             self.allowContentTypes(typeinfo['allowed_content_types'], ptype)
 
     #
-    # Mixed management methods
+    # Access control management methods
     #
 
-    def addRoles(self, roles):
+    def verifyRoles(self, roles):
         already = self.portal.valid_roles()
         for role in roles:
             if role not in already:
                 self.portal._addRole(role)
                 self.log(" Add role %s" % role)
+
+    def setupPortalPermissions(self, permissions):
+        """Sets up the permissions of the portal object
+
+        permissions is a dict:
+        {'permission': ['list', 'of', 'roles'],}
+        """
+        # XXX Once again this does not verify anything, but brutally
+        # overrides any earlier changes.
+        for perm, roles in permissions.items():
+            self.log("  Setting up permission %s" % perm)
+            self.portal.manage_permission(perm, roles, 0)
+        self.flagReindexSecurity()
+
+    def flagReindexSecurity(self):
+        self.portal._v_reindex_security = 1
+
+    #
+    # Mixed management methods
+    #
 
     def addCalendarTypes(self, type_ids):
         ctool = getToolByName(self.portal, 'portal_calendar', None)
@@ -302,11 +326,15 @@ class CMFInstaller:
                 current_types.append(tid)
         ctool.calendar_types = current_types
 
-    def addTool(self, toolid, product, meta_type):
-        self.log('Creating %s' % toolid)
-        if self.portalhas(toolid):
-            self.logOK()
-        else:
-            self.portal.manage_addProduct[product].manage_addTool(meta_type)
-
+    def verifyTool(self, toolid, product, meta_type):
+        self.log('Verifying tool %s' % toolid)
+        if self.portalHas(toolid):
+            tool = self.getTool(toolid)
+            if tool.meta_type == meta_type:
+                self.logOK()
+                return
+            self.log(' Deleting old %s tool' % tool.meta_type)
+            self.portal.manage_delObjects([toolid])
+        self.log(' Adding')
+        self.portal.manage_addProduct[product].manage_addTool(meta_type)
 
