@@ -140,11 +140,12 @@ class CPSInstaller(CMFInstaller):
         """
         self.log('Verifying local workflow for %s' % object.getId())
         if not '.cps_workflow_configuration' in object.objectIds():
-            installer.log("  Adding workflow configuration to %s" % object.getId())
+            self.log("  Adding workflow configuration to %s" % object.getId())
             object.manage_addProduct['CPSCore'].addCPSWorkflowConfiguration()
         wfc = getattr(object, '.cps_workflow_configuration')
         for portal_type, chain in wfchains.items():
-          wfc.manage_addChain(portal_type=portal_type, chain=chain)
+            if not wfc.getPlacefulChainFor(portal_type):
+                wfc.manage_addChain(portal_type=portal_type, chain=chain)
 
     #
     # Flexible Type installation
