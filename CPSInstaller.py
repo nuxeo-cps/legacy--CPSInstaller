@@ -33,7 +33,7 @@ from CMFInstaller import CMFInstaller
 class CPSInstaller(CMFInstaller):
 
     def finalize(self):
-        if not self.is_main_installer:
+        if not self.isMainInstaller():
             return
         self._cmf_finalize()
         self._cps_finalize()

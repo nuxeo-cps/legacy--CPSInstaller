@@ -44,22 +44,40 @@ class CMFInstaller:
         and similar actions that only needs to be done once.
         """
         self.context = context
-        self.portal = context.portal_url.getPortalObject()
         self.messages = []
+        self.portal = context.portal_url.getPortalObject()
+        if not hasattr(self.portal, '_v_main_installer'):
+            self.log('Main installer!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            self.portal._v_main_installer = self
         self.is_main_installer = is_main_installer
         if product_name is not None:
             self.product_name = product_name
         if self.product_name is None:
             raise ValueError('No product name given to installer')
 
+    def isMainInstaller(self):
+        if self.portal._v_main_installer is self:
+            self.log("IS main installer, finalizing")
+            return 1
+        self.log("Not main installer, exiting")
+        return 0
+
     def finalize(self):
-        if not self.is_main_installer:
-            return
         self._cmf_finalize()
 
     def _cmf_finalize(self):
         """Does all the things that only needs to be done once"""
+        self.reindexCatalog()
+        self.resetSkinCache()
+        self.reindexSecurity()
+        
+    #
+    # Methods normally called only at the end of an install.
+    # Typically reindexing methods and similar.
+    #
+    def reindexCatalog(self):
         # Reindex portal_catalog
+        delattr(self.portal, '_v_main_installer')
         reindex_catalog = getattr(self.portal, '_v_reindex_catalog', 0)
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
         if reindex_catalog or len(changed_indexes) > 1:
@@ -71,12 +89,14 @@ class CMFInstaller:
             for name in changed_indexes:
                 ct.reindexIndex(name, self.portal.REQUEST)
 
+    def resetSkinCache(self):
         # Reset skins cache
         if getattr(self.portal, '_v_reset_skins', 0):
             self.log("Resetting skin cache")
             self.portal._v_skindata = None
             self.portal.setupCurrentSkin()
 
+    def reindexSecurity(self):
         if getattr(self.portal, '_v_reindex_security', 0):
             self.log("Reindexing Security")
             self.portal.reindexObjectSecurity()
