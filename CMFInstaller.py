@@ -95,7 +95,8 @@ class CMFInstaller:
     # Methods to setup and manage actions
     #
     def hasAction(self, tool, actionid):
-        for action in self.portal[tool].listActions():
+        actions = [action.id for action in self.portal[tool].listActions()]
+        for actionid in actions:
             if action.id == actionid:
                 return 1
         return 0
