@@ -6,9 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
-- Made entry local roles addition done only on fresh directories
-- Added 'use_content_status_history' key for handling the new per type
-  'status_history' action (Closes #295).
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
