@@ -172,7 +172,7 @@ class CPSInstaller(CMFInstaller):
     # This will go away, when registration with dependancies are implemented
     def runExternalUpdater(self, id, title, module, script, method):
         try:
-            if not self.portalhas(id):
+            if not self.portalHas(id):
                 __import__(module)
                 self.log('Adding %s' % title)
                 script = ExternalMethod(id, title, script, method)
