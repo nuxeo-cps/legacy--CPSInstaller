@@ -7,7 +7,7 @@ New features:
 - box import cope with guard configuration
 Bug fixes:
 ~~~~~~~~~~
--
+- Boxes were not updated, even if they were not modified by users
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
