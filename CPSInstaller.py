@@ -22,6 +22,7 @@ import os
 from re import match
 
 from App.Extensions import getPath
+from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ExternalMethod.ExternalMethod import ExternalMethod
@@ -488,8 +489,10 @@ class CPSInstaller(CMFInstaller):
         if object is None:
             object = self.portal
         idbc = self.portal.portal_boxes.getBoxContainerId(object)
-        self.log("Verifying box container /%s" % idbc)
-        if not hasattr(object,idbc):
+        self.log("Verifying box container %s/%s" %
+            (object.absolute_url(relative=1),
+             idbc))
+        if not hasattr(aq_base(object), idbc):
             self.log("   Creating")
             object.manage_addProduct['CPSDefault'].addBoxContainer()
 
@@ -497,9 +500,9 @@ class CPSInstaller(CMFInstaller):
         if object is None:
             object = self.portal
         self.verifyBoxContainer(object)
-        self.log('Verifying boxes on %s' % object.getId())
+        self.log('Verifying boxes on %s' % object.absolute_url(relative=1))
         ttool = self.getTool('portal_types')
-        idbc = self.portal.portal_boxes.getBoxContainerId(self.portal)
+        idbc = self.portal.portal_boxes.getBoxContainerId(object)
         box_container = object[idbc]
         existing_boxes = box_container.objectIds()
         for box in boxes.keys():
