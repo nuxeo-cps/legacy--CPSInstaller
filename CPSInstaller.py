@@ -295,9 +295,6 @@ class CPSInstaller(CMFInstaller):
             self.log(" Adding vocabulary %s" % id)
             if id in vtool.objectIds():
                 p = vtool[id]
-                self.log(str(p.meta_type))
-                self.log(str(p.getId()))
-
                 if p.isUserModified():
                     self.log('WARNING: The schema is modified and will not be '
                              'changed. Delete manually if needed.')
