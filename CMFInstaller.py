@@ -162,6 +162,9 @@ class CMFInstaller:
         # And category to 'object':
         if not properties.has_key('category'):
             properties['category'] = 'object'
+        # Condition must be present, even empty
+        if not properties.has_key('condition'):
+            properties['condition'] = ''
 
         object.addAction(**properties)
 
