@@ -7,9 +7,10 @@ New features:
   during installation if necessary.
 - Verifying of FlexibleTypes will now upgrade FactoryBased types, and
   set up actions, if defined.
+- Changes in local workflow setup are not overridden.
 Bug fixes:
 ~~~~~~~~~~
--
+- Fixed a bug in the local workflow setup
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
