@@ -3,7 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- CPSInstaller will now use CMFQuickInstaller to install products, if possible.
 Bug fixes:
 ~~~~~~~~~~
 -

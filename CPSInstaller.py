@@ -29,6 +29,13 @@ from zLOG import LOG, INFO, DEBUG
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ExternalMethod.ExternalMethod import ExternalMethod
 
+try:
+    from Products.CMFQuickInstallerTool.QuickInstallerTool import \
+        addQuickInstallerTool
+    _quickinstaller_support = 1
+except ImportError:
+    _quickinstaller_support = 0
+    
 from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):
@@ -267,6 +274,22 @@ class CPSInstaller(CMFInstaller):
 
     # This will go away, when registration with dependancies are implemented
     def runExternalUpdater(self, id, title, module, script, method):
+        # First check if we should use the QuickInstaller:
+        if _quickinstaller_support:
+            if not self.portalHas('portal_quickinstaller'):
+                addQuickInstallerTool(self.portal)
+            qtool = self.getTool('portal_quickinstaller')
+            try:
+                qtool.getInstallMethod(module)
+            except AttributeError:
+                # No install method found. Go Try with an external script.
+                pass
+            else:
+                # Install
+                qtool.installProduct(module)
+                return
+            
+        # No QuickInstaller product or no install method found.
         try:
             if not self.portalHas(id):
                 __import__('Products.' + module)
