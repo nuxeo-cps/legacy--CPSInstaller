@@ -6,7 +6,8 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- Workflow state property 'workflow_reset_on_workflow_variable' was not taken
+  into account by CPSInstaller.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
