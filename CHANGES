@@ -9,4 +9,5 @@ Bug fixes:
 -
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
--
+- Adding Plone skins names in CMFInstaller to be able to register
+  CPSIO skins (needed when installing CPSIO on a Plone site to export it).
