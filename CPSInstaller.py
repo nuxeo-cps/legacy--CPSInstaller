@@ -725,6 +725,11 @@ class CPSInstaller(CMFInstaller):
                 confdata = self.loadConfigurationFile(
                     **info['dataFromConfigFile'])
                 info['data'].update(confdata)
+            # Adding construction of backing_dir_infos for MetaDirectories
+            if info['data'].has_key('backing_dir_infos'):
+                bdi = info['data'].get('backing_dir_infos')
+                dir.setBackingDirectories(bdi)
+                del info['data']['backing_dir_infos']
             dir.manage_changeProperties(**info['data'])
 
     def verifyEventSubscribers(self, subscribers):
