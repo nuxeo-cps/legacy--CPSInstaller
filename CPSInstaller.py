@@ -205,7 +205,7 @@ class CPSInstaller(CMFInstaller):
     #
     # CPSSchemas installation
     #
-    def addSchemas(self, schemas):
+    def verifySchemas(self, schemas):
         """Adds schemas if they don't exist
 
         The schemas parameter is a dictionary of schema definitions.
@@ -225,7 +225,7 @@ class CPSInstaller(CMFInstaller):
                 schema.manage_addField(field_id, fieldinfo['type'],
                                     **fieldinfo['data'])
 
-    def addWidgets(self, widgets):
+    def verifyWidgets(self, widgets):
         """Adds widgets if they don't exist
 
         The widgets parameter is a dictionary of widget definitions.
@@ -241,7 +241,7 @@ class CPSInstaller(CMFInstaller):
             widget = wtool.manage_addCPSWidgetType(id, info['type'])
             widget.manage_changeProperties(**info['data'])
 
-    def addLayouts(self, layouts):
+    def verifyLayouts(self, layouts):
         """Adds layouts if they don't exist
 
         The layouts parameter is a dictionary of layout definitions.
@@ -262,7 +262,7 @@ class CPSInstaller(CMFInstaller):
             layout.setLayoutDefinition(info['layout'])
             layout.manage_changeProperties(**info['layout'])
 
-    def addVocabularies(self, vocabularies):
+    def verifyVocabularies(self, vocabularies):
         """Adds vocabularies if they don't exist
 
         The vocabularies parameter is a dictionary of vocabulary definitions.
@@ -273,7 +273,11 @@ class CPSInstaller(CMFInstaller):
         for id, info in vocabularies.items():
             self.log(" Adding vocabulary %s" % id)
             if id in vtool.objectIds():
-                if getattr(vtool, id).isUserModified():
+                p = vtool[id]
+                self.log(str(p.meta_type) )
+                self.log(str(p.getId()) )
+
+                if p.isUserModified():
                     self.log("  Keeping, as it has been modified.")
                     self.log("  Delete it manually if needed.")
                     continue
@@ -281,8 +285,8 @@ class CPSInstaller(CMFInstaller):
                     self.log("  Deleting.")
                     vtool.manage_delObjects([id])
                 self.log("  Installing.")
-                type = info.get('type', 'CPS Vocabulary')
-                vtool.manage_addCPSVocabulary(id, type, **info['data'])
+                vtype = info.get('type', 'CPS Vocabulary')
+                vtool.manage_addCPSVocabulary(id, vtype, **info['data'])
 
     #
     # Internationalization support
@@ -361,4 +365,24 @@ class CPSInstaller(CMFInstaller):
         if treename not in trees:
             trees.append(treename)
             self.portal._v_changed_tree_caches = trees
+
+
+    #
+    # Misc stuff
+    #
+
+    def verifyDirectories(self, directories):
+        dirtool = self.portal.portal_directories
+        for id, info in directories.items():
+            self.log(" Directory %s" % id)
+            if id in dirtool.objectIds():
+                self.logOK()
+                continue
+            self.log("  Installing.")
+            directory = dirtool.manage_addCPSDirectory(id, info['type'])
+            directory.manage_changeProperties(**info['data'])
+            for role, expr in info.get('entry_local_roles', ()):
+                res = directory.addEntryLocalRole(role, expr)
+                if res:
+                    raise ValueError(res)
 

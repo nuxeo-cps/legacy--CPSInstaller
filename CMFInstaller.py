@@ -55,7 +55,7 @@ class CMFInstaller:
             raise ValueError('No product name given to installer')
 
     def isMainInstaller(self):
-        if self.portal._v_main_installer is self:
+        if getattr(self.portal, '_v_main_installer', 1) is self:
             self.log("IS main installer, finalizing")
             return 1
         self.log("Not main installer, exiting")
@@ -121,6 +121,9 @@ class CMFInstaller:
         return log
 
     def logResult(self):
+        if not self.isMainInstaller():
+            return self.flush()
+        # Wrap HTML around it if it's the main installer.
         return '''<html><head><title>%s</title></head>
             <body><pre>%s</pre></body></html>''' % (
             self.product_name, self.flush() )
