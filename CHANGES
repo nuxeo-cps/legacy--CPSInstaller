@@ -3,8 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
-- new CPSInstaller methods to mask and restore events for subscriber
-  of portal_eventservice during installation
+-
 Bug fixes:
 ~~~~~~~~~~
 -
