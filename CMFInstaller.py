@@ -105,6 +105,10 @@ class CMFInstaller:
         if reindex_catalog:
             self.log('Rebuild all catalog indexes')
             ct.refreshCatalog(clear=1)
+            if getattr(self.portal, '_v_reindex_security', 0):
+                # no need to reindex security index allowedRolesAndUsers
+                # as we just reindex the wall catalog
+                setattr(self.portal, '_v_reindex_security', 0)
         elif changed_indexes:
             self.log('Rebuild catalog indexes: %s' %
                      ' '.join(changed_indexes))
