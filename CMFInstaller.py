@@ -18,10 +18,12 @@
 # $Id$
 
 import os
-from App.Extensions import getPath
+from Globals import package_home
 from re import match
 from zLOG import LOG, INFO, DEBUG
+from App.Extensions import getPath
 from Products.PythonScripts.PythonScript import PythonScript
+from Products.CMFCore.utils import getToolByName
 
 SECTIONS_ID = 'sections'
 WORKSPACES_ID = 'workspaces'
@@ -43,7 +45,7 @@ class CMFInstaller:
         LOG(self.modulename, INFO, message)
 
     def logOK(self):
-        self.log(" Already correctly installed")
+        self.log("   Already correctly installed")
 
     def flush(self):
         log = '\n'.join(self.messages)
@@ -110,12 +112,13 @@ class CMFInstaller:
     #
     # Methods to setup and manage skins
     #
-    # This is Stephanes version:
-    def setupSkins(self, skins):
+
+    def verifySkins(self, skins):
         """Install or update skins.
 
         <skins> parameter is a sequence of (<skin_name>, <skin_path>)."""
 
+        self.log("Verifying skins")
         skin_installed = 0
         for skin, path in skins:
             path = path.replace('/', os.sep)
@@ -126,7 +129,7 @@ class CMFInstaller:
                 if oldpath == path:
                     self.logOK()
                 else:
-                    self.log("  Correctly installed, correcting path")
+                    self.log("  Incorrectly installed, correcting path")
                     dv.manage_properties(dirpath=path)
             else:
                 skin_installed = 1
@@ -151,54 +154,6 @@ class CMFInstaller:
             self.portal._v_skindata = None
             self.portal.setupCurrentSkin()
 
-    # And this Lennarts.
-    # XXX: Check the difference between these two methods and decide
-    # Which one to use.
-    def verifySkins(self, skindefs):
-        """XXX: write some docstring here stating what a skindefs is"""
-
-        self.log("Verifying skins")
-
-        cmfcore = self.portal.portal_skins.manage_addProduct['CMFCore']
-
-        for skin, path in skindefs.items():
-            path = path.replace('/', os.sep)
-            self.log(" FS Directory View '%s'" % skin)
-            if skin in self.portal.portal_skins.objectIds():
-                dv = self.portal.portal_skins[skin]
-                oldpath = dv.getDirPath()
-                if oldpath == path:
-                    self.logOK()
-                else:
-                    self.log("  Incorrectly installed, correcting path")
-                    dv.manage_properties(dirpath=path)
-            else:
-                # XXX: Hack around a CMFCore/DirectoryView bug (?)
-                path = os.path.join(package_home(cpsdefault_globals),
-                     "..", "..", path)
-                path = minimalpath(path)
-
-                cmfcore.manage_addDirectoryView(filepath=path, id=skin)
-                self.log("  Creating skin")
-
-        allskins = self.portal.portal_skins.getSkinPaths()
-        skins = skindefs.keys()
-        for skin_name, skin_path in allskins:
-            if skin_name != 'Basic':
-                continue
-            path = [x.strip() for x in skin_path.split(',')]
-            path = [x for x in path if x not in skins] # strip all
-            if path and path[0] == 'custom':
-                path = path[:1] + list(skins) + path[1:]
-            else:
-                path = list(skins) + path
-            npath = ', '.join(path)
-            self.portal.portal_skins.addSkinSelection(skin_name, npath)
-            self.log(" Fixup of skin %s" % skin_name)
-        self.log(" Resetting skin cache")
-        self.portal._v_skindata = None
-        self.portal.setupCurrentSkin()
-
     #
     # Mixed management methods
     #
@@ -213,4 +168,17 @@ class CMFInstaller:
                 self.portal._addRole(role)
                 self.log(" Add role %s" % role)
 
+    def addCalendarTypes(self, type_ids):
+        ctool = getToolByName(self.portal, 'portal_calendar', None)
+        if ctool is None:
+            return
+
+        current_types = ctool.calendar_types
+        print current_types
+        print type_ids
+        for tid in type_ids:
+            if tid not in current_types:
+                self.log(' Calendar type %s added' % tid)
+                current_types.append(tid)
+        ctool.calendar_types = current_types
 

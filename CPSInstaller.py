@@ -26,6 +26,8 @@ from App.Extensions import getPath
 from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
 from Products.PythonScripts.PythonScript import PythonScript
+from Products.ExternalMethods.ExternalMethod import ExternalMethod
+from Products.CMFCore.utils import getToolByName
 
 from CMFInstaller import CMFInstaller
 
@@ -34,8 +36,6 @@ class CPSInstaller(CMFInstaller):
     #
     # Workflow methods:
     #
-
-    # XXX Uh-oh, this is CPS Specific! Should be moved to CPSInstaller.
 
     def createWorkflow(self, wfdef):
         wftool = self.portal.portal_workflow
@@ -119,6 +119,28 @@ class CPSInstaller(CMFInstaller):
         self.log(' Done')
 
     #
+    # Flexible Type installation
+    #
+
+    def addFlexibleTypes(self, type_data):
+        ttool = getToolByName(self.portal, 'portal_types')
+        ptypes_installed = ttool.objectIds()
+        display_in_cmf_calendar = []
+
+        for ptype, data in type_data.items():
+            self.log(" Adding type '%s'" % ptype)
+            if ptype in ptypes_installed:
+                self.logOK()
+                continue
+            ti = ttool.addFlexibleTypeInformation(id=ptype)
+            if data.get('display_in_cmf_calendar'):
+                display_in_cmf_calendar.append(ptype)
+                del data['display_in_cmf_calendar']
+            ti.manage_changeProperties(**data)
+
+        self.addCalendarTypes(display_in_cmf_calendar)
+
+    #
     # Internationalization support
     #
 
@@ -133,7 +155,6 @@ class CPSInstaller(CMFInstaller):
             self.log(" !!! Unable to find .po dir")
         else:
             self.log("  Checking installable languages")
-            langs = []
             avail_langs = mcat.get_languages()
             self.log("    Available languages: %s" % str(avail_langs))
             for file in os.listdir(popath):
