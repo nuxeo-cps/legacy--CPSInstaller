@@ -14,6 +14,7 @@ New features:
 - Changed the Schema methods from addXxxx to verifyXxxx.
 - Changed the Workflow methods from setupXxxx to verifyXxxx.
 - New method verifyEventSubsribers.
+- setupPortalPermissions now takes an optional object as argument.
 Bug fixes:
 ~~~~~~~~~~
 - Fixed a bug in the local workflow setup.

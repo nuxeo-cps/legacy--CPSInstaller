@@ -325,17 +325,21 @@ class CMFInstaller:
                 self.portal._addRole(role)
                 self.log(" Add role %s" % role)
 
-    def setupPortalPermissions(self, permissions):
-        """Sets up the permissions of the portal object
+    def setupPortalPermissions(self, permissions, object=None):
+        """Sets up the permissions of an object
+
+        Uses the portal object if no other object is given.
 
         permissions is a dict:
         {'permission': ['list', 'of', 'roles'],}
         """
+        if object is None:
+            object = self.portal
         # XXX Once again this does not verify anything, but brutally
         # overrides any earlier changes.
         for perm, roles in permissions.items():
             self.log("  Setting up permission %s" % perm)
-            self.portal.manage_permission(perm, roles, 0)
+            object.manage_permission(perm, roles, 0)
         self.flagReindexSecurity()
 
     def flagReindexSecurity(self):

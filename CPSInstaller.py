@@ -141,7 +141,7 @@ class CPSInstaller(CMFInstaller):
         self.verifyWfVariables(wf, wfvariables)
         self.log(' Done')
 
-    def setupLocalWorkflowChains(self, object, wfchains):
+    def verifyLocalWorkflowChains(self, object, wfchains):
         """Sets up the local workflows on object.
 
         wfchains = {
