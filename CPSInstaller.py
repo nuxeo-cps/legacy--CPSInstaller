@@ -69,8 +69,7 @@ class CPSInstaller(CMFInstaller):
               workflow_type='cps_workflow (Web-configurable workflow for CPS)')
 
         wf = wftool[wfid]
-        if hasattr(wf, 'isUserModified') and \
-           wf.isUserModified():
+        if hasattr(wf, 'isUserModified') and wf.isUserModified():
             self.log('WARNING: The workflow permissions are modified and'
                 ' will not be changed. Delete manually if needed.')
             return wf
@@ -86,8 +85,7 @@ class CPSInstaller(CMFInstaller):
         for stateid, statedef in states.items():
             if stateid in existing_states:
                 ob = workflow.states[stateid]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if hasattr(ob, 'isUserModified') and ob.isUserModified():
                     self.log('WARNING: The workflow state is modified and will'
                              ' not be changed. Delete manually if needed.')
                     continue
@@ -108,8 +106,7 @@ class CPSInstaller(CMFInstaller):
         for transid, transdef in transitions.items():
             if transid in existing_transitions:
                 ob = workflow.transitions[transid]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if hasattr(ob, 'isUserModified') and ob.isUserModified():
                     self.log('WARNING: The workflow transition is modified and'
                              ' will not be changed. Delete manually if needed.')
                     continue
@@ -126,8 +123,7 @@ class CPSInstaller(CMFInstaller):
         for scriptid, scriptdef in scripts.items():
             if scriptid in existing_scripts:
                 ob = workflow.scripts[scriptid]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if hasattr(ob, 'isUserModified') and ob.isUserModified():
                     self.log('WARNING: The workflow script is modified and'
                              ' will not be changed. Delete manually if needed.')
                     continue
@@ -147,8 +143,7 @@ class CPSInstaller(CMFInstaller):
         for varid, vardef in variables.items():
             if varid in existing_vars:
                 ob = workflow.variables[varid]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if hasattr(ob, 'isUserModified') and ob.isUserModified():
                     self.log('WARNING: The workflow variable is modified and'
                              ' will not be changed. Delete manually if needed.')
                     continue
@@ -161,8 +156,8 @@ class CPSInstaller(CMFInstaller):
             var.setProperties(**vardef)
 
         if state_var:
-            if hasattr(workflow.variables, 'isUserModified') and \
-               workflow.variables.isUserModified():
+            if (hasattr(workflow.variables, 'isUserModified')
+                and workflow.variables.isUserModified()):
                 self.log('WARNING: The workflow state variable is modified and'
                         ' will not be changed. Change manually if needed.')
             else:
@@ -214,9 +209,8 @@ class CPSInstaller(CMFInstaller):
             self.log(" Adding type '%s'" % ptype)
             if ptype in ptypes_installed:
                 ob = ttool[ptype]
-                if ob.meta_type != 'Factory-based Type Information' and \
-                   hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if (ob.meta_type != 'Factory-based Type Information'
+                    and hasattr(ob, 'isUserModified') and ob.isUserModified()):
                     self.log('WARNING: The type is modified and will not be '
                              'changed. Delete manually if needed.')
                     continue
@@ -279,8 +273,8 @@ class CPSInstaller(CMFInstaller):
             self.log(" Adding schema %s" % id)
             if id in existing_schemas:
                 schema = stool['id']
-                if hasattr(schema, 'isUserModified') and \
-                   schema.isUserModified():
+                if (hasattr(schema, 'isUserModified')
+                    and schema.isUserModified()):
                     self.log('WARNING: The schema is modified and will not be '
                              'changed. Delete manually if needed.')
                     continue
@@ -306,8 +300,7 @@ class CPSInstaller(CMFInstaller):
             self.log(" Adding widget %s" % id)
             if id in existing_widgets:
                 ob = wtool[id]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if hasattr(ob, 'isUserModified') and ob.isUserModified():
                     self.log('WARNING: The widget is modified and will not be '
                              'changed. Delete manually if needed.')
                     continue
@@ -330,8 +323,7 @@ class CPSInstaller(CMFInstaller):
             self.log(" Adding layout %s" % id)
             if id in existing_layouts:
                 ob = ltool[id]
-                if hasattr(ob, 'isUserModified') and \
-                   ob.isUserModified():
+                if hasattr(ob, 'isUserModified') and ob.isUserModified():
                     self.log('WARNING: The layout is modified and will not be '
                              'changed. Delete manually if needed.')
                     continue
@@ -467,8 +459,8 @@ class CPSInstaller(CMFInstaller):
         tree.manage_changeProperties(
             type_names=old_type_names + list(type_names),
             meta_types=old_meta_types + list(meta_types))
-        if old_type_names != tree.type_names or \
-           old_meta_types != tree.meta_types:
+        if (old_type_names != tree.type_names
+            or old_meta_types != tree.meta_types):
             self.flagRebuildTreeCache(treename)
 
     def flagRebuildTreeCache(self, treename):
@@ -544,8 +536,7 @@ class CPSInstaller(CMFInstaller):
             self.log(" Directory %s" % id)
             if id in dirtool.objectIds():
                 dir = dirtool[id]
-                if hasattr(dir, 'isUserModified') and \
-                   dir.isUserModified():
+                if hasattr(dir, 'isUserModified') and dir.isUserModified():
                     self.log('WARNING: The directory is modified and will not '
                              'be changed. Delete manually if needed.')
                 else:
