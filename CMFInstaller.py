@@ -1,40 +1,43 @@
-# (c) 2003 Nuxeo SARL <http://nuxeo.com>
+# (C) Copyright 2003 Nuxeo SARL <http://nuxeo.com>
+# Author: Lennart Regebro <regebro@nuxeo.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as published
+# by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+#
 # $Id$
-""" here we go
-"""
 
 import os
-import sys
-from Globals import package_home
-from AccessControl import getSecurityManager
+from App.Extensions import getPath
+from re import match
 from zLOG import LOG, INFO, DEBUG
-from Products.CMFCore.ActionInformation import ActionInformation
-from Products.CMFCore.CMFCorePermissions import View, ModifyPortalContent, \
-     ReviewPortalContent, RequestReview
 from Products.PythonScripts.PythonScript import PythonScript
 
-from Products.CPSCore.CPSWorkflow import \
-     TRANSITION_INITIAL_PUBLISHING, TRANSITION_INITIAL_CREATE, \
-     TRANSITION_ALLOWSUB_CREATE, TRANSITION_ALLOWSUB_PUBLISHING, \
-     TRANSITION_BEHAVIOR_PUBLISHING, TRANSITION_BEHAVIOR_FREEZE, \
-     TRANSITION_BEHAVIOR_DELETE, TRANSITION_BEHAVIOR_MERGE, \
-     TRANSITION_ALLOWSUB_CHECKOUT, TRANSITION_INITIAL_CHECKOUT, \
-     TRANSITION_BEHAVIOR_CHECKOUT, TRANSITION_ALLOW_CHECKIN, \
-     TRANSITION_BEHAVIOR_CHECKIN, TRANSITION_ALLOWSUB_DELETE, \
-     TRANSITION_ALLOWSUB_MOVE, TRANSITION_ALLOWSUB_COPY
+SECTIONS_ID = 'sections'
+WORKSPACES_ID = 'workspaces'
 
-from Products.DCWorkflow.Transitions import TRIGGER_USER_ACTION
-from Products.CPSDefault import cpsdefault_globals
-from Products.CMFCore.utils import minimalpath
-from Products.ExternalMethod.ExternalMethod import ExternalMethod
+class CMFInstaller:
+    """Base class for product-specific installers"""
 
-
-class InstallLogger:
-
-    def __init__(self, modulename):
+    def __init__(self, context, modulename):
+        self.context = context
+        self.portal = context.portal_url.getPortalObject()
         self.modulename = modulename
         self.messages = []
 
+    #
+    # Logging
+    #
     def log(self, message):
         self.messages.append(message)
         LOG(self.modulename, INFO, message)
@@ -42,16 +45,14 @@ class InstallLogger:
     def flush(self):
         return '\n'.join(self.messages)
 
+    def htmlflush(self):
+        return '''<html><head><title>%s</title></head>
+            <body><pre>%s</pre></body></html>''' % (
+            self.modulename, self.flush() )
 
-class InstallHelper:
-
-    def __init__(self, script, logger):
-        self.portal = script.portal_url.getPortalObject()
-        self.logger = logger
-
-    def portalhas(self, id):
-        return id in self.portal.objectIds()
-
+    #
+    # Methods to setup and manage actions
+    #
     def hasAction(self, tool, actionid):
         for action in self.portal[tool].listActions():
             if action.id == actionid:
@@ -65,7 +66,7 @@ class InstallHelper:
         else:
             self.portal[tool].addAction(**kw)
             result += 'added.'
-        self.logger.log(result)
+        self.log(result)
 
     def verifyActions(self, actionslist):
         for a in actionslist:
@@ -79,7 +80,7 @@ class InstallHelper:
                 if id in actionids:
                     if ac.visible:
                         ac.visible = 0
-                        self.logger.log(" Hiding action %s from %s" % (id, tool))
+                        self.log(" Hiding action %s from %s" % (id, tool))
             self.portal[tool]._actions = actions
 
     def deleteActions(self, actions):
@@ -90,33 +91,73 @@ class InstallHelper:
                 if id in actionids:
                     if ac.visible:
                         ac.visible = 0
-                        self.logger.log(" Deleting action %s from %s" % (id, tool))
+                        self.log(" Deleting action %s from %s" % (id, tool))
             self.portal[tool]._actions = actions
 
-    def addRoles(self, roles):
-        already = self.portal.valid_roles()
-        for role in roles:
-            if role not in already:
-                self.portal._addRole(role)
-                self.logger.log(" Add role %s" % role)
+    #
+    # Methods to setup and manage skins
+    #
+    # This is Stephanes version:
+    def setupSkins(self, skins):
+        """Install or update skins.
 
+        <skins> parameter is a sequence of (<skin_name>, <skin_path>)."""
+
+        skin_installed = 0
+        for skin, path in skins:
+            path = path.replace('/', os.sep)
+            self.log(" FS Directory View '%s'" % skin)
+            if skin in self.portal.portal_skins.objectIds():
+                dv = self.portal.portal_skins[skin]
+                oldpath = dv.getDirPath()
+                if oldpath == path:
+                    self.logOK()
+                else:
+                    self.log("  Correctly installed, correcting path")
+                    dv.manage_properties(dirpath=path)
+            else:
+                skin_installed = 1
+                self.portal.portal_skins.manage_addProduct['CMFCore'].manage_addDirectoryView(filepath=path, id=skin)
+                self.log("  Creating skin")
+
+        if skin_installed:
+            all_skins = self.portal.portal_skins.getSkinPaths()
+            for skin_name, skin_path in all_skins:
+                if skin_name != 'Basic':
+                    continue
+                path = [x.strip() for x in skin_path.split(',')]
+                path = [x for x in path if x not in skins] # strip all
+                if path and path[0] == 'custom':
+                    path = path[:1] + [skin[0] for skin in skins] + path[1:]
+                else:
+                    path = [skin[0] for skin in skins] + path
+                npath = ', '.join(path)
+                self.portal.portal_skins.addSkinSelection(skin_name, npath)
+                self.log(" Fixup of skin %s" % skin_name)
+            self.log(" Resetting skin cache")
+            self.portal._v_skindata = None
+            self.portal.setupCurrentSkin()
+
+    # And this Lennarts.
+    # XXX: Check the difference between these two methods and decide
+    # Which one to use.
     def verifySkins(self, skindefs):
         """XXX: write some docstring here stating what a skindefs is"""
 
-        self.logger.log("Verifying skins")
+        self.log("Verifying skins")
 
         cmfcore = self.portal.portal_skins.manage_addProduct['CMFCore']
 
         for skin, path in skindefs.items():
             path = path.replace('/', os.sep)
-            self.logger.log(" FS Directory View '%s'" % skin)
+            self.log(" FS Directory View '%s'" % skin)
             if skin in self.portal.portal_skins.objectIds():
                 dv = self.portal.portal_skins[skin]
                 oldpath = dv.getDirPath()
                 if oldpath == path:
-                    self.logger.log(" Already correctly installed")
+                    self.log(" Already correctly installed")
                 else:
-                    self.logger.log("  Incorrectly installed, correcting path")
+                    self.log("  Incorrectly installed, correcting path")
                     dv.manage_properties(dirpath=path)
             else:
                 # XXX: Hack around a CMFCore/DirectoryView bug (?)
@@ -125,7 +166,7 @@ class InstallHelper:
                 path = minimalpath(path)
 
                 cmfcore.manage_addDirectoryView(filepath=path, id=skin)
-                self.logger.log("  Creating skin")
+                self.log("  Creating skin")
 
         allskins = self.portal.portal_skins.getSkinPaths()
         skins = skindefs.keys()
@@ -140,12 +181,14 @@ class InstallHelper:
                 path = list(skins) + path
             npath = ', '.join(path)
             self.portal.portal_skins.addSkinSelection(skin_name, npath)
-            self.logger.log(" Fixup of skin %s" % skin_name)
-        self.logger.log(" Resetting skin cache")
+            self.log(" Fixup of skin %s" % skin_name)
+        self.log(" Resetting skin cache")
         self.portal._v_skindata = None
         self.portal.setupCurrentSkin()
 
-
+    #
+    # Workflow methods:
+    #
     def createWorkflow(self, wfdef):
         wftool = self.portal.portal_workflow
         wfid = wfdef['wfid']
@@ -168,15 +211,15 @@ class InstallHelper:
 
     def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
-        self.logger.log(" Setup workflow %s" % wfdef['wfid'])
+        self.log(" Setup workflow %s" % wfdef['wfid'])
         wf = self.createWorkflow(wfdef)
 
         for stateid in wfstates.keys():
-            self.logger.log('  Adding state %s' % stateid)
+            self.log('  Adding state %s' % stateid)
             wf.states.addState(stateid)
 
         for transid in wftransitions.keys():
-            self.logger.log('  Adding transition %s' % transid)
+            self.log('  Adding transition %s' % transid)
             wf.transitions.addTransition(transid)
 
         for stateid, statedef in wfstates.items():
@@ -202,15 +245,18 @@ class InstallHelper:
             var = wf.variables[varid]
             var.setProperties(**vardef)
 
+    #
+    # Mixed management methods
+    #
 
-    def runExternalUpdater(self, id, title, module, script, method):
-        try:
-            if not self.portalhas(id):
-                __import__(module)
-                self.logger.log('Adding %s' % title)
-                script = ExternalMethod(id, title, script, method)
-                self.portal._setObject(id, script)
-            self.logger.log(self.portal[id]())
-        except ImportError:
-            pass
+    def portalhas(self, id):
+        return id in self.portal.objectIds()
+
+    def addRoles(self, roles):
+        already = self.portal.valid_roles()
+        for role in roles:
+            if role not in already:
+                self.portal._addRole(role)
+                self.log(" Add role %s" % role)
+
 
