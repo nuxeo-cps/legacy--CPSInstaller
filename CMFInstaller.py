@@ -182,7 +182,7 @@ class CMFInstaller:
                     dv.manage_properties(dirpath=path)
             else:
                 skin_installed = 1
-                #self.portal.portal_skins.manage_addProduct['CMFCore'].manage_addDirectoryView(filepath=path, id=skin)
+                self.portal.portal_skins.manage_addProduct['CMFCore'].manage_addDirectoryView(filepath=path, id=skin)
                 self.log("  Creating skin")
 
         if skin_installed:
