@@ -62,29 +62,36 @@ class CPSInstaller(CMFInstaller):
         wfid = wfdef['wfid']
 
         self.log(' Creating workflow %s' % wfid)
-        if wfid in wftool.objectIds():
-            self.logOK()
-            return None
-
-        # Create and set up workflow
-        wftool.manage_addWorkflow(id=wfid,
-            workflow_type='cps_workflow (Web-configurable workflow for CPS)')
+        if wfid not in wftool.objectIds():
+            wftool.manage_addWorkflow(id=wfid,
+              workflow_type='cps_workflow (Web-configurable workflow for CPS)')
 
         wf = wftool[wfid]
+        if hasattr(wf, 'isUserModified') and \
+           wf.isUserModified():
+            self.log('WARNING: The workflow permissions are modified and'
+                ' will not be changed. Delete manually if needed.')
+            return wf
+
+        wf.permissions = ()
         if wfdef.has_key('permissions'):
             for p in wfdef['permissions']:
                 wf.addManagedPermission(p)
-
-        if wfdef.has_key('state_var'):
-            wf.variables.setStateVar(wfdef['state_var'])
-
         return wf
 
     def verifyWfStates(self, workflow, states):
         existing_states = workflow.states.objectIds()
         for stateid, statedef in states.items():
             if stateid in existing_states:
-                continue
+                ob = workflow.states[stateid]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The workflow state is modified and will'
+                             ' not be changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    workflow.states.manage_delObjects([stateid])
             self.log(' Adding state %s' % stateid)
             workflow.states.addState(stateid)
             state = workflow.states.get(stateid)
@@ -98,17 +105,33 @@ class CPSInstaller(CMFInstaller):
         existing_transitions = workflow.transitions.objectIds()
         for transid, transdef in transitions.items():
             if transid in existing_transitions:
-                continue
+                ob = workflow.transitions[transid]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The workflow transition is modified and'
+                             ' will not be changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    workflow.transitions.manage_delObjects([transid])
             self.log(' Adding transition %s' % transid)
             workflow.transitions.addTransition(transid)
             trans = workflow.transitions.get(transid)
             trans.setProperties(**transdef)
 
     def verifyWfScripts(self, workflow, scripts):
-        existing_scripts = workflow.states.objectIds()
+        existing_scripts = workflow.scripts.objectIds()
         for scriptid, scriptdef in scripts.items():
             if scriptid in existing_scripts:
-                continue
+                ob = workflow.scripts[scriptid]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The workflow script is modified and'
+                             ' will not be changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    workflow.scripts.manage_delObjects([scriptid])
             self.log(' Adding script %s' % scriptid)
             workflow.scripts._setObject(scriptid, PythonScript(scriptid))
             script = workflow.scripts[scriptid]
@@ -117,15 +140,31 @@ class CPSInstaller(CMFInstaller):
                 if scriptdef.has_key(attribute):
                     setattr(script, attribute, scriptdef[attribute])
 
-    def verifyWfVariables(self, workflow, variables):
+    def verifyWfVariables(self, workflow, variables, state_var=None):
         existing_vars = workflow.variables.objectIds()
         for varid, vardef in variables.items():
             if varid in existing_vars:
-                continue
+                ob = workflow.variables[varid]
+                if hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The workflow variable is modified and'
+                             ' will not be changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log('   Deleting old definition')
+                    workflow.variables.manage_delObjects([varid])
             self.log(' Adding variable %s' % varid)
             workflow.variables.addVariable(varid)
             var = workflow.variables[varid]
             var.setProperties(**vardef)
+
+        if state_var:
+            if hasattr(workflow.variables, 'isUserModified') and \
+               workflow.variables.isUserModified():
+                self.log('WARNING: The workflow state variable is modified and'
+                        ' will not be changed. Change manually if needed.')
+            else:
+                workflow.variables.setStateVar(state_var)
 
     def verifyWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
