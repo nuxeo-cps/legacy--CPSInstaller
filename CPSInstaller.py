@@ -234,7 +234,8 @@ class CPSInstaller(CMFInstaller):
                 schema = stool['id']
                 if hasattr(schema, 'isUserModified') and \
                    schema.isUserModified():
-                    self.log('WARNING: Schema has is modified. Not changing')
+                    self.log('WARNING: The schema is modified and will not be '
+                             'changed. Delete manually if needed.')
                     continue
                 else:
                     self.log('   Deleting old definition')
@@ -298,8 +299,8 @@ class CPSInstaller(CMFInstaller):
                 self.log(str(p.getId()))
 
                 if p.isUserModified():
-                    self.log("  Keeping, as it has been modified.")
-                    self.log("  Delete it manually if needed.")
+                    self.log('WARNING: The schema is modified and will not be '
+                             'changed. Delete manually if needed.')
                     continue
                 else:
                     self.log("  Deleting.")
