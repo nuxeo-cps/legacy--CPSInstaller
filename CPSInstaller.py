@@ -132,6 +132,16 @@ class CPSInstaller(CMFInstaller):
         self.log(' Done')
 
     def setupLocalWorkflowChains(self, object, wfchains):
+        """Sets up the local workflows on object.
+
+        wfchains = {
+            '<Portal Type>': '<workflow_id>',
+        }
+        """
+        self.log('Verifying local workflow for %s' % object.getId())
+        if not '.cps_workflow_configuration' in object.objectIds():
+            installer.log("  Adding workflow configuration to %s" % object.getId())
+            object.manage_addProduct['CPSCore'].addCPSWorkflowConfiguration()
         wfc = getattr(object, '.cps_workflow_configuration')
         for portal_type, chain in wfchains.items():
           wfc.manage_addChain(portal_type=portal_type, chain=chain)

@@ -257,11 +257,11 @@ class CMFInstaller:
         type_dict is:
         {'typeid': {'allowed_content_types': ('type1', 'type2'),
                     'typeinfo_name': 'Product: Typename',
-                    'add_meta_type'='Factory-based Type Information',
+                    'add_meta_type': 'Factory-based Type Information',
                    }
         }
         """
-        self.log("Verifying Types")
+        self.log("Verifying portal types")
         ttool = self.portal.portal_types
         ptypes_installed = ttool.objectIds()
 
