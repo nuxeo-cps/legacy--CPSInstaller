@@ -291,9 +291,10 @@ class CPSInstaller(CMFInstaller):
         tab of a vocabulary.
         """
         vtool = self.portal.portal_vocabularies
+        existing_vocabularies = vtool.objectIds()
         for id, info in vocabularies.items():
             self.log(" Adding vocabulary %s" % id)
-            if id in vtool.objectIds():
+            if id in existing_vocabularies:
                 p = vtool[id]
                 if p.isUserModified():
                     self.log('WARNING: The schema is modified and will not be '
