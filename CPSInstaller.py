@@ -565,8 +565,13 @@ class CPSInstaller(CMFInstaller):
         ttool = self.getTool('portal_types')
         for box in boxes.keys():
             if box in existing_boxes:
-                box_container._delObject(box)
-                self.log("   Deletion of box: %s" % box)
+                if hasattr(box, 'isUserModified') and box.isUserModified():
+                    self.log('WARNING: The Box is modified and will not be '
+                             'changed. Delete manually if needed.')
+                    continue
+                else:
+                    self.log("   Deletion of box: %s" % box)
+                    box_container._delObject(box)
             self.log("   Creation of box: %s" % box)
             apply(ttool.constructContent,
                 (boxes[box]['type'], box_container,
