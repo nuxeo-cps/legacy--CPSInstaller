@@ -284,12 +284,29 @@ class CPSInstaller(CMFInstaller):
                     else:
                         self.log('    Skipping not installed locale for file %s' % file)
 
+    def verifyMessageCatalog(self, catalog_id, title):
+        """Sets up a spezialized message catalog for your product"""
+        self.log('Verifying message catalog %s' % catalog_id)
+        localizer = self.portal['Localizer']
+        # MessageCatalog
+        if catalog_id in localizer.objectIds():
+            self.logOK()
+            return
+
+        languages = localizer.get_supported_languages()
+        localizer.manage_addProduct['Localizer'].manage_addMessageCatalog(
+            id=catalog_id,
+            title=title,
+            languages=languages,
+        )
+        self.log('    Created')
+
     #
     # Portal_trees
     #
 
     def addTreeCacheType(self, treename, type_name, meta_type):
-        self.log('  Verifying %s type in %s tree cache' % (type_name, treename))
+        self.log('Verifying %s type in %s tree cache' % (type_name, treename))
         trtool = self.portal.portal_trees
         WTN = list(trtool[treename].type_names)
         if type_name not in WTN:
@@ -304,7 +321,7 @@ class CPSInstaller(CMFInstaller):
 
     def flagRebuildTreeCache(self, treename):
         trees = getattr(self.portal, '_v_changed_tree_caches', [])
-        if treename not on trees:
+        if treename not in trees:
             trees.append(treename)
             self.portal._v_changed_tree_caches = trees
 
