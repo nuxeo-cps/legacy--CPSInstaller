@@ -53,7 +53,7 @@ class CMFInstaller:
     def isMainInstaller(self):
         if getattr(self.portal, '_v_main_installer', 1) is self:
             return 1
-        return 0.
+        return 0
 
     def finalize(self):
         if self.isMainInstaller():
