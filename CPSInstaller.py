@@ -25,6 +25,7 @@ from types import TupleType, ListType
 from App.Extensions import getPath
 from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
+from Products.PythonScripts.PythonScript import PythonScript
 
 from CMFInstaller import CMFInstaller
 
@@ -40,7 +41,7 @@ class CPSInstaller(CMFInstaller):
         wftool = self.portal.portal_workflow
         wfid = wfdef['wfid']
 
-        self.log('Installing workflow %s' % wfid)
+        self.log(' Creating workflow %s' % wfid)
         if wfid in wftool.objectIds():
             self.logOK()
             return None
@@ -57,7 +58,6 @@ class CPSInstaller(CMFInstaller):
         if wfdef.has_key('state_var'):
             wf.variables.setStateVar(wfdef['state_var'])
 
-        self.log(' Done')
         return wf
 
     def setupWfStates(self, workflow, states):
@@ -65,7 +65,7 @@ class CPSInstaller(CMFInstaller):
         for stateid, statedef in states.items():
             if stateid in existing_states:
                 continue
-            self.log('  Adding state %s' % stateid)
+            self.log(' Adding state %s' % stateid)
             workflow.states.addState(stateid)
             state = workflow.states.get(stateid)
             state.setProperties(title=statedef['title'], transitions=statedef['transitions'])
@@ -77,7 +77,7 @@ class CPSInstaller(CMFInstaller):
         for transid, transdef in transitions.items():
             if transid in existing_transitions:
                 continue
-            self.log('  Adding transition %s' % transid)
+            self.log(' Adding transition %s' % transid)
             workflow.transitions.addTransition(transid)
             trans = workflow.transitions.get(transid)
             trans.setProperties(**transdef)
@@ -87,7 +87,7 @@ class CPSInstaller(CMFInstaller):
         for scriptid, scriptdef in scripts.items():
             if scriptid in existing_scripts:
                 continue
-            self.log('  Adding script %s' % scriptid)
+            self.log(' Adding script %s' % scriptid)
             workflow.scripts._setObject(scriptid, PythonScript(scriptid))
             script = workflow.scripts[scriptid]
             script.write(scriptdef['script'])
@@ -100,23 +100,23 @@ class CPSInstaller(CMFInstaller):
         for varid, vardef in variables.items():
             if varid in existing_vars:
                 continue
-            self.log('  Adding variable %s' % scriptid)
+            self.log(' Adding variable %s' % varid)
             workflow.variables.addVariable(varid)
             var = workflow.variables[varid]
             var.setProperties(**vardef)
 
     def setupWorkflow(self, wfdef={}, wfstates={}, wftransitions={},
                       wfscripts={}, wfvariables={}):
-        self.log(" Setup workflow %s" % wfdef['wfid'])
+        self.log("Setup workflow %s" % wfdef['wfid'])
         wf = self.createWorkflow(wfdef)
         if wf is None:
-            self.logOK()
             return
 
         self.setupWfStates(wf, wfstates)
         self.setupWfTransitions(wf, wftransitions)
         self.setupWfScripts(wf, wfscripts)
         self.setupWfVariables(wf, wfvariables)
+        self.log(' Done')
 
     #
     # Internationalization support
