@@ -1,13 +1,31 @@
 CPSInstaller
 
-  CPSInstaller and CMFInstaller are two base classes that is intended to
-  vastly simplify the creation of install scripts for CMF and CPS products.
-  
-  It is basically a class full with methods that is commonly done when 
-  installing products, such as setting up skins, creating workflows,
-  adding types, creating tools and such. CPSInstaller extends CMFInstaller
-  with CPSSpecific support methods. It is simple to do the same for other
-  CMF based systems, like Plone.
+  About CPSInstaller
+
+    CPSInstaller provides CMF products authors with an extensible framework to
+    help them writing *installers*: scripts that set up products for use in the
+    CMF, including boring tasks such as registering or configuring skins,
+    portal types, actions, catalog indexes, permissions, schemas, widgets,
+    layouts, vocabularies, translations, events... 
+
+    CPSInstaller will be the standard way to install products in CPS 3.1, and
+    extends and supersedes the old CPS 3.0 installer which was located in the
+    CPSDefault product (CPSDefault.Installer). By removing the dependency on
+    CPSDefault, we expect that it will make it easier to install CPS products
+    (CPSDocument, CPSSchemas, CPSDirectory...) on CMF sites (including Plone
+    sites) that don't include CPSDefault, and to write non-CPS products
+    installers that will make them easy to install on CPS sites.
+
+  How it works
+
+    CPSInstaller and CMFInstaller are two base classes that is intended to
+    vastly simplify the creation of install scripts for CMF and CPS products.
+    
+    It is basically a class full with methods that is commonly done when
+    installing products, such as setting up skins, creating workflows, adding
+    types, creating tools and such. CPSInstaller extends CMFInstaller with
+    CPS-specific support methods. It is simple to do the same for other CMF
+    based systems, like Plone.
   
   Writing install scripts.
 
