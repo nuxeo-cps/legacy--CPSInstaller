@@ -32,6 +32,20 @@ from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):
 
+    def finalize(self):
+        if not self.is_main_installer:
+            return
+        self._cmf_finalize()
+        self._cps_finalize()
+
+    def _cps_finalize(self):
+        changed_trees = getattr(self.portal, '_v_changed_tree_caches', [])
+        if changed_trees:
+            self.log('Rebuilding Tree cache')
+            trtool = self.portal.portal_trees
+            for tree in changed_trees:
+                trtool[tree].manage_rebuild()
+
     #
     # Workflow methods:
     #
@@ -269,3 +283,28 @@ class CPSInstaller(CMFInstaller):
                         mcat.manage_import(lang, lang_file)
                     else:
                         self.log('    Skipping not installed locale for file %s' % file)
+
+    #
+    # Portal_trees
+    #
+
+    def addTreeCacheType(self, treename, type_name, meta_type):
+        self.log('  Verifying %s type in %s tree cache' % (type_name, treename))
+        trtool = self.portal.portal_trees
+        WTN = list(trtool[treename].type_names)
+        if type_name not in WTN:
+            WTN.append(type_name)
+            trtool[treename].type_names = WTN
+            self.flagRebuildTreeCache(treename)
+        WMT = list(trtool[treename].meta_types)
+        if meta_type not in WMT:
+            WMT.append(type_name)
+            trtool[treename].meta_types = WMT
+            self.flagRebuildTreeCache(treename)
+
+    def flagRebuildTreeCache(self, treename):
+        trees = getattr(self.portal, '_v_changed_tree_caches', [])
+        if treename not on trees:
+            trees.append(treename)
+            self.portal._v_changed_tree_caches = trees
+

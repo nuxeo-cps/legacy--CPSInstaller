@@ -53,14 +53,16 @@ class CMFInstaller:
             raise ValueError('No product name given to installer')
 
     def finalize(self):
-        """Does all the things that only needs to be done once"""
         if not self.is_main_installer:
             return
+        self._cmf_finalize()
 
+    def _cmf_finalize(self):
+        """Does all the things that only needs to be done once"""
         # Reindex portal_catalog
-        ct = self.portal.portal_catalog
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
         if changed_indexes:
+            ct = self.portal.portal_catalog
             #XXX Reindex all indexes if more than one index is to be reindexed.
             self.log('Reindex Catalog')
             for name in changed_indexes:
