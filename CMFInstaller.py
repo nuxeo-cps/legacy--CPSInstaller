@@ -216,7 +216,7 @@ class CMFInstaller:
             actions = [ ac for ac in list(self.portal[tool]._actions)\
                                   if ac.id not in actionids ]
             for ac in actionids:
-                self.log(" Deleting action %s from %s" % (id, tool))
+                self.log(" Deleting action %s from %s" % (ac, tool))
             self.portal[tool]._actions = tuple(actions)
 
     #
