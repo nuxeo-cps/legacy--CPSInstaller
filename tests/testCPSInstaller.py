@@ -217,6 +217,7 @@ return "This is a test script"
             calendar_product.manage_addTool('CMF Calendar Tool')
         except AttributeError:
             pass
+
         installer = CPSInstaller(self.portal, 'Installer test')
         installer.verifyFlexibleTypes(types)
         self.assert_(hasattr(self.portal.portal_types, 'FlexibleType'))
@@ -225,6 +226,10 @@ return "This is a test script"
             # Make sure the calendar type got registered.
             self.assert_('IsInCalendarType' in \
                 self.portal.portal_calendar.calendar_types)
+
+        installer.cleanupPortalTypes(types_to_delete=['FlexibleType'])
+        self.assert_(hasattr(self.portal.portal_types, 'IsInCalendarType'))
+        self.assert_(not hasattr(self.portal.portal_types, 'FlexibleType'))
 
 
 if __name__ == '__main__':

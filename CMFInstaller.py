@@ -470,6 +470,19 @@ class CMFInstaller:
             self.allowContentTypes(
                 typeinfo.get('allowed_content_types', ()), ptype)
 
+    def cleanupPortalTypes(self, types_to_keep=[], types_to_delete=[]):
+        """Delete unneeded portal types"""
+        ptypes = self.portal.portal_types
+        current_types = ptypes.objectIds()
+        if types_to_keep:
+            types_to_delete = [ t for t in current_types 
+                                  if not t in types_to_keep]
+        else:
+            types_to_delete = [ t for t in current_types 
+                                  if t in types_to_delete]
+        ptypes.manage_delObjects(types_to_delete)
+        
+
     #
     # Access control management methods
     #

@@ -3,7 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- New utility method "cleanupPortalTypes".
 Bug fixes:
 ~~~~~~~~~~
 - CPSInstaller runExternalUpdater method did not run the product installer if
