@@ -6,7 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- Made entry local roles addition done only on fresh directories
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

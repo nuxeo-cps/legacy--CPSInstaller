@@ -544,11 +544,11 @@ class CPSInstaller(CMFInstaller):
                     dirtool.manage_delObjects([id])
             if id not in dirtool.objectIds():
                 dir = dirtool.manage_addCPSDirectory(id, info['type'])
+                for role, expr in info.get('entry_local_roles', ()):
+                    res = dir.addEntryLocalRole(role, expr)
+                    if res:
+                        raise ValueError(res)
             dir.manage_changeProperties(**info['data'])
-            for role, expr in info.get('entry_local_roles', ()):
-                res = dir.addEntryLocalRole(role, expr)
-                if res:
-                    raise ValueError(res)
 
     def verifyEventSubscribers(self, subscribers):
         objs = self.portal.portal_eventservice.objectValues()
