@@ -61,6 +61,7 @@ class CMFInstaller:
         ct = self.portal.portal_catalog
         changed_indexes = getattr(self.portal, '_v_changed_indexes', [])
         if changed_indexes:
+            #XXX Reindex all indexes if more than one index is to be reindexed.
             self.log('Reindex Catalog')
             for name in changed_indexes:
                 ct.reindexIndex(name, self.portal.REQUEST)
