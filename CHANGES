@@ -3,7 +3,9 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+-added new method that updates the local workflow associations for the document types.
+It is now possible to pass an extra argument to verifyFlexibleTypes ("document_roots") 
+to execute the workflow associations update after the document types installation.
 Bug fixes:
 ~~~~~~~~~~
 -
