@@ -167,13 +167,16 @@ class CPSInstaller(CMFInstaller):
         for ptype, data in type_data.items():
             self.log(" Adding type '%s'" % ptype)
             if ptype in ptypes_installed:
-                if ttool[ptype].meta_type == 'Factory-based Type Information':
-                    # Old CMF type that needs to be upgraded.
-                    ttool.manage_delObjects([ptype])
-                    self.log("  Replacing...")
-                else:
-                    self.logOK()
+                ob = ttool[ptype]
+                if ob.meta_type != 'Factory-based Type Information' and \
+                   hasattr(ob, 'isUserModified') and \
+                   ob.isUserModified():
+                    self.log('WARNING: The type is modified and will not be '
+                             'changed. Delete manually if needed.')
                     continue
+                else:
+                    self.log('   Deleting old definition')
+                    ttool.manage_delObjects([ptype])
 
             ti = ttool.addFlexibleTypeInformation(id=ptype)
             if data.get('display_in_cmf_calendar'):
