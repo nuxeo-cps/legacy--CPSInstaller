@@ -7,7 +7,11 @@ New features:
   
 Bug fixes:
 ~~~~~~~~~~
--
+- Modifying the verifyFlexibleTypes method so that display_in_cmf_calendar and
+  use_content_status_history instructions are processed after all user actions
+  override the portal type actions. This has the effect of those instructions to
+  not be deleted, which was particularly the case with custom document types.
+
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

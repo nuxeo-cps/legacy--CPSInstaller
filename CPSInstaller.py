@@ -223,6 +223,14 @@ class CPSInstaller(CMFInstaller):
                     ttool.manage_delObjects([ptype])
 
             ti = ttool.addFlexibleTypeInformation(id=ptype)
+
+            if data.has_key('actions'):
+                self.log("    Setting actions")
+                nb_action = len(ti.listActions())
+                ti.deleteActions(selections=range(nb_action))
+                for a in data['actions']:
+                    self.addAction(ti, a)
+
             if data.get('display_in_cmf_calendar'):
                 display_in_cmf_calendar.append(ptype)
                 del data['display_in_cmf_calendar']
@@ -237,13 +245,6 @@ class CPSInstaller(CMFInstaller):
                 del data['use_content_status_history']
             ti.manage_changeProperties(**data)
             self.log("  Added")
-
-            if data.has_key('actions'):
-                self.log("    Setting actions")
-                nb_action = len(ti.listActions())
-                ti.deleteActions(selections=range(nb_action))
-                for a in data['actions']:
-                    self.addAction(ti, a)
 
         self.addCalendarTypes(display_in_cmf_calendar)
 
