@@ -3,13 +3,10 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
-- New utility method "cleanupPortalTypes".
+-
 Bug fixes:
 ~~~~~~~~~~
-- CPSInstaller runExternalUpdater method did not run the product installer if
-  CMFQuickInstaller was installed and product was already installed. Now runs
-  the external method in this case, as reinstalling the product is not the
-  behaviour expected using runExternalUpdater.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

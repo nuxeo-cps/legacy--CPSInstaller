@@ -1,4 +1,23 @@
 *******************************************
+** CPSInstaller V0.16.0 [R1 build 2005/03/07-15:49 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- New utility method "cleanupPortalTypes".
+Bug fixes:
+~~~~~~~~~~
+- CPSInstaller runExternalUpdater method did not run the product installer if
+  CMFQuickInstaller was installed and product was already installed. Now runs
+  the external method in this case, as reinstalling the product is not the
+  behaviour expected using runExternalUpdater.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.15.1 [R1 build 2005/01/27-09:40 by madarche]
 
 Requires:
