@@ -182,7 +182,7 @@ class CPSInstaller(CMFInstaller):
                                state_var=wfdef.get('state_var'))
         self.log(' Done')
 
-    def verifyLocalWorkflowChains(self, object, wfchains, destructive=0, 
+    def verifyLocalWorkflowChains(self, object, wfchains, destructive=0,
                                   under_sub_add=None):
         """Sets up the local workflows on object.
 
@@ -199,7 +199,7 @@ class CPSInstaller(CMFInstaller):
         wfc = getattr(object, '.cps_workflow_configuration')
         for portal_type, chain in wfchains.items():
             if not wfc.getPlacefulChainFor(portal_type):
-                wfc.manage_addChain(portal_type=portal_type, chain=chain, 
+                wfc.manage_addChain(portal_type=portal_type, chain=chain,
                                     under_sub_add=under_sub_add)
             else:
                 if destructive:
@@ -593,19 +593,31 @@ class CPSInstaller(CMFInstaller):
         self.log('Verifying portlets on %s' % object.absolute_url(relative=1))
 
         portlet_container = self.getPortletContainer(object, create=1)
-        existing_portlets = portlet_container.listPortletIds()
+
         ttool = self.getTool('portal_types')
 
         returned = []
-        for portlet in portlets.keys():
-            if portlet in existing_portlets:
-                continue
-            self.log("   Creation of portlet: %s" % portlet)
-            portlet_id = self.portal.portal_cpsportlets.createPortlet(
-                ptype_id=portlets[portlet]['type'],
-                context=object,
-                **portlets[portlet])
-            returned.append(portlet_id)
+        for new_portlet in portlets:
+            existing_portlets = portlet_container.listPortlets()
+            updated = 0
+            # Check if the portlet needs an update
+            identifier = new_portlet.get('identifier')
+            if identifier:
+                for portlet in existing_portlets:
+                    if identifier == portlet.identifier:
+                        self.log(" Update of portlet: %s" % portlet)
+                        portlet.edit(**new_portlet)
+                        portlet_id = portlet.getId()
+                        updated = 1
+                        continue
+            if not updated:
+                self.log("   Creation of portlet: %s" % new_portlet)
+                portlet_id = self.portal.portal_cpsportlets.createPortlet(
+                    ptype_id=new_portlet['type'],
+                    context=object,
+                    **new_portlet)
+            if portlet_id not in returned:
+                returned.append(portlet_id)
         return returned
 
     #
