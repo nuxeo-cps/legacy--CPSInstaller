@@ -177,7 +177,6 @@ class CPSInstaller(CMFInstaller):
             if data.has_key('actions'):
                 self.log("    Setting actions")
                 nb_action = len(ti.listActions())
-                self.log(str(nb_action))
                 ti.deleteActions(selections=range(nb_action))
                 for a in data['actions']:
                     ti.addAction(a['id'],
