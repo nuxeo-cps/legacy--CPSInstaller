@@ -3,15 +3,10 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
-- verifyDirectories handle a **dataFromConfigFile param
- in addition to **data this enable you to set instance data
- like ldap authentication information into a configuration file
- located in the zope instance/etc directory
-- Do not shown content_history for anonymous people
+-
 Bug fixes:
 ~~~~~~~~~~
-- Ensure actions are always TALES.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
-- Using mixed case method name verifyVHM -> verifyVhm
-- adding loadConfigurationFile to set data from config file
+-
