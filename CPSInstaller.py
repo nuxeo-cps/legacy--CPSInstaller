@@ -565,13 +565,15 @@ class CPSInstaller(CMFInstaller):
         ttool = self.getTool('portal_types')
         for box in boxes.keys():
             if box in existing_boxes:
-                continue
+                box_container._delObject(box)
+                self.log("   Deletion of box: %s" % box)
             self.log("   Creation of box: %s" % box)
             apply(ttool.constructContent,
                 (boxes[box]['type'], box_container,
                 box, None), {})
             ob = getattr(box_container, box)
             ob.manage_changeProperties(**boxes[box])
+            ob.setGuardProperties(props=boxes[box].get('guard_props', {}))
 
     def deleteBoxes(self, boxes_id, object=None):
         """Delete boxes with the id listed in boxes_id that are located in

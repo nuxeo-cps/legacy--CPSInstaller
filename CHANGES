@@ -4,6 +4,7 @@ Requires:
 New features:
 ~~~~~~~~~~~~~
 - CPSInstaller will now use CMFQuickInstaller to install products, if possible.
+- box import cope with guard configuration
 Bug fixes:
 ~~~~~~~~~~
 -
