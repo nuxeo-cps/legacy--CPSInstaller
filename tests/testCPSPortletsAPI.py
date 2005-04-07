@@ -63,16 +63,20 @@ class TestCPSPortletsAPI(CPSDefaultTestCase.CPSDefaultTestCase):
 
         # If CPSPortlets is present
         if self.installer is not None:
-            # Check there's no container
-            self.assertEqual(self.installer.getPortletContainer(), None)
-            # Check there's one now
-            self.assertNotEqual(self.installer.getPortletContainer(create=1),
-                                None)
+            from Products.CPSPortlets.PortletsContainer import \
+                 PortletsContainer
+            # Check there's a container in the default installation
+            container = self.installer.getPortletContainer(create=1)
+            self.assert_(isinstance(container, PortletsContainer))
 
     def test_verifyPortletContainer(self):
 
         # If CPSPortlets is present
         if self.installer is not None:
+
+            # Delete the container
+            if '.cps_portlets' in self.portal.objectIds():
+                self.portal.manage_delObjects(['.cps_portlets'])
             # Check there's no container
             self.assertEqual(self.installer.getPortletContainer(), None)
             # Create one container
