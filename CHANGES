@@ -8,8 +8,8 @@ It is now possible to pass an extra argument to verifyFlexibleTypes ("document_r
 to execute the workflow associations update after the document types installation.
 Bug fixes:
 ~~~~~~~~~~
-- according to the docstring setupPortlets() expects a dictionary as the
-  'portlets' argument, not a list.
+- updated the docstring for verifyPortlets(). the 'portlets' argument is
+  a tuple of dictionaries.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 - verifyProduct() supports 'install' or 'Install' as external method script name.
