@@ -1,4 +1,21 @@
 *******************************************
+** CPSInstaller V0.17.1 [R1 build 2005/04/08-19:22 by madarche]
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- Added a new "ttype" parameter on the verifyTool method so that in addition to
+  the meta_type the check may be done on the type of the object too.
+Bug fixes:
+~~~~~~~~~~
+-
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.17.0 [R1 build 2005/04/08-16:23 by ben]
 
 Requires:
