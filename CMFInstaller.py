@@ -27,7 +27,7 @@ from Products.ZCTextIndex.ZCTextIndex import manage_addLexicon, ZCTextIndex
 
 SECTIONS_ID = 'sections'
 WORKSPACES_ID = 'workspaces'
-log_ok_message = '...Already correctly installed'
+log_ok_message = "...Already correctly installed"
 
 class CMFInstaller:
     """Base class for product-specific installers"""
@@ -169,7 +169,7 @@ class CMFInstaller:
 
     def getTool(self, id, default=_marker):
         """Gets the tool by id
-        
+
         If No default is given, it will raise an error.
         """
         return getToolByName(self.portal, id, default)
@@ -181,10 +181,10 @@ class CMFInstaller:
         atool = self.getTool('portal_actions')
         if action_provider in atool.listActionProviders():
             self.log(' Already correctly installed')
-        else:    
+        else:
             atool.addActionProvider(action_provider)
             self.log(' Installed')
-        
+
     def hasAction(self, tool, actionid):
         for action in self.portal[tool].listActions():
             if action.id == actionid:
@@ -475,13 +475,13 @@ class CMFInstaller:
         ptypes = self.portal.portal_types
         current_types = ptypes.objectIds()
         if types_to_keep:
-            types_to_delete = [ t for t in current_types 
+            types_to_delete = [ t for t in current_types
                                   if not t in types_to_keep]
         else:
-            types_to_delete = [ t for t in current_types 
+            types_to_delete = [ t for t in current_types
                                   if t in types_to_delete]
         ptypes.manage_delObjects(types_to_delete)
-        
+
 
     #
     # Access control management methods
