@@ -524,7 +524,7 @@ class CMFInstaller:
         current_types = tuple(ctool.calendar_types)
         for tid in type_ids:
             if tid not in current_types:
-                self.log(' Calendar type %s added' % tid)
+                self.log(" Calendar type %s added" % tid)
                 current_types += (tid,)
         ctool.calendar_types = current_types
 
@@ -536,25 +536,33 @@ class CMFInstaller:
         current_types = list(ctool.calendar_types)
         for tid in type_ids:
             if tid in current_types:
-                self.log(' Calendar type %s removed' % tid)
+                self.log(" Calendar type %s removed" % tid)
                 current_types.remove(tid)
         ctool.calendar_types = tuple(current_types)
 
-    def verifyTool(self, toolid, product, meta_type):
+    def verifyTool(self, toolid, product, meta_type, ttype=None):
+        """Verify is there is a tool on the portal from the given product with
+        the given meta_type and the (optional) given type.
+
+        If there isn't any such tool, it creates one, in place of another tool
+        if needed.
+        """
         self.log('Verifying tool %s' % toolid)
         if self.portalHas(toolid):
             tool = self.getTool(toolid)
-            if tool.meta_type == meta_type:
+            if (ttype is not None
+                and tool.meta_type == meta_type and type(tool) == ttype
+                or tool.meta_type == meta_type):
                 self.logOK()
                 return
-            self.log(' Deleting old %s tool' % tool.meta_type)
+            self.log(" Deleting old %s tool" % tool.meta_type)
             self.portal.manage_delObjects([toolid])
-        self.log(' Adding')
+        self.log(" Adding")
         self.portal.manage_addProduct[product].manage_addTool(meta_type)
 
     def verifyVHM(self):
-        """
-        Verify that a Virtual Host Monster exist at root of Zope.
+        """Verify that a Virtual Host Monster exist at root of Zope.
+
         That's not necessary, but admin friendly.
         """
         root = self.portal.getPhysicalRoot()
