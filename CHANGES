@@ -1,15 +1,12 @@
 Requires:
 ~~~~~~~~~
-- CPSCompat >= 0.1.0
+-
 New features:
 ~~~~~~~~~~~~~
--added new method that updates the local workflow associations for the document types.
-It is now possible to pass an extra argument to verifyFlexibleTypes ("document_roots") 
-to execute the workflow associations update after the document types installation.
+-
 Bug fixes:
 ~~~~~~~~~~
-- updated the docstring for verifyPortlets(). the 'portlets' argument is
-  a tuple of dictionaries.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
-- verifyProduct() supports 'install' or 'Install' as external method script name.
+-
