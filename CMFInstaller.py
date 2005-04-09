@@ -552,7 +552,7 @@ class CMFInstaller:
             tool = self.getTool(toolid)
             if (ttype is not None
                 and tool.meta_type == meta_type and type(tool) == ttype
-                or tool.meta_type == meta_type):
+                or ttype is None and tool.meta_type == meta_type):
                 self.logOK()
                 return
             self.log(" Deleting old %s tool" % tool.meta_type)
