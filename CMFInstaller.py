@@ -282,7 +282,6 @@ class CMFInstaller:
         self.log("Verifying skins")
         skin_installed = 0
         for skin, path in skins.items():
-            path = path.replace('/', os.sep)
             self.log(" FS Directory View '%s'" % skin)
             if skin in self.portal.portal_skins.objectIds():
                 dv = self.portal.portal_skins[skin]
