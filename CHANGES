@@ -6,7 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- Fixed bug #585 that prevented default CPS site be added under windows
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
