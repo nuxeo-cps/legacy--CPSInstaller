@@ -6,7 +6,8 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- CPSInstaller verifyRoles method assumed that user folder had a non-standard
+  userFolderAddRole method, that does not exist on a CPSUserFolder
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

@@ -64,7 +64,11 @@ class CPSInstaller(CMFInstaller):
         already = self.portal.valid_roles()
         for role in roles:
             if role not in already:
-                self.portal.acl_users.userFolderAddRole(role)
+                try:
+                    self.portal.acl_users.userFolderAddRole(role)
+                except AttributeError:
+                    # Use standard CMF method, needed when using CPSUserFolder
+                    self.portal._addRole(role)
                 self.log(" Add role %s" % role)
 
     #
