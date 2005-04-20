@@ -789,6 +789,8 @@ class CPSInstaller(CMFInstaller):
                 self.logOK()
                 continue
             self.log(" Adding")
+            if subscriber.get('activated') is None:
+                subscriber['activated'] = True
             self.portal.portal_eventservice.manage_addSubscriber(**subscriber)
 
     def _getSubscriberObject(self, subscriber_name):
