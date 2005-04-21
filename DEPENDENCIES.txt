@@ -1,5 +1,5 @@
 # $Id$
 
 # CPS --------------------
-CPSCore
+CPSCore > 3.24.2
 CPSCompat >= 0.1.0
