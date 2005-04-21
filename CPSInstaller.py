@@ -35,13 +35,14 @@ try:
 except ImportError:
     _quickinstaller_support = 0
 
+from Products.CMFCore.utils import getToolByName
+
 from CMFInstaller import CMFInstaller
 
 class CPSInstaller(CMFInstaller):
 
     WORKSPACES_ID = 'workspaces'
     SECTIONS_ID = 'sections'
-    EVENT_MASK_META_TYPE = "INVALID METATYPE TO MASK EVENT DURING INSTALL TIME"
 
     def finalize(self):
         if not self.isMainInstaller():
@@ -794,37 +795,34 @@ class CPSInstaller(CMFInstaller):
             self.portal.portal_eventservice.manage_addSubscriber(**subscriber)
 
     def _getSubscriberObject(self, subscriber_name):
-        obj = [obj for obj in self.portal.portal_eventservice.objectValues()
-               if obj.subscriber == subscriber_name]
-        if not obj:
-            return None
-        return obj[0]
+        evtool = getToolByName(self.portal, 'portal_eventservice')
+        return evtool.getSubscriberByName(subscriber_name)
 
-    def maskEventSubscriber(self, subscriber):
-        # mask events for a subscriber by setting an invalid meta type mask
-        obj = self._getSubscriberObject(subscriber)
-        if obj is None:
-            return
-        obj._v_old_meta_type_ = obj.meta_type_
-        obj.manage_changeProperties(meta_type_=self.EVENT_MASK_META_TYPE)
-        self.log("maskEventSubscriber %s remove meta_type %s" % (
-            subscriber, obj._v_old_meta_type_))
+    def disableEventSubscriber(self, subscriber_name):
+        """Disable an event subscriber by name 
 
-    def restoreEventSubscriber(self, subscriber):
-        # restore events for a subscriber
-        obj = self._getSubscriberObject(subscriber)
-        if obj is None:
-            return
-        if obj.meta_type_ == self.EVENT_MASK_META_TYPE:
-            meta_type_ = getattr(self, '_v_old_meta_type_', '*')
-            obj.manage_changeProperties(meta_type_=meta_type_)
-            self.log("restoreEventSubscriber %s restore meta_type %s" % (
-            subscriber, obj.meta_type_))
-            try:
-                del obj._v_old_meta_type_
-            except KeyError:
-                self.log("restoreEventSubscriber %s "
-                         "warning missing backuped metatype" % (subscriber))
+        subscriber_name -> portal_trees for instance
+        """ 
+        evtool = getToolByName(self.portal, 'portal_eventservice', None)   
+        if evtool is None:
+            return 1
+        sub = evtool.getSubscriberByName(subscriber_name)
+        if sub is not None:
+            sub.disable()
+            return 0
+
+    def enableEventSubscriber(self, subscriber_name):
+        """Enable an event subscriber by name 
+
+        subscriber_name -> portal_trees for instance
+        """ 
+        evtool = getToolByName(self.portal, 'portal_eventservice', None)
+        if evtool is None:
+            return 1
+        sub = evtool.getSubscriberByName(subscriber_name)
+        if sub is not None:
+            sub.enable()
+            return 0
 
     def loadConfigurationFile(self, filename, section='default', default={}):
         # load a configuration file in INSTANCE_HOME/etc

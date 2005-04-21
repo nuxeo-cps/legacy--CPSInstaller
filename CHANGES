@@ -1,9 +1,10 @@
 Requires:
 ~~~~~~~~~
--
+- CPSCore > 3.24.2
 New features:
 ~~~~~~~~~~~~~
--
+- API : disabeleEventSusbcriber(subscriber_name)
+- API : enableEventSubscriber(subscriber_name)
 Bug fixes:
 ~~~~~~~~~~
 - CPSInstaller verifyRoles method assumed that user folder had a non-standard
@@ -11,3 +12,4 @@ Bug fixes:
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 - verifyEventSSubscribers() flag the susbcriber if status not specified
+- remove the maskEventSubscriber() and restoreEventSubscriber()
