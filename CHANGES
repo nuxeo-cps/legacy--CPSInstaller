@@ -3,7 +3,7 @@ Requires:
 - CPSCore > 3.24.2
 New features:
 ~~~~~~~~~~~~~
-- API : disabeleEventSusbcriber(subscriber_name)
+- API : disableEventSusbcriber(subscriber_name)
 - API : enableEventSubscriber(subscriber_name)
 Bug fixes:
 ~~~~~~~~~~
