@@ -11,5 +11,5 @@ Bug fixes:
   userFolderAddRole method, that does not exist on a CPSUserFolder
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
-- verifyEventSSubscribers() flag the susbcriber if status not specified
+- verifyEventSubscribers() flag the susbcriber if status not specified
 - remove the maskEventSubscriber() and restoreEventSubscriber()
