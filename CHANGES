@@ -9,6 +9,8 @@ Bug fixes:
 ~~~~~~~~~~
 - CPSInstaller verifyRoles method assumed that user folder had a non-standard
   userFolderAddRole method, that does not exist on a CPSUserFolder
+- Made the CMFInstaller return logs in HTML the format, so that it's possible to
+  do use richer output.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 - verifyEventSubscribers() flag the susbcriber if status not specified

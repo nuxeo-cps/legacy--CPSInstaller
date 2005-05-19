@@ -149,7 +149,7 @@ class CMFInstaller:
         #self.log(log_ok_message)
 
     def flush(self):
-        log = '\n'.join(self.messages)
+        log = '<br/>\n'.join(self.messages)
         self.messages = []
         return log
 
@@ -158,7 +158,7 @@ class CMFInstaller:
             return self.flush()
         # Wrap HTML around it if it's the main installer.
         return '''<html><head><title>%s</title></head>
-            <body><pre>%s</pre></body></html>''' % (
+            <body>%s</body></html>''' % (
             self.product_name, self.flush() )
 
     #
