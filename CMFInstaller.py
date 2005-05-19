@@ -154,9 +154,6 @@ class CMFInstaller:
         return log
 
     def logResult(self):
-        if not self.isMainInstaller():
-            return self.flush()
-        # Wrap HTML around it if it's the main installer.
         return '''<html><head><title>%s</title></head>
             <body>%s</body></html>''' % (
             self.product_name, self.flush() )
