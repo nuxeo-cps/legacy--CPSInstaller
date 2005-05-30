@@ -1,4 +1,4 @@
-# (C) Copyright 2003 Nuxeo SARL <http://nuxeo.com>
+# (C) Copyright 2003-2005 Nuxeo SARL <http://nuxeo.com>
 # Author: Lennart Regebro <regebro@nuxeo.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -280,7 +280,7 @@ class CPSInstaller(CMFInstaller):
         if doc_roots:
             self.log("Updating workflow associations")
             self.verifyWorkflowAssociations(type_data, doc_roots)
-    
+
     def verifyWorkflowAssociations(self, type_data, doc_roots):
         '''
         type_data is a structure as the one returned by getDocumentTypes;
@@ -291,14 +291,14 @@ class CPSInstaller(CMFInstaller):
         # init wf_chain's elements
         for root_id in doc_roots.keys():
             wf_chain[root_id] = {}
-        
+
         for ptype, data in type_data.items():
             self.log("Reading workflow associations for %s type..." % ptype)
             wfs = data.get('workflows') or {}
             for root_id, root_data in doc_roots.items():
                 wf = wfs.get(root_id)
                 if not wf:
-                    wf = data.get(root_data.get('wf_attrname'), 
+                    wf = data.get(root_data.get('wf_attrname'),
                                   root_data.get('content_default_wf'))
                 self.log("    ...%s in %s" % (wf, root_data.get('title', root_id)))
                 wf_chain[root_id][ptype] = wf
@@ -799,11 +799,11 @@ class CPSInstaller(CMFInstaller):
         return evtool.getSubscriberByName(subscriber_name)
 
     def disableEventSubscriber(self, subscriber_name):
-        """Disable an event subscriber by name 
+        """Disable an event subscriber by name
 
         subscriber_name -> portal_trees for instance
-        """ 
-        evtool = getToolByName(self.portal, 'portal_eventservice', None)   
+        """
+        evtool = getToolByName(self.portal, 'portal_eventservice', None)
         if evtool is None:
             return 1
         sub = evtool.getSubscriberByName(subscriber_name)
@@ -812,10 +812,10 @@ class CPSInstaller(CMFInstaller):
             return 0
 
     def enableEventSubscriber(self, subscriber_name):
-        """Enable an event subscriber by name 
+        """Enable an event subscriber by name
 
         subscriber_name -> portal_trees for instance
-        """ 
+        """
         evtool = getToolByName(self.portal, 'portal_eventservice', None)
         if evtool is None:
             return 1
