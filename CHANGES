@@ -6,8 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
-- Made the CMFInstaller return logs in HTML the format, so that it's possible to
-  do use richer output.
+-
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

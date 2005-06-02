@@ -1,4 +1,21 @@
 *******************************************
+** CPSInstaller V0.18.1 [R1 build 2005/06/02-09:33 by fguillaume]
+** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 22058
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- Made the CMFInstaller return logs in HTML the format, so that it's possible to
+  do use richer output.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.18.0 [R1 build 2005/05/19-14:08 by madarche]
 ** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 21661
 Requires:
