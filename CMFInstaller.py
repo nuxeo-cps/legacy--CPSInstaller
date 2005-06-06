@@ -355,13 +355,15 @@ class CMFInstaller:
         manage_addLexicon(ct, id, title, elems)
         self.log(' Added')
 
-    def addPortalCatalogIndex(self, id, type, extra=None):
+    def addPortalCatalogIndex(self, id, type, extra=None, destructive=False):
         """Adds an index on portal_catalog."""
         self.log(' Portal_catalog verify index %s: %s' % (type, id))
         ct = self.portal.portal_catalog
         if id in ct.indexes():
             current_index_type = ct._catalog.getIndex(id).meta_type
-            if current_index_type == type:
+            if destructive:
+                pass
+            elif current_index_type == type:
                 self.logOK()
                 return
             elif type == 'ZCTextIndex' and current_index_type != 'TextIndex':
@@ -448,7 +450,7 @@ class CMFInstaller:
             self.log("  Type '%s'" % ptype)
             if ptype in ptypes_installed:
                 if destructive:
-                    self.log(" Deleting %s"  %ptype)
+                    self.log(" Deleting %s" % ptype)
                     ttool.manage_delObjects([ptype])
                 else:
                     self.logOK()

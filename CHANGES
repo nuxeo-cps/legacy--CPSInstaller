@@ -6,7 +6,7 @@ New features:
 -
 Bug fixes:
 ~~~~~~~~~~
--
+- Added a "destructive" parameter to the addPortalCatalogIndex method.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -
