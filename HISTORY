@@ -1,4 +1,20 @@
 *******************************************
+** CPSInstaller V0.18.2 [R1 build 2005/06/07-09:53 by madarche]
+** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 22277
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- Added a "destructive" parameter to the addPortalCatalogIndex method.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.18.1 [R1 build 2005/06/02-09:33 by fguillaume]
 ** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 22058
 Requires:
