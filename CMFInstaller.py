@@ -36,10 +36,12 @@ class CMFInstaller:
     def __init__(self, context, product_name=None):
         """CMFInstaller initialization
 
+        context is used to pass the portal root.
+
         product_name should be set as a class attribute when subclassing,
         but must be passed if you are not subclassing the installer.
 
-        is_main_installer should be se to 0 if this installer is called
+        _v_main_installer should be se to 0 if this installer is called
         from another installer to prevent multiple reindexing of catalogs
         and similar actions that only needs to be done once.
         """
