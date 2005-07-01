@@ -172,6 +172,24 @@ class CMFInstaller:
         If No default is given, it will raise an error.
         """
         return getToolByName(self.portal, id, default)
+
+    #
+    # CMFSetup
+    #
+
+    def setupSetupTool(self):
+        self.log("Setting up Portal Setup Tool")
+        self.verifyTool('portal_setup', 'CMFSetup', 'Portal Setup Tool')
+
+    def importSetupProfile(self, profile_id, steps):
+        self.log("Importing profile %s, steps %s" % (profile_id, steps))
+        setup_tool = getToolByName(self.portal, 'portal_setup')
+        setup_tool.setImportContext('profile-%s' % profile_id)
+        for step in steps:
+            res = setup_tool.runImportStep(step)
+            for s in res['steps']:
+                self.log("%s: %s" % (s, res['messages'][s]))
+
     #
     # Methods to setup and manage actions
     #

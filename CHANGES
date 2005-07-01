@@ -3,7 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- Added hooks for the setup tool.
 Bug fixes:
 ~~~~~~~~~~
 - Improved CMFInstaller docstrings.
