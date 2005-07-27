@@ -199,7 +199,7 @@ class CPSInstaller(CMFInstaller):
 
     def verifyLocalWorkflowChains(self, object, wfchains, destructive=0,
                                   under_sub_add=None):
-        """Sets up the local workflows on object.
+        """Set up the local workflows on object.
 
         wfchains = {
             '<Portal Type>': '<workflow_id>',
@@ -370,7 +370,7 @@ class CPSInstaller(CMFInstaller):
     # CPSSchemas installation
     #
     def verifySchemas(self, schemas):
-        """Adds schemas if they don't exist
+        """Add schemas if they don't exist
 
         The schemas parameter is a dictionary of schema definitions.
         The schema definition is what you get when you go to the 'Export'
@@ -398,7 +398,7 @@ class CPSInstaller(CMFInstaller):
                                     **fieldinfo['data'])
 
     def verifyWidgets(self, widgets):
-        """Adds widgets if they don't exist
+        """Add widgets if they don't exist
 
         The widgets parameter is a dictionary of widget definitions.
         The widget definition is what you get when you go to the 'Export'
@@ -422,7 +422,7 @@ class CPSInstaller(CMFInstaller):
             widget.manage_changeProperties(**info['data'])
 
     def verifyLayouts(self, layouts):
-        """Adds layouts if they don't exist
+        """Add layouts if they don't exist
 
         The layouts parameter is a dictionary of layout definitions.
         The layout definition is what you get when you go to the 'Export'
@@ -451,7 +451,7 @@ class CPSInstaller(CMFInstaller):
             layout.manage_changeProperties(**info['layout'])
 
     def verifyVocabularies(self, vocabularies):
-        """Adds vocabularies if they don't exist
+        """Add vocabularies if they don't exist
 
         The vocabularies parameter is a dictionary of vocabulary definitions.
         The vocabulary definition is what you get when you go to the 'Export'
@@ -549,7 +549,7 @@ class CPSInstaller(CMFInstaller):
 
 
     def verifyMessageCatalog(self, catalog_id, title):
-        """Sets up a spezialized message catalog for your product"""
+        """Set up a specialized message catalog for your product"""
         self.log('Verifying message domain %s' % catalog_id)
         localizer = self.portal['Localizer']
         # MessageCatalog
@@ -615,7 +615,7 @@ class CPSInstaller(CMFInstaller):
 
     def verifyBoxes(self, boxes, object=None):
         """Verify the existence of given boxes in the object's box container.
-        If not found, a box is instantied. Existing boxes are not affected.
+        If not found, a box is instantiated. Existing boxes are not affected.
 
         boxes is a dictionary with keys begins the box ids, and values being
         the dictionary given by the export tab.
