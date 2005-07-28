@@ -7,6 +7,8 @@ New features:
 Bug fixes:
 ~~~~~~~~~~
 - Improved CMFInstaller docstrings.
+- Type names or meta types to add to a cache in portal_trees were added again
+  even if they were already present in the list.
 New internal features:
 ~~~~~~~~~~~~~~~~~~~~~~
 -

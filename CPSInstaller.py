@@ -578,9 +578,13 @@ class CPSInstaller(CMFInstaller):
         tree = self.portal.portal_trees[treename]
         old_type_names = list(tree.type_names)
         old_meta_types = list(tree.meta_types)
+        new_type_names = [x for x in list(type_names)
+                          if x not in old_type_names]
+        new_meta_types = [x for x in list(meta_types)
+                          if x not in old_meta_types]
         tree.manage_changeProperties(
-            type_names=old_type_names + list(type_names),
-            meta_types=old_meta_types + list(meta_types))
+            type_names=old_type_names + list(new_type_names),
+            meta_types=old_meta_types + list(new_meta_types))
         if (old_type_names != tree.type_names
             or old_meta_types != tree.meta_types):
             self.flagRebuildTreeCache(treename)
