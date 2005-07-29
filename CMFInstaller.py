@@ -477,10 +477,19 @@ class CMFInstaller:
                     continue
 
             self.log("  Adding")
+            add_meta_type = typeinfo['add_meta_type']
+            typeinfo_name = typeinfo['typeinfo_name']
+            if not typeinfo_name.endswith(')'):
+                from warnings import warn
+                warn('Old typeinfo name is deprecated, got %r for type %r'
+                     % (typeinfo_name, ptype),
+                     DeprecationWarning, stacklevel=2)
+                ti_prod, ti_mt = [x.strip() for x in typeinfo_name.split(':')]
+                typeinfo_name = '%s (%s)' % (typeinfo_name, ti_mt)
             ttool.manage_addTypeInformation(
                 id=ptype,
-                add_meta_type=typeinfo['add_meta_type'],
-                typeinfo_name=typeinfo['typeinfo_name'])
+                add_meta_type=add_meta_type,
+                typeinfo_name=typeinfo_name)
             if typeinfo.has_key('properties'):
                 ttool[ptype].manage_changeProperties(
                     **typeinfo['properties'])
