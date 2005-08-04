@@ -755,6 +755,7 @@ class CPSInstaller(CMFInstaller):
                     if isCacheable(dir) and dir.ZCacheable_isCachingEnabled():
                         # Store the associate ram cache manager
                         cache_manager_id = dir.ZCacheable_getManagerId()
+                        dir.ZCacheable_invalidate()
                     dirtool.manage_delObjects([id])
             if id not in dirtool.objectIds():
                 dir = dirtool.manage_addCPSDirectory(id, info['type'])
