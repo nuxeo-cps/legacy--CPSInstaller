@@ -22,6 +22,7 @@ from re import match
 from types import TupleType, ListType
 from ConfigParser import ConfigParser, NoOptionError, NoSectionError
 
+from OFS.Cache import isCacheable
 from App.Extensions import getPath
 from Acquisition import aq_base
 from zLOG import LOG, INFO, DEBUG
@@ -743,6 +744,7 @@ class CPSInstaller(CMFInstaller):
         dirtool = self.portal.portal_directories
         for id, info in directories.items():
             self.log(" Directory %s" % id)
+            cache_manager_id = None
             if id in dirtool.objectIds():
                 dir = dirtool[id]
                 if hasattr(dir, 'isUserModified') and dir.isUserModified():
@@ -750,6 +752,9 @@ class CPSInstaller(CMFInstaller):
                              'be changed. Delete manually if needed.')
                 else:
                     self.log('   Deleting old definition')
+                    if isCacheable(dir) and dir.ZCacheable_isCachingEnabled():
+                        # Store the associate ram cache manager
+                        cache_manager_id = dir.ZCacheable_getManagerId()
                     dirtool.manage_delObjects([id])
             if id not in dirtool.objectIds():
                 dir = dirtool.manage_addCPSDirectory(id, info['type'])
@@ -779,6 +784,9 @@ class CPSInstaller(CMFInstaller):
                 dir.setBackingDirectories(bdi)
                 del info['data']['backing_dir_infos']
             dir.manage_changeProperties(**info['data'])
+            if cache_manager_id is not None:
+                # Restore the associate ram cache manager
+                dir.ZCacheable_setManagerId(cache_manager_id)
 
     def verifyEventSubscribers(self, subscribers):
         objs = self.portal.portal_eventservice.objectValues()
