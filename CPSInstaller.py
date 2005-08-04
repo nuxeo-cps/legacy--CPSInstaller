@@ -641,12 +641,8 @@ class CPSInstaller(CMFInstaller):
 
             self.log("   Creation of box: %s" % box)
 
-            try:
-                apply(ttool.constructContent,
-                      (boxes[box]['type'], box_container,
-                       box, None), {})
-            except:
-                raise str(box)
+            __traceback_info__ = (box, boxes[box])
+            ttool.constructContent(boxes[box]['type'], box_container, box)
 
             ob = getattr(box_container, box)
             ob.manage_changeProperties(**boxes[box])
