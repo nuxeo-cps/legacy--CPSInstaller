@@ -1,4 +1,23 @@
 *******************************************
+** CPSInstaller V0.19.0 [R1 build 2005/08/05-13:56 by ben]
+** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 25426
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- Added hooks for the setup tool.
+Bug fixes:
+~~~~~~~~~~
+- Improved CMFInstaller docstrings.
+- Type names or meta types to add to a cache in portal_trees were added again
+  even if they were already present in the list.
+- verifyDirectories restore RamCache association.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.18.2 [R1 build 2005/06/07-09:53 by madarche]
 ** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 22277
 Requires:
