@@ -273,6 +273,10 @@ class CPSInstaller(CMFInstaller):
                             for k, v in a.items():
                                 if k == 'permissions':
                                     k = 'permission'
+                                if (k == 'action' and
+                                    v is not None and
+                                    ':' not in v):
+                                    v = 'string:${object_url}/'+v
                                 properties[k+suffix] = v
                             if not k in properties:
                                 properties
