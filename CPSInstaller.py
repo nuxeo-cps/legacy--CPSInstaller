@@ -260,7 +260,28 @@ class CPSInstaller(CMFInstaller):
             if data.has_key('actions_add'):
                 self.log("    Adding actions")
                 for a in data['actions_add']:
-                    self.addAction(ti, a)
+                    # Remove previous with same id+category
+                    prevactions = ti.listActions()
+                    for i, prev in enumerate(prevactions):
+                        if (prev.id == a['id'] and
+                            prev.category == a.get('category', 'object')):
+                            # Change previous action
+                            # No API for that <sigh>
+                            properties = {}
+                            suffix = '_'+str(i)
+                            properties['visible'+suffix] = True
+                            for k, v in a.items():
+                                if k == 'permissions':
+                                    k = 'permission'
+                                properties[k+suffix] = v
+                            if not k in properties:
+                                properties
+                            actions = list(prevactions)
+                            actions[i] = ti._extractAction(properties, i)
+                            ti._actions = tuple(actions)
+                            break
+                    else:
+                        self.addAction(ti, a)
 
             if data.get('display_in_cmf_calendar'):
                 display_in_cmf_calendar.append(ptype)
