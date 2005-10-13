@@ -287,6 +287,9 @@ class CPSInstaller(CMFInstaller):
                     else:
                         self.addAction(ti, a)
 
+            if data.get('aliases'):
+                ti.setMethodAliases(data['aliases'])
+
             if data.get('display_in_cmf_calendar'):
                 display_in_cmf_calendar.append(ptype)
                 del data['display_in_cmf_calendar']

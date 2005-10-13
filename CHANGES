@@ -3,7 +3,7 @@ Requires:
 -
 New features:
 ~~~~~~~~~~~~~
--
+- add support for CMF 1.5 aliases in verifyFlexibleTypes
 Bug fixes:
 ~~~~~~~~~~
 -
