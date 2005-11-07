@@ -1,4 +1,20 @@
 *******************************************
+** CPSInstaller V0.21.0 [R1 build 2005/11/07-15:21 by fguillaume]
+** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 29058
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+- add support for CMF 1.5 aliases in verifyFlexibleTypes
+Bug fixes:
+~~~~~~~~~~
+-
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+-
+
+*******************************************
 ** CPSInstaller V0.20.0 [R1 build 2005/09/21-15:16 by fguillaume]
 ** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 27306
 Requires:
