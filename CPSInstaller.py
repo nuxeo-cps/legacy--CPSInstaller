@@ -426,30 +426,6 @@ class CPSInstaller(CMFInstaller):
                 schema.manage_addField(field_id, fieldinfo['type'],
                                     **fieldinfo['data'])
 
-    def verifyWidgets(self, widgets):
-        """Add widgets if they don't exist
-
-        The widgets parameter is a dictionary of widget definitions.
-        The widget definition is what you get when you go to the 'Export'
-        tab of a widget.
-        """
-        self.log("Verifying widgets")
-        wtool = self.portal.portal_widget_types
-        existing_widgets = wtool.objectIds()
-        for id, info in widgets.items():
-            self.log(" Adding widget %s" % id)
-            if id in existing_widgets:
-                ob = wtool[id]
-                if hasattr(ob, 'isUserModified') and ob.isUserModified():
-                    self.log('WARNING: The widget is modified and will not be '
-                             'changed. Delete manually if needed.')
-                    continue
-                else:
-                    self.log('   Deleting old definition')
-                    wtool.manage_delObjects([id])
-            widget = wtool.manage_addCPSWidgetType(id, info['type'])
-            widget.manage_changeProperties(**info['data'])
-
     def verifyLayouts(self, layouts):
         """Add layouts if they don't exist
 
