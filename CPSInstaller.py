@@ -426,6 +426,10 @@ class CPSInstaller(CMFInstaller):
                 schema.manage_addField(field_id, fieldinfo['type'],
                                     **fieldinfo['data'])
 
+    # BBB, will be removed in CPS 3.4.1
+    def verifyWidgets(self, widgets):
+        return
+
     def verifyLayouts(self, layouts):
         """Add layouts if they don't exist
 
