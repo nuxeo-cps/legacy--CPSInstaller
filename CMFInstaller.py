@@ -323,6 +323,7 @@ class CMFInstaller:
                 # CPSIO skins on a Plone site when exporting a Plone site.
                 if skin_name not in  ['Basic',
                                       'CPSSkins',
+                                      'CPSSkins-macroless',
                                       'Plone Default',
                                       'Plone Tableless']:
                     continue
