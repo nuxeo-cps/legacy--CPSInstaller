@@ -1,4 +1,20 @@
 *******************************************
+** CPSInstaller V0.22.0 [R1 build 2006/01/23-17:28 by fermigier]
+** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 31976
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+- New products skins were not installed in the "CPSSkins-macroless" skin.
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+- Removed obsolete widget types registration.
+
+*******************************************
 ** CPSInstaller V0.21.0 [R1 build 2005/11/07-15:21 by fguillaume]
 ** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 29058
 Requires:
