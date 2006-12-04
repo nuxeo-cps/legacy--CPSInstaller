@@ -1,3 +1,23 @@
+===========================================================
+Package: CPSInstaller 0.23.0
+===========================================================
+First release built by: madarche at: 2006-12-04T15:52:23
+SVN Tag: https://svn.nuxeo.org/pub/CPS3/legacy/CPSInstaller/tags/0.23.0
+Build from: https://svn.nuxeo.org/pub/CPS3/legacy/CPSInstaller/trunk@50470
+
+Requires:
+~~~~~~~~~
+-
+New features:
+~~~~~~~~~~~~~
+-
+Bug fixes:
+~~~~~~~~~~
+-
+New internal features:
+~~~~~~~~~~~~~~~~~~~~~~
+- Managed by bundleman.
+
 *******************************************
 ** CPSInstaller V0.22.0 [R1 build 2006/01/23-17:28 by fermigier]
 ** SVN URL: https://svn.nuxeo.org/pub/CPSInstaller/trunk Revision: 31976
