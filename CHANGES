@@ -3,7 +3,7 @@ Requires
 -
 New features
 ~~~~~~~~~~~~
--
+- Added a "destructive" option to the verifyAction and verifyActions methods.
 Bug fixes
 ~~~~~~~~~
 -

@@ -1,4 +1,4 @@
-# (C) Copyright 2003-2005 Nuxeo SARL <http://nuxeo.com>
+# (C) Copyright 2003-2006 Nuxeo SAS <http://nuxeo.com>
 # Author: Lennart Regebro <regebro@nuxeo.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -198,7 +198,7 @@ class CPSInstaller(CMFInstaller):
         self.verifyWfScripts(wf, wfscripts)
         self.log(' Done')
 
-    def verifyLocalWorkflowChains(self, object, wfchains, destructive=0,
+    def verifyLocalWorkflowChains(self, object, wfchains, destructive=False,
                                   under_sub_add=None):
         """Set up the local workflows on object.
 

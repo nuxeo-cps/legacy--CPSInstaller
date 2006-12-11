@@ -1,4 +1,4 @@
-# (C) Copyright 2003-2005 Nuxeo SARL <http://nuxeo.com>
+# (C) Copyright 2003-2006 Nuxeo SAS <http://nuxeo.com>
 # Author: Lennart Regebro <regebro@nuxeo.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -224,7 +224,12 @@ class CMFInstaller:
 
         Fixes up some properties first.
         """
-
+        # ActionInformation.__init__() uses 'title' as a
+        # parameter, but addAction() uses 'name'. We will
+        # allow both.
+        if properties.has_key('title'):
+            properties['name'] = properties['title']
+            del properties['title']
         # ActionInformation.__init__() uses 'permissions' as a
         # parameter, but addAction() uses 'permission'. We will
         # allow both.
@@ -247,18 +252,25 @@ class CMFInstaller:
 
         object.addAction(**properties)
 
-    def verifyAction(self, tool, **kw):
-        result = ' Verifying action %s...' % kw['id']
-        if self.hasAction(tool, kw['id']):
-            result += 'exists.'
+    def verifyAction(self, tool, destructive=False, **kw):
+        action_id = kw['id']
+        result = " Verifying action %s on tool %s ..." % (action_id, tool)
+        if self.hasAction(tool, action_id):
+            result += " exists."
+            if destructive:
+                result += " modified."
+                for ai in self.portal[tool].listActions():
+                    if (ai.getId() == action_id
+                        and ai.getCategory() == kw['category']):
+                        ai.edit(**kw)
         else:
             self.addAction(self.portal[tool], kw)
-            result += 'added.'
+            result += " added."
         self.log(result)
 
-    def verifyActions(self, actionslist):
+    def verifyActions(self, actionslist, destructive=False):
         for a in actionslist:
-            self.verifyAction(**a)
+            self.verifyAction(destructive=destructive, **a)
 
     def hideActions(self, hidemap):
         # XXX This breaks the installer rules, as it does not check
@@ -453,7 +465,7 @@ class CMFInstaller:
                     workspaceACT.append(ptype)
             ttool[type].allowed_content_types = workspaceACT
 
-    def verifyContentTypes(self, type_dict, destructive=0):
+    def verifyContentTypes(self, type_dict, destructive=False):
         """Checks the content_types
 
         type_dict is:
