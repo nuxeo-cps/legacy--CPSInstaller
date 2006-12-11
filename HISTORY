@@ -1,4 +1,24 @@
 ===========================================================
+Package: CPSInstaller 0.24.0
+===========================================================
+First release built by: madarche at: 2006-12-11T14:24:09
+SVN Tag: https://svn.nuxeo.org/pub/CPS3/legacy/CPSInstaller/tags/0.24.0
+Build from: https://svn.nuxeo.org/pub/CPS3/legacy/CPSInstaller/trunk@50546
+
+Requires
+~~~~~~~~
+-
+New features
+~~~~~~~~~~~~
+- Added a "destructive" option to the verifyAction and verifyActions methods.
+Bug fixes
+~~~~~~~~~
+-
+New internal features
+~~~~~~~~~~~~~~~~~~~~~
+- 
+
+===========================================================
 Package: CPSInstaller 0.23.0
 ===========================================================
 First release built by: madarche at: 2006-12-04T15:52:23
